@@ -30,16 +30,10 @@
 html,body{background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
-/* ---------- topp (som broset.no) ---------- */
-.top{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 48px}
-.top img{height:30px;display:block}
-.top nav{display:flex;gap:22px;font-size:14px;color:var(--teal)}
-.top nav b{font-weight:700}
-.burger{display:none}
 
 /* ---------- kartet ---------- */
-.wrap{display:flex;justify-content:center;align-items:flex-start;gap:20px;padding:0 48px;margin:0 auto 24px}
-.hero{position:relative;margin:0;flex:0 0 auto;width:min(calc(100vw - 96px - 380px),calc((100svh - 120px) * 3500 / 2227));aspect-ratio:3500/2227;overflow:hidden;background:#2a2a22;isolation:isolate;user-select:none;-webkit-user-select:none}
+.wrap{display:flex;justify-content:center;align-items:flex-start;gap:20px;padding:24px 48px;margin:0 auto}
+.hero{position:relative;margin:0;flex:0 0 auto;width:min(calc(100vw - 96px - 380px),calc((100svh - 48px) * 3500 / 2227));aspect-ratio:3500/2227;overflow:hidden;background:#2a2a22;isolation:isolate;user-select:none;-webkit-user-select:none}
 .hero img{-webkit-user-drag:none}
 .stage{touch-action:pan-y}
 .hero.zoomed .stage{cursor:grab}.hero.dragging .stage{cursor:grabbing}
@@ -50,7 +44,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
  background:radial-gradient(circle at var(--sx) var(--sy),rgba(10,30,30,0) 0,rgba(10,30,30,0) calc(var(--sr)*.55),rgba(10,30,30,.5) calc(var(--sr)*1.5),rgba(8,24,24,.72) calc(var(--sr)*3.2));
  transition:opacity 700ms ease,--sx var(--dur) var(--ease),--sy var(--dur) var(--ease),--sr var(--dur) var(--ease)}
 .hero.zoom .spot{opacity:1}
-.shade{position:absolute;left:0;right:0;top:0;height:170px;pointer-events:none;background:linear-gradient(to bottom,rgba(10,30,30,.6),rgba(10,30,30,0))}
+.shade{position:absolute;left:0;right:0;top:0;height:250px;pointer-events:none;background:linear-gradient(to bottom,rgba(10,30,30,.6),rgba(10,30,30,0))}
 .disc{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;bottom:16px;z-index:9;font-size:12px;color:rgba(254,251,249,.9);text-shadow:0 1px 3px rgba(0,0,0,.6);opacity:0;transition:opacity 400ms}
 .hero.zoom .disc{opacity:1}
 
@@ -171,21 +165,16 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .bar .t .proj{display:flex;align-items:center;gap:7px;margin-top:5px;font-family:var(--body);font-weight:700;font-size:12.5px;color:var(--paper);text-decoration:underline;text-decoration-color:rgba(230,201,184,.7);text-underline-offset:3px}
 .bar .t .proj i{width:11px;height:11px;border:2px solid var(--peach);border-radius:3px;transition:background 200ms}
 .bar .t .proj.on i{background:var(--peach)}
-.chips{display:flex;gap:8px;margin:2px auto 0}
-.chip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 6px;border-radius:999px;background:rgba(19,53,54,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(254,251,249,.22);font-size:13.5px;font-weight:600;white-space:nowrap;transition:background 200ms}
-.chip i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--teal);font-style:normal}
-.chip i svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.chip{cursor:pointer}.chip:hover{background:rgba(19,53,54,.85)}
-.chip.on{background:var(--paper);color:var(--teal);border-color:var(--paper);box-shadow:0 6px 18px rgba(0,0,0,.25)}.chip.on b{opacity:.85}
-.chip.k-arv i{background:var(--peach);color:var(--teal)}.chip.k-barn i{color:var(--mint)}.chip.k-han i{color:var(--paper)}.chip.k-mot i{background:var(--mint);color:var(--teal)}
-.chip b{font-weight:700;opacity:.7;font-size:12px}
+.bar .t .flt{display:flex;flex-direction:column;align-items:flex-start;margin-top:4px}
+.bar .t .flt .proj{margin-top:5px}
+.bar .t .flt .proj b{font-weight:600;opacity:.75;margin-left:2px}
+.bar .t .proj:hover{text-decoration-color:var(--peach)}
 .tour{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px 0 8px;border-radius:999px;background:var(--paper);color:var(--teal);font-weight:700;font-size:14px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .tour i{width:26px;height:26px;border-radius:50%;background:var(--teal);color:var(--paper);display:grid;place-items:center}
 .tour.on i{background:#a8673f}
 .bar .t .proj{text-align:left}
 .tour .ts{display:none}
-/* smal skjerm: kategoriknappene på egen linje */
-.hero.narrow .bar{flex-wrap:wrap}.hero.narrow .chips{order:3;flex-basis:100%;margin:8px 0 0;justify-content:center}.hero.narrow .tour{margin-left:auto}
+.bar .tour{margin-left:auto}
 /* zoom */
 .zctl{position:absolute;left:16px;bottom:14px;z-index:9;display:flex;align-items:center;gap:8px}
 .zhint{padding:6px 12px;border-radius:999px;background:rgba(19,53,54,.62);backdrop-filter:blur(8px);color:rgba(254,251,249,.92);font-size:12px;font-weight:600;transition:opacity 300ms}
@@ -195,9 +184,10 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .hero.zoomed .zreset{display:inline-flex}
 .ztoast{position:absolute;left:50%;top:50%;z-index:10;transform:translate(-50%,-50%);padding:14px 22px;border-radius:12px;background:rgba(19,53,54,.85);color:var(--paper);font-size:16px;font-weight:700;pointer-events:none;opacity:0;transition:opacity 250ms}
 .ztoast.on{opacity:1}
-.hint{position:absolute;left:50%;top:calc(var(--barh,72px) + 12px);transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13.5px;font-weight:600;white-space:nowrap;transition:opacity 400ms}
+.hint{position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13.5px;font-weight:600;white-space:nowrap;transition:opacity 400ms}
 .hero.explore .hint,.hero.proj .hint{opacity:0}
-.prog{position:absolute;right:28px;top:calc(var(--barh,72px) + 4px);z-index:9;display:none;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13px;font-weight:600}
+.hero.hintlow .hint{top:auto;bottom:22px}
+.prog{position:absolute;right:28px;top:calc(var(--tourb,62px) + 10px);z-index:9;display:none;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13px;font-weight:600}
 .hero.touring .prog{display:flex}
 .prog .b{width:120px;height:3px;background:rgba(254,251,249,.25);border-radius:2px;overflow:hidden}.prog .b i{display:block;height:100%;background:var(--mint)}
 .mini{position:absolute;bottom:60px;z-index:9;width:180px;height:101px;border:1.5px solid rgba(254,251,249,.85);box-shadow:0 6px 18px rgba(0,0,0,.35);background-repeat:no-repeat;opacity:0;transition:opacity 400ms ease;pointer-events:none;overflow:hidden}
@@ -211,6 +201,8 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .side{flex:0 0 360px;width:360px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:hidden}
 .box{flex:0 0 auto;position:relative;background:var(--paper);border:1px solid var(--line);box-shadow:0 10px 30px rgba(19,53,54,.08);overflow:auto;scrollbar-width:thin}
 .box .intro .iph{position:relative;aspect-ratio:2/1;background:#ccc center/cover no-repeat}
+.box .intro .iph.logo{display:grid;place-items:center;background:var(--sand)}
+.box .intro .iph.logo img{width:54%;max-width:230px;height:auto;display:block}
 .box .intro .iph span{position:absolute;left:0;bottom:0;padding:5px 10px;font-size:11px;color:var(--paper);background:rgba(19,53,54,.82)}
 .box .intro .ibd{padding:16px 20px 18px}
 .box .intro h2{margin-top:8px;font-family:var(--head);font-weight:800;font-size:23px;line-height:1.15;color:var(--teal)}
@@ -252,32 +244,37 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .li:hover,.li.pv{background:var(--paper)}
 .li.on{background:var(--teal)}.li.on b{color:var(--paper)}.li.on small{color:var(--peach)}
 .li:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
-.lg.off{display:none}
+.lg.off .li{display:none}
+.lg.off h3{opacity:.62}
+.lg h3 .lgh{display:flex;align-items:center;gap:8px;width:100%;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;text-align:left;cursor:pointer}
+.lg h3 .lgh:hover{color:var(--teal)}
+.lg h3 .cb{flex:0 0 11px;width:11px;height:11px;border:2px solid var(--teal);border-radius:3px;transition:background 200ms}
+.lg.sel h3 .cb{background:var(--teal)}
+.lg.sel h3{color:var(--teal)}
 .m.peek .head{transform:scale(1.25);box-shadow:0 0 0 3px var(--paper),0 0 0 9px rgba(151,218,184,.55),0 8px 22px rgba(0,0,0,.4)}
 .m.peek .lbl{opacity:1;transform:none}
 .m.peek{z-index:3}
 
 /* ---------- mobil ---------- */
 @media (max-width:700px){
- .top{height:64px;padding:0 18px}.top img{height:24px}.top nav{display:none}.burger{display:block;width:26px;height:16px;border-top:2px solid var(--teal);border-bottom:2px solid var(--teal);position:relative}.burger::after{content:"";position:absolute;left:0;right:0;top:5px;border-top:2px solid var(--teal)}
  .wrap{display:flex;flex-direction:column;align-items:stretch;padding:0;margin:0;gap:0}
  .side{order:2;flex:none;width:auto;height:auto!important;display:block;overflow:visible}
  .box{display:none}
  .list{max-height:none;overflow:visible;padding:4px 14px 30px;background:var(--paper)}
  .lg h3{position:static;background:none;margin:0;padding:18px 4px 6px}
- .hero{margin:0;aspect-ratio:auto;height:calc(100svh - 64px);min-height:620px}
+ .hero{margin:0;aspect-ratio:auto;height:100svh;min-height:620px}
  .bar{padding:14px 14px 0;gap:10px}
  .bar .t{display:block;font-size:17px}.bar .t span{font-size:11.5px}.bar .t .proj{font-size:11.5px}
- .chips{display:flex;position:absolute;left:0;right:0;top:94px;margin:0;padding:0 14px;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.chips::-webkit-scrollbar{display:none}
- .chip{height:32px;font-size:12.5px;flex:0 0 auto}
- .zctl{display:none;top:136px;bottom:auto;left:auto!important;right:14px!important}.zhint{display:none}
+ .bar .t .flt{flex-direction:row;flex-wrap:wrap;gap:0 14px;max-width:calc(100vw - 28px)}
+ .bar .t .flt .proj{font-size:11.5px}
+ .zctl{display:none;top:calc(var(--barh,150px) + 8px);bottom:auto;left:auto!important;right:14px!important}.zhint{display:none}
  .hero.zoomed .zctl{display:flex}
  .hero.zoomed .disc{display:none}
  .tour{margin-left:auto;height:38px;font-size:13px;padding:0 14px 0 6px;flex:0 0 auto}
  .tour .tl{display:none}.tour .ts{display:inline}
  .bar .t{min-width:0}
  .hint{top:auto;bottom:22px;font-size:12.5px}
- .disc{bottom:auto;top:136px;left:14px;transform:none;font-size:11px}
+ .disc{bottom:auto;top:calc(var(--barh,150px) + 8px);left:14px;transform:none;font-size:11px}
  .hero{width:auto}
  .mini{display:none}
  .card{top:auto;bottom:0;left:0!important;right:0!important;width:auto;transform:translateY(105%)!important;border-radius:18px 18px 0 0;max-height:66%;overflow:auto;transition:transform 560ms var(--ease);box-shadow:0 -10px 40px rgba(0,0,0,.35)}
@@ -297,20 +294,54 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .card .grab{display:none}
 @media (max-width:700px){.card .grab{display:block}}
 @media (prefers-reduced-motion:reduce){:root{--dur:1ms}.m.on .head::after{animation:none}.gal .tr{scroll-behavior:auto}}
+/* forstørret visning: legger seg foran kartet og menyen */
+.lb{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(9,26,26,.9);opacity:0;transition:opacity 260ms ease}
+.lb[hidden]{display:none}
+.lb.on{opacity:1}
+.lbin{position:relative;display:flex;width:min(1480px,100%);height:min(900px,100%);background:var(--paper);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden;transform:scale(.97);transition:transform 320ms var(--ease)}
+.lb.on .lbin{transform:none}
+.lbg{position:relative;flex:1 1 auto;min-width:0;background:#10292a}
+.lbtr{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain}
+.lbtr::-webkit-scrollbar{display:none}
+.lbtr figure{position:relative;flex:0 0 100%;height:100%;scroll-snap-align:start;display:flex;align-items:center;justify-content:center}
+.lbtr img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;display:block}
+.lbtr .crop{position:relative;width:100%;aspect-ratio:2/1;background-repeat:no-repeat}
+.lbtr figcaption{position:absolute;left:0;bottom:0;max-width:80%;padding:8px 14px;font-size:13px;line-height:1.4;color:var(--paper);background:rgba(19,53,54,.86)}
+.lgb{position:absolute;top:50%;width:48px;height:48px;margin-top:-24px;border-radius:50%;background:rgba(254,251,249,.94);color:var(--teal);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.3);z-index:2}
+.lgb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.lgp{left:16px}.lgn{right:16px}.lgb[disabled]{opacity:0;pointer-events:none}
+.lbc{position:absolute;right:16px;bottom:14px;padding:4px 11px;border-radius:999px;background:rgba(19,53,54,.8);color:var(--paper);font-size:12.5px;font-weight:700}
+.lbg.one .lgb,.lbg.one .lbc{display:none}
+.lbt{flex:0 0 420px;overflow:auto;scrollbar-width:thin;padding:34px 34px 30px}
+.lbt h2{margin-top:10px;font-family:var(--head);font-weight:800;font-size:32px;line-height:1.1;color:var(--teal)}
+.lbt p{margin-top:14px;font-size:16px;line-height:1.6;color:#2b2b2b}
+.lbt p+p{margin-top:10px}
+.lbt .facts dd{font-size:16px;overflow-wrap:anywhere;hyphens:auto}
+.lbt .todo{margin-top:16px;padding:12px 14px;border:1.5px dashed #c9b3a6;color:#8a6b5a;font-size:14px;line-height:1.45;background:#fbf4ef}
+.lbt .src{margin-top:18px;font-size:12.5px;line-height:1.5;color:#6d7d7d}
+.lbt .src b{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#7a8a8a}
+.lbt .src ul{margin:6px 0 0;padding-left:16px}.lbt .src li{margin-top:3px}
+.lbt .src a{color:#3d6b6b;text-decoration:underline;text-underline-offset:2px}
+.lbt .lft{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
+.lbt .more{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid var(--teal);border-radius:999px;color:var(--teal);font-size:14px;font-weight:600;text-decoration:none}
+.lbt .nav{display:flex;align-items:center;gap:6px;font-size:13px;color:#6b7b7b;font-weight:600}
+.lbt .nav button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--teal)}
+.lbx{position:absolute;right:14px;top:14px;width:40px;height:40px;border-radius:50%;background:rgba(254,251,249,.96);color:var(--teal);font-size:22px;line-height:1;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:3}
+.card .gal img,.card .gal .crop{cursor:zoom-in}
+.card:not(.pv) .bd h2,.card:not(.pv) .bd p,.card:not(.pv) .bd .facts{cursor:zoom-in}
+.card .gz{position:absolute;right:52px;top:10px;width:32px;height:32px;border-radius:50%;background:rgba(254,251,249,.94);display:grid;place-items:center;color:var(--teal);z-index:2}
+.card .gz svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.card.pv .gz{display:none}
+@media (max-width:900px){.lb{padding:0}.lbin{flex-direction:column;height:100%;overflow:auto}.lbg{flex:0 0 auto;height:56vh}.lbt{flex:0 0 auto;overflow:visible;padding:22px 20px 30px}.lbt h2{font-size:26px}}
 .noanim *, .noanim *::before, .noanim *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 </style>
 </head>
 <body>
-<header class="top">
- <img src="assets/logo.svg" alt="Brøset">
- <nav><span>Destinasjon Brøset</span><span>Fellesfunksjoner</span><span>Finn boligprosjekter</span><span>Aktuelle nyheter</span><span>Områdekart</span><span>Eksisterende bebyggelse</span><b>Meld interesse</b></nav>
- <span class="burger" aria-hidden="true"></span>
-</header>
 
 <div class="wrap" id="wrap">
 <aside class="side" id="side" aria-label="Alle steder på Brøset">
  <div class="box" id="box">
-  <div class="intro" id="intro"><div class="iph" style="background-image:url(assets/g/intro_bekk.jpg)"><span>Illustrasjon: bekkeløp og tursti</span></div>
+  <div class="intro" id="intro"><div class="iph logo"><img src="assets/logo.svg" alt="Brøset"></div>
    <div class="ibd"><div class="eyebrow"><span class="dot"></span>Destinasjon Brøset</div><h2>En helt ny bydel</h2>
    <p>Bare ti minutter fra Trondheim sentrum vokser Brøset fram som en helt ny bydel. Her får du en bolig i et område med store parkanlegg, en nyetablert bekkedal for flotte spaserturer, trivelige gatetun og alt du trenger av tjenester i nærheten.</p>
    <p class="tip">Hold pekeren over et sted i lista for å se bilde og fakta. Klikk for å zoome til stedet i kartet.</p></div></div>
@@ -332,11 +363,21 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
  <div class="disc">Alle bilder er av illustrativ karakter, endringer vil forekomme.</div>
  <div class="prog" id="prog"><span id="progt">1 / 22</span><span class="b"><i id="progb" style="width:5%"></i></span></div>
  <div class="bar">
-  <div class="t">Utforsk Brøset<span id="nsteder">24 steder i den nye bydelen</span><button class="proj" id="proj"><i></i><span id="nproj">4 nyboligprosjekter i salg</span></button></div>
-  <div class="chips" id="chips"></div>
+  <div class="t" id="tblk">Utforsk Brøset<span id="nsteder">24 steder i den nye bydelen</span><button class="proj" id="proj" aria-pressed="false"><i></i><span id="nproj">4 nyboligprosjekter i salg</span></button><div class="flt" id="chips" role="group" aria-label="Vis kategori"></div></div>
   <button class="tour" id="tour" aria-pressed="false"></button>
  </div>
 </section>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-labelledby="lbh" hidden>
+ <div class="lbin" id="lbin">
+  <div class="lbg" id="lbg"><div class="lbtr" id="lbtr"></div>
+   <button class="lgb lgp" id="lbp" aria-label="Forrige bilde"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+   <button class="lgb lgn" id="lbn" aria-label="Neste bilde"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+   <span class="lbc" id="lbc"></span></div>
+  <div class="lbt" id="lbt"></div>
+  <button class="lbx" id="lbx" aria-label="Lukk forstørret visning">×</button>
+ </div>
 </div>
 
 <script>
@@ -509,10 +550,14 @@ function layout(){
  // meny: samme høyde som kartet, boksen har fast høyde så lista ikke hopper når innholdet byttes
  if(!mob()){side.style.height=H+'px';const bh=Math.round(Math.min(560,Math.max(250,H*0.6)));box.style.height=bh+'px';box.classList.toggle('short',bh<430);if(card.parentNode!==box)box.append(card);}
  else{side.style.height='';box.style.height='';if(card.parentNode!==hero)hero.insertBefore(card,$('hint'));}
- const bar=hero.querySelector('.bar'),t=bar.querySelector('.t'),tb=$('tour'),chs=[...$('chips').children];
- const need=(t?t.offsetWidth:0)+chs.reduce((a,c)=>a+c.offsetWidth+8,0)+(tb?tb.offsetWidth:0)+56+40;
- hero.classList.toggle('narrow',!mob()&&need>W);
- G.barh=document.querySelector('.bar').offsetHeight; hero.style.setProperty('--barh',G.barh+'px');
+ const t=$('tblk'),tb=$('tour'),hn=$('hint');
+ G.barh=hero.querySelector('.bar').offsetHeight; hero.style.setProperty('--barh',G.barh+'px');
+ hero.style.setProperty('--tourb',(tb.offsetTop+tb.offsetHeight)+'px');
+ // flater som punkter og navnelapper ikke skal havne under: tittelblokken og omvisningsknappen
+ const pad=10,rb=el=>{const a=el.getBoundingClientRect(),o=hero.getBoundingClientRect();return [a.left-o.left-pad,a.top-o.top-pad,a.right-o.left+pad,a.bottom-o.top+pad]};
+ G.blk=mob()?[[0,0,W,G.barh+14]]:[rb(t),rb(tb)];
+ // hint øverst i midten; flyttes ned hvis det ikke er plass mellom tittel og omvisning
+ const hw=hn.offsetWidth||320;hero.classList.toggle('hintlow',mob()||((W-hw)/2<G.blk[0][2]+8)||((W+hw)/2>G.blk[G.blk.length-1][0]-8));
 }
 const D=p=>({X:G.ox+p.x*G.k,Y:G.oy+p.y*G.k});
 function clamp(tx,ty,s,vis){
@@ -521,7 +566,7 @@ function clamp(tx,ty,s,vis){
  tx=Math.min(-x0,Math.max(G.W-x1,tx)); ty=Math.min(-y0,Math.max(Hb-y1,ty)); return {tx,ty,s};
 }
 function focus(X,Y,s,side){
- if(!mob()){const bh=G.barh||72,cx=G.W/2,cy=bh+(G.H-bh)*0.5,a=.85,px=X+(cx-X)*a,py=Y+(cy-Y)*a;return clamp(px-s*X,py-s*Y,s);}
+ if(!mob()){const bh=72,cx=G.W/2,cy=bh+(G.H-bh)*0.5,a=.85,px=X+(cx-X)*a,py=Y+(cy-Y)*a;return clamp(px-s*X,py-s*Y,s);}
  if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const cx=G.W/2,cy=150+(vis-150)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
  const free=G.W-404-80, cx= side==='r'? free/2+10 : G.W-free/2-10, cy=G.H*0.54;
  const a=.5, px=X+(cx-X)*a, py=Y+(cy-Y)*a;
@@ -554,7 +599,7 @@ function build(){
   pins.append(b);c.el=b;});
  // menyen til venstre: alle punktene gruppert etter kategori
  list.innerHTML=Object.entries(KAT).map(([k,v])=>{const ps=P.filter(p=>p.k===k);
-  return `<div class="lg k-${k}" data-k="${k}"><h3><i></i>${v.n}<b>${ps.length}</b></h3>${ps.map(p=>`<button class="li k-${p.k}" data-id="${p.id}"><span class="ic">${svg(p.ic)}</span><span><b>${p.n}</b><small>${p.ey||v.n}</small></span></button>`).join('')}</div>`}).join('');
+  return `<div class="lg k-${k}" data-k="${k}"><h3><button class="lgh" data-k="${k}" aria-pressed="false" title="Vis bare ${v.n.toLowerCase()} i kartet"><span class="cb"></span><i></i>${v.n}<b>${ps.length}</b></button></h3>${ps.map(p=>`<button class="li k-${p.k}" data-id="${p.id}"><span class="ic">${svg(p.ic)}</span><span><b>${p.n}</b><small>${p.ey||v.n}</small></span></button>`).join('')}</div>`}).join('');
  list.querySelectorAll('.li').forEach(el=>{const id=+el.dataset.id;
   el.addEventListener('pointerenter',e=>{if(e.pointerType!=='mouse'||mob())return;clearTimeout(pvT);pvT=setTimeout(()=>preview(id),60)});
   el.addEventListener('focus',()=>{if(!mob())preview(id)});
@@ -563,14 +608,13 @@ function build(){
  list.addEventListener('focusout',e=>{if(!list.contains(e.relatedTarget))endPreview()});
  // kategoriknapper: klikk låser fokus på kategorien til knappen klikkes av igjen
  const ch=$('chips');
- ch.innerHTML=Object.entries(KAT).map(([k,v])=>`<button class="chip k-${k}" data-k="${k}" aria-pressed="false"><i>${svg(v.ic)}</i>${v.n} <b>${P.filter(p=>p.k===k).length}</b></button>`).join('');
- ch.querySelectorAll('.chip').forEach(c=>{
+ ch.innerHTML=Object.entries(KAT).map(([k,v])=>`<button class="proj fk k-${k}" data-k="${k}" aria-pressed="false"><i></i><span>${v.n}</span><b>${P.filter(p=>p.k===k).length}</b></button>`).join('');
+ ch.querySelectorAll('.fk').forEach(c=>{
   c.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hl(c.dataset.k)});c.addEventListener('pointerleave',()=>hl(null));
-  c.addEventListener('click',()=>{const k=c.dataset.k;F.has(k)?F.delete(k):F.add(k);c.classList.toggle('on',F.has(k));c.setAttribute('aria-pressed',F.has(k));HL=null;
-   if(S.id&&!vis(byId[S.id])){if(tour)step(1);else closeAll();}
-   if(S.id){const list=P.filter(vis),sp=card.querySelector('.nav span');if(sp)sp.textContent=(list.indexOf(byId[S.id])+1)+' / '+list.length;}
-   place();});
+  c.addEventListener('click',()=>toggleF(c.dataset.k));
  });
+ list.querySelectorAll('.lgh').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();toggleF(b.dataset.k)});
+  b.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hl(b.dataset.k)});b.addEventListener('pointerleave',()=>hl(null));});
  $('nsteder').textContent=P.length+' steder i den nye bydelen';
  const nS=FELT.filter(f=>f.st!=='kommer').length,nK=FELT.length-nS;
  $('nproj').textContent=mob()?(nS+' prosjekter i salg'+(nK?` · ${nK} kommer`:'')):(nS+' nyboligprosjekter i salg'+(nK?` · ${nK} kommer for salg`:''));
@@ -599,6 +643,15 @@ function endPreview(){clearTimeout(pvT);if(pvId===null)return;pvId=null;list.que
  if(S.mode!=='start'&&S.id){renderCard(byId[S.id],S.side);box.classList.add('has');}else box.classList.remove('has');place();}
 function markList(id,scroll){list.querySelectorAll('.li').forEach(el=>el.classList.toggle('on',+el.dataset.id===id));
  if(scroll&&!mob()&&id!=null){const el=list.querySelector(`.li[data-id="${id}"]`);if(el){const t=el.offsetTop,b=t+el.offsetHeight;if(t<list.scrollTop+34)list.scrollTop=t-40;else if(b>list.scrollTop+list.clientHeight)list.scrollTop=b-list.clientHeight+8;}}}
+// kategorifilter: avhukingen i kartet og hovedpunktene i menyen styrer det samme
+function toggleF(k){F.has(k)?F.delete(k):F.add(k);HL=null;
+ $('chips').querySelectorAll('.fk').forEach(c=>{const on=F.has(c.dataset.k);c.classList.toggle('on',on);c.setAttribute('aria-pressed',on)});
+ list.querySelectorAll('.lg').forEach(g=>{const on=F.has(g.dataset.k);g.classList.toggle('sel',on);g.querySelector('.lgh').setAttribute('aria-pressed',on)});
+ if(S.id&&!vis(byId[S.id])){if(tour)step(1);else closeAll();}
+ if(S.id){const L=P.filter(vis),sp=card.querySelector('.nav span');if(sp)sp.textContent=(L.indexOf(byId[S.id])+1)+' / '+L.length;}
+ if(pvId!=null&&!vis(byId[pvId]))endPreview();
+ if(F.has(k)&&!mob()){const g=list.querySelector(`.lg[data-k="${k}"]`);if(g)list.scrollTo({top:g.offsetTop-4,behavior:'smooth'});}
+ place();}
 function hl(k){if(S.mode!=='start'||F.size)k=null;if(HL===k)return;HL=k;place();}
 const ov=(a,b)=>a[0]<b[2]&&a[2]>b[0]&&a[1]<b[3]&&a[3]>b[1];
 function place(){
@@ -627,7 +680,7 @@ function place(){
   singles.sort((a,b)=>sc(a)[0]-sc(b)[0]).forEach(p=>{const [x,y]=sc(p),w=(p.el.querySelector('.lbl').offsetWidth||120)+6;
    const cand=[['R',0],['L',0],['R',-34],['L',-34],['R',34],['L',34]];
    for(const [sd,u] of cand){const r=sd==='R'?[x+22,y-60+u,x+22+w,y-28+u]:[x-22-w,y-60+u,x-22,y-28+u];
-    if(blocks.some(b=>ov(r,b))||r[0]<8||r[2]>G.W-8||r[1]<(G.barh||70))continue;
+    if(blocks.some(b=>ov(r,b))||(G.blk||[]).some(b=>ov(r,b))||r[0]<8||r[2]>G.W-8||r[1]<8)continue;
     p.el.classList.add('flab');if(sd==='L')p.el.classList.add('lblL');if(u)p.el.style.setProperty('--ly',u+'px');blocks.push(r);break;}
   });
  }
@@ -647,8 +700,8 @@ function place(){
    if(!right) el.classList.add('lblL');});
  }
  // skjul punkter under topplinjen når kartet er zoomet
- const thr=mob()?150:(G.barh||72)+24, zoomed=!start||s>1.01;
- P.concat(CL).forEach(o=>{const d=D(o);const hy=ty+s*d.Y-44;o.el.classList.toggle('under',zoomed&&hy<thr&&!o.el.classList.contains('named'))});
+ const zoomed=!start||s>1.01;
+ P.concat(CL).forEach(o=>{const d=D(o);const hx=tx+s*d.X,hy=ty+s*d.Y-44;const r=[hx-22,hy-22,hx+22,hy+22];o.el.classList.toggle('under',zoomed&&(G.blk||[]).some(b=>ov(r,b))&&!o.el.classList.contains('named'))});
  stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
  if(S.id){const C=S.cl?CL.find(c=>c.id===S.cl):null,q=C?D(C):D(byId[S.id]);setSpot(tx+s*q.X,ty+s*q.Y-30,(S.cl?170:110)*Math.max(1,s/2.1));}
  if(S.id&&!S.cl&&$('lead').classList.contains('show'))lead(byId[S.id],S.side);
@@ -679,7 +732,7 @@ function renderCard(p,side,pv){
   <div class="dots" id="gd">${Array.from({length:n},(_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div><span class="hint2">Sveip</span><span class="cnt" id="gc">1 / ${n}</span></div>`;
  const facts=p.f?`<dl class="facts" style="--n:${p.f.length}">${p.f.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join('')}</dl>`:'';
  const list=P.filter(vis),i=list.indexOf(p)+1;
- card.innerHTML=`<span class="grab"></span><button class="x" aria-label="Lukk" onclick="closeAll()">×</button>${gal}<div class="bd">
+ card.innerHTML=`<span class="grab"></span><button class="x" aria-label="Lukk" onclick="closeAll()">×</button><button class="gz" aria-label="Forstørr bilde og tekst"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>${gal}<div class="bd">
   <div class="eyebrow"><span class="dot"></span>${kat.n}${p.ey&&p.ey!==kat.n?' · '+p.ey:''}</div>
   <h2>${p.n}</h2>${facts}${p.t?[].concat(p.t).map(x=>`<p>${x}</p>`).join(''):''}${p.todo?`<div class="todo">${p.todo}</div>`:''}${p.src&&!pv?`<details class="src"><summary>Kilder</summary><ul>${p.src.map(([a,u])=>`<li>${u?`<a href="${u}" target="_blank" rel="noopener">${a}</a>`:a}</li>`).join('')}</ul></details>`:''}
   <div class="ft">${pv?'<span class="pvh">Klikk for å vise i kartet</span>':''}${p.ln&&!pv?`<a class="more" href="${p.ln}" target="_blank" rel="noopener">${p.lt||'Les mer'} <span aria-hidden="true">→</span></a>`:'<span></span>'}
@@ -690,6 +743,9 @@ function renderCard(p,side,pv){
  tr.addEventListener('scroll',()=>{cancelAnimationFrame(upd.r);upd.r=requestAnimationFrame(upd)},{passive:true});
  gp.onclick=e=>{e.stopPropagation();tr.scrollBy({left:-tr.clientWidth})};gn.onclick=e=>{e.stopPropagation();tr.scrollBy({left:tr.clientWidth})};
  card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};
+ if(!pv){const big=e=>{if(e.target.closest('button,a,summary,details'))return;openLB(p.id,cur())};
+  tr.addEventListener('click',big);card.querySelector('.bd').addEventListener('click',big);
+  card.querySelector('.gz').addEventListener('click',e=>{e.stopPropagation();openLB(p.id,cur())});}
  upd();
  if(card.parentNode===box)box.scrollTop=0;
  $('progt').textContent=i+' / '+list.length;$('progb').style.width=(i/list.length*100)+'%';
@@ -747,6 +803,32 @@ function openCl(cid){const c=CL.find(c=>c.id===cid);const m=c.m.find(i=>vis(byId
 function closeAll(){if(tour)stopTour();tourPaused=false;S={mode:'start',id:null,cl:null,side:null};T={...V};hero.classList.remove('zoom','explore');card.classList.remove('show');box.classList.remove('has');pvId=null;markList(null);$('lead').classList.remove('show');place();setTourUI(false);}
 function resetView(){V={...HOME};if(S.mode==='start'){T={...HOME};place();}else closeAll();}
 function step(n){const L=P.filter(vis);if(!L.length)return;const i=L.findIndex(p=>p.id===S.id);const j=i<0?(n>0?0:L.length-1):(i+n+L.length)%L.length;open(L[j].id,{sticky:true});}
+// forstørret visning av bilde og tekst
+const LB=$('lb'),LBtr=$('lbtr');let lbId=null;
+function openLB(id,k){const p=byId[id];if(!p)return;if(tour)stopTour();if(S.id===id)S.sticky=true;lbId=id;
+ const kat=KAT[p.k],g=(p.g&&p.g.length)?p.g:null,n=g?g.length:1;
+ LBtr.innerHTML=g?g.map(([s,c])=>`<figure><img src="${s}" alt="${p.n}${c?': '+c:''}" draggable="false">${c?`<figcaption>${c}</figcaption>`:''}</figure>`).join('')
+  :`<figure><div class="crop" id="lbcrop"></div><figcaption>Utsnitt av illustrasjonen</figcaption></figure>`;
+ $('lbg').classList.toggle('one',n<2);
+ const facts=p.f?`<dl class="facts" style="--n:${p.f.length}">${p.f.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join('')}</dl>`:'';
+ const L=P.filter(vis),i=L.indexOf(p)+1;
+ $('lbt').innerHTML=`<div class="eyebrow"><span class="dot"></span>${kat.n}${p.ey&&p.ey!==kat.n?' · '+p.ey:''}</div><h2 id="lbh">${p.n}</h2>${facts}${p.t?[].concat(p.t).map(x=>`<p>${x}</p>`).join(''):''}${p.todo?`<div class="todo">${p.todo}</div>`:''}${p.src?`<div class="src"><b>Kilder</b><ul>${p.src.map(([a,u])=>`<li>${u?`<a href="${u}" target="_blank" rel="noopener">${a}</a>`:a}</li>`).join('')}</ul></div>`:''}
+  <div class="lft">${p.ln?`<a class="more" href="${p.ln}" target="_blank" rel="noopener">${p.lt||'Les mer'} <span aria-hidden="true">→</span></a>`:'<span></span>'}${i?`<div class="nav"><button aria-label="Forrige sted" data-s="-1">‹</button><span>${i} / ${L.length}</span><button aria-label="Neste sted" data-s="1">›</button></div>`:''}</div>`;
+ $('lbt').querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{step(+b.dataset.s);if(S.id)openLB(S.id,0)});
+ $('lbt').className='lbt k-'+p.k;
+ if(LB.hidden){LB.hidden=false;document.documentElement.style.overflow='hidden';requestAnimationFrame(()=>LB.classList.add('on'));LB._ret=document.activeElement;}
+ requestAnimationFrame(()=>{const c=$('lbcrop');if(c){const w=c.clientWidth,f=Math.min(1,w/620),hgt=w/2;c.style.backgroundImage=`url(${HERO})`;c.style.backgroundSize=SRC.w*f+'px auto';c.style.backgroundPosition=`${-(p.x*f-w/2)}px ${-((p.y-30)*f-hgt/2)}px`;}
+  LBtr.style.scrollBehavior='auto';LBtr.scrollLeft=(k||0)*LBtr.clientWidth;LBtr.style.scrollBehavior='';lbUpd();$('lbt').scrollTop=0;$('lbx').focus({preventScroll:true});});
+}
+function lbN(){return LBtr.children.length}
+function lbCur(){return Math.round(LBtr.scrollLeft/Math.max(1,LBtr.clientWidth))}
+function lbUpd(){const c=lbCur(),n=lbN();$('lbc').textContent=(c+1)+' / '+n;$('lbp').disabled=c<=0;$('lbn').disabled=c>=n-1;}
+function closeLB(){if(LB.hidden)return;LB.classList.remove('on');document.documentElement.style.overflow='';const k=lbCur(),id=lbId;lbId=null;
+ setTimeout(()=>{LB.hidden=true;LBtr.innerHTML='';},260);if(S.id===id&&card.goto)card.goto(k);if(LB._ret&&LB._ret.focus)LB._ret.focus({preventScroll:true});}
+LBtr.addEventListener('scroll',()=>{cancelAnimationFrame(lbUpd.r);lbUpd.r=requestAnimationFrame(lbUpd)},{passive:true});
+$('lbp').onclick=()=>LBtr.scrollBy({left:-LBtr.clientWidth});$('lbn').onclick=()=>LBtr.scrollBy({left:LBtr.clientWidth});
+$('lbx').onclick=closeLB;
+LB.addEventListener('click',e=>{if(!e.target.closest('#lbin'))closeLB()});
 // omvisning: play blir pause mens den går
 let tour=0,tourPaused=false;const TB=$('tour');
 function setTourUI(on){TB.innerHTML=(on?IC_PAUSE:IC_PLAY)+`<span class="tl">${on?'Pause omvisning':(tourPaused&&S.mode!=='start'?'Fortsett omvisning':'Ta en omvisning')}</span><span class="ts">Omvisning</span>`;TB.setAttribute('aria-label',on?'Pause omvisning':'Start omvisning');TB.setAttribute('aria-pressed',on?'true':'false');TB.classList.toggle('on',on);hero.classList.toggle('touring',on);}
@@ -790,12 +872,17 @@ function endPtr(e){if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);if(
 addEventListener('pointerup',endPtr);addEventListener('pointercancel',endPtr);
 hero.addEventListener('click',e=>{if(dragMoved){e.preventDefault();e.stopPropagation();dragMoved=false;}},true);
 $('zreset').onclick=resetView;
+hero.addEventListener('click',e=>{if(S.mode==='start')return;
+ // composedPath: målet kan være fjernet fra DOM-en av en annen klikkhandler (f.eks. omvisningsknappen som tegnes på nytt)
+ if(e.composedPath().some(n=>n.nodeType===1&&n.matches('.m,.card,.bar,.zctl,.mini,.prog,.hint,.plbl a')))return;
+ e.preventDefault();closeAll();});
 hero.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});
 wrap.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!tour&&!drag)setTimeout(()=>{if(!wrap.matches(':hover')&&!drag&&S.mode!=='start'&&!S.sticky)closeAll()},450)});
 // mens alle fire prosjektene vises: de blir stående så lenge pekeren er i bevegelse, og skjules først når den har stått i ro utenfor et prosjekt
 hero.addEventListener('pointermove',e=>{if(projCur.length>1&&!projLock&&!e.target.closest('a.fa,.plbl a,#proj'))projHide()},{passive:true});
 addEventListener('keydown',e=>{
  if(e.target.closest&&e.target.closest('input,textarea'))return;
+ if(!LB.hidden){if(e.key==='Escape'){e.preventDefault();closeLB();}else if(e.key==='ArrowRight'){e.preventDefault();$('lbn').click();}else if(e.key==='ArrowLeft'){e.preventDefault();$('lbp').click();}return}
  if(e.key==='Escape'){if(tour)stopTour();if(S.mode!=='start')closeAll();else if(V.s>1.01)resetView();projClear();return}
  if(S.mode!=='start'&&e.key==='ArrowRight')step(1);if(S.mode!=='start'&&e.key==='ArrowLeft')step(-1);
  if(!e.ctrlKey&&!e.metaKey&&(e.key==='+'||e.key==='-'||e.key==='0')&&hero.matches(':hover')){e.preventDefault();if(e.key==='0')resetView();else zoomAt(G.W/2,G.H/2,e.key==='+'?1.25:0.8);}
@@ -804,7 +891,7 @@ addEventListener('resize',()=>{layout();V={...HOME};if(S.id)open(S.id,{now:1,ref
 build();setTourUI(false);layout();place();
 document.fonts&&document.fonts.ready.then(()=>{layout();place()});
 if(mob())document.querySelector('#hint span').textContent='Trykk på et punkt for å se mer';
-window.demo={open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,V:()=>V,F,zoomAt,resetView,step,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
+window.demo={openLB,closeLB,toggleF,open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,V:()=>V,F,zoomAt,resetView,step,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
 </script>
 </body>
 </html>
