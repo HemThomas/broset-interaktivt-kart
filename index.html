@@ -53,7 +53,7 @@ svg.felt{position:absolute;overflow:visible}
 svg.felt .h{fill:none;stroke:rgba(19,53,54,.55);stroke-width:calc(var(--sw,1px)*5);stroke-linejoin:round}
 svg.felt .f{fill:none;stroke:var(--peach);stroke-width:calc(var(--sw,1px)*2);stroke-linejoin:round;pointer-events:all;cursor:pointer;transition:stroke 200ms,stroke-width 200ms}
 svg.felt .f.on{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*3)}
-.hero.zoom svg.felt .f{pointer-events:none}
+.hero.zoom:not(.pz) svg.felt .f{pointer-events:none}
 svg.felt a{cursor:pointer}
 svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*4)}
 .plbl a:hover{background:var(--teal);color:var(--paper)}.plbl a:hover small{color:var(--mint)}.plbl a:hover::after{background:var(--teal)}
@@ -68,7 +68,7 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .plbl a.l::after{left:auto;right:-5px;bottom:50%;margin:0 0 -5px 0}
 .plbl a.b{transform:translate(-50%,0);margin-top:10px}.plbl a.b.on{margin-top:16px}
 .plbl a.b::after{bottom:auto;top:-5px}
-.hero.zoom .plbl a{opacity:0!important;pointer-events:none!important}
+.hero.zoom:not(.pz) .plbl a{opacity:0!important;pointer-events:none!important}
 
 /* markører */
 .pins{position:absolute;inset:0;z-index:6;pointer-events:none}
@@ -334,7 +334,37 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .card .gz{position:absolute;right:52px;top:10px;width:32px;height:32px;border-radius:50%;background:rgba(254,251,249,.94);display:grid;place-items:center;color:var(--teal);z-index:2}
 .card .gz svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .card.pv .gz{display:none}
-@media (max-width:900px){.lb{padding:0}.lbin{flex-direction:column;height:100%;overflow:auto}.lbg{flex:0 0 auto;height:56vh}.lbt{flex:0 0 auto;overflow:visible;padding:22px 20px 30px}.lbt h2{font-size:26px}}
+@media (max-height:520px) and (orientation:landscape){.lb{padding:0}.lbin{height:100%;width:100%}.lbt{flex-basis:44%;padding:16px 18px 18px}.lbt h2{font-size:22px}.lbt p{font-size:14px}.lbx{width:34px;height:34px;right:8px;top:8px}}
+@media (max-width:900px) and (orientation:portrait){.lb{padding:0}.lbin{flex-direction:column;height:100%;overflow:auto}.lbg{flex:0 0 auto;height:56vh}.lbt{flex:0 0 auto;overflow:visible;padding:22px 20px 30px}.lbt h2{font-size:26px}}
+/* telefon i landskap: kartet fyller skjermen, kortet ligger til høyre i kartet, lista under */
+html.land .wrap{display:flex;flex-direction:column;align-items:stretch;padding:0;gap:0}
+html.land .side{order:2;flex:none;width:auto;height:auto!important;display:block;overflow:visible}
+html.land .box{display:none}
+html.land .list{overflow:visible;max-height:none;background:var(--paper);padding:6px 20px 28px;display:grid;grid-template-columns:repeat(2,1fr);gap:0 28px;align-items:start}
+html.land .lg h3{position:static;background:none;margin:0;padding:14px 4px 6px}
+html.land .hero{width:100vw;height:100svh;aspect-ratio:auto}
+html.land .bar{padding:10px 14px 0;gap:10px}
+html.land .bar .t{font-size:16px}
+html.land .bar .t span{font-size:11px}
+html.land #nsteder{display:none}
+html.land .bar .t .proj{font-size:11px;margin-top:3px}
+html.land .bar .t .flt{flex-direction:row;flex-wrap:wrap;gap:0 10px;max-width:64vw}
+html.land .bar .t .flt .proj{font-size:10.5px}
+html.land .shade{height:140px}
+html.land .tour{height:34px;font-size:12.5px;padding:0 12px 0 5px}
+html.land .tour .tl{display:none}html.land .tour .ts{display:inline}
+html.land .mini{display:none}
+html.land .zctl{bottom:10px;left:10px}
+html.land .disc{font-size:10px;bottom:8px}
+html.land .hint{font-size:12px;bottom:12px}
+html.land .card{top:54px;bottom:8px;max-height:none;width:min(340px,42vw);right:8px!important;left:auto!important;transform:translateX(16px)!important}
+html.land .hero.zoom .card.show{transform:none!important}
+html.land .card .gal{aspect-ratio:2/1}
+html.land .card .bd{padding:12px 16px 14px}
+html.land .card h2{font-size:20px;margin-top:6px}
+html.land .card p{font-size:13.5px;margin-top:8px}
+html.land .facts{margin-top:10px}html.land .facts div{padding:7px 6px 7px 0}html.land .facts div+div{padding-left:8px}html.land .facts dd{font-size:13px}
+html.land .m .lbl{font-size:12px}
 .noanim *, .noanim *::before, .noanim *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 </style>
 </head>
@@ -540,12 +570,16 @@ let G={W:0,H:0,k:1,ox:0,oy:0},T={...HOME},V={...HOME},S={mode:'start',id:null,cl
 const F=new Set();                                   // aktive kategorier (knappene øverst)
 const vis=p=>F.size===0||F.has(p.k);
 const mob=()=>innerWidth<=700;
+const land=()=>!mob()&&innerHeight<=520&&innerWidth>innerHeight;   // telefon i landskap
+const compact=()=>mob()||land();
 const isMac=/Mac|iPhone|iPad/.test(navigator.platform||'')||/Mac OS X/.test(navigator.userAgent);
 const ZK=isMac?'⌘':'Ctrl';
 const IC_PLAY='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></i>';
 const IC_PAUSE='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></i>';
 
 function layout(){
+ document.documentElement.classList.toggle('land',land());
+ $('hint').querySelector('span').textContent=(compact()&&matchMedia('(pointer:coarse)').matches)?'Trykk på et punkt for å se mer':'Hold pekeren over et punkt for å se mer';
  const W=hero.clientWidth,H=hero.clientHeight,top=mob()?260:0;
  const k=Math.max(W/SRC.w,H/(SRC.h-top));
  let ox=(W-SRC.w*k)/2, oy=H-SRC.h*k;
@@ -553,7 +587,7 @@ function layout(){
  G={W,H,k,ox,oy};
  for(const el of [img,felt]){el.style.width=SRC.w*k+'px';el.style.height=SRC.h*k+'px';el.style.left=ox+'px';el.style.top=oy+'px';}
  // meny: samme høyde som kartet, boksen har fast høyde så lista ikke hopper når innholdet byttes
- if(!mob()){side.style.height=H+'px';const bh=Math.round(Math.min(560,Math.max(250,H*0.6)));box.style.height=bh+'px';box.classList.toggle('short',bh<430);if(card.parentNode!==box)box.append(card);}
+ if(!compact()){side.style.height=H+'px';const bh=Math.round(Math.min(560,Math.max(250,H*0.6)));box.style.height=bh+'px';box.classList.toggle('short',bh<430);if(card.parentNode!==box)box.append(card);}
  else{side.style.height='';box.style.height='';if(card.parentNode!==hero)hero.insertBefore(card,$('hint'));}
  const t=$('tblk'),tb=$('tour'),hn=$('hint');
  G.barh=hero.querySelector('.bar').offsetHeight; hero.style.setProperty('--barh',G.barh+'px');
@@ -562,7 +596,7 @@ function layout(){
  const pad=10,rb=el=>{const a=el.getBoundingClientRect(),o=hero.getBoundingClientRect();return [a.left-o.left-pad,a.top-o.top-pad,a.right-o.left+pad,a.bottom-o.top+pad]};
  G.blk=mob()?[[0,0,W,G.barh+14]]:[rb(t),rb(tb)];
  // hint øverst i midten; flyttes ned hvis det ikke er plass mellom tittel og omvisning
- const hw=hn.offsetWidth||320;hero.classList.toggle('hintlow',mob()||((W-hw)/2<G.blk[0][2]+8)||((W+hw)/2>G.blk[G.blk.length-1][0]-8));
+ const hw=hn.offsetWidth||320;hero.classList.toggle('hintlow',compact()||((W-hw)/2<G.blk[0][2]+8)||((W+hw)/2>G.blk[G.blk.length-1][0]-8));
 }
 const D=p=>({X:G.ox+p.x*G.k,Y:G.oy+p.y*G.k});
 function clamp(tx,ty,s,vis){
@@ -571,6 +605,7 @@ function clamp(tx,ty,s,vis){
  tx=Math.min(-x0,Math.max(G.W-x1,tx)); ty=Math.min(-y0,Math.max(Hb-y1,ty)); return {tx,ty,s};
 }
 function focus(X,Y,s,side){
+ if(land()){const cw=(S.mode==='poi'?(card.offsetWidth||340)+16:0),cx=(G.W-cw)/2,cy=G.H*0.56;return clamp(cx-s*X,cy-s*Y,s);}
  if(!mob()){const bh=72,cx=G.W/2,cy=bh+(G.H-bh)*0.5,a=.85,px=X+(cx-X)*a,py=Y+(cy-Y)*a;return clamp(px-s*X,py-s*Y,s);}
  if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const cx=G.W/2,cy=150+(vis-150)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
  const free=G.W-404-80, cx= side==='r'? free/2+10 : G.W-free/2-10, cy=G.H*0.54;
@@ -583,11 +618,14 @@ function build(){
  plbl.innerHTML=FELT.map(f=>`<a class="${FELT_ANKER[f.id][2]}${f.st==='kommer'?' kommer':''}" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener"><i></i>${f.n}<small>${f.st==='kommer'?'Kommer for salg':'I salg'} ↗</small></a>`).join('');
  felt.querySelectorAll('a.fa').forEach(el=>{const id=el.dataset.id;
   const lab=()=>plbl.querySelector(`[data-id="${id}"]`);
-  el.addEventListener('pointerenter',e=>{if(drag)return;if(e.pointerType!=='mouse')el._armed=lab().classList.contains('on');projShow(projLock||projCur.length>1?ALL:[id])});
+  el.addEventListener('pointerenter',e=>{if(drag)return;if(e.pointerType!=='mouse')el._armed=lab().classList.contains('on');
+   if(e.pointerType==='mouse'&&!projLock&&projCur.length<=1&&(S.mode==='start'||S.mode==='proj')){intent(()=>zoomProj(id));return}
+   projShow(projLock||projCur.length>1?ALL:[id])});
+  el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')cancelIntent()});
   el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});
   el.addEventListener('focus',()=>projShow([id]));el.addEventListener('blur',projHide);
   // på berøringsskjerm: første trykk viser navnet, andre trykk (på omriss eller etikett) åpner prosjektsiden
-  el.addEventListener('click',e=>{if(S.mode!=='start'){e.preventDefault();return}if(lastPT!=='mouse'&&!el._armed){e.preventDefault();el._armed=true;projShow(projLock?ALL:[id]);}});});
+  el.addEventListener('click',e=>{if(S.mode!=='start'&&!(S.mode==='proj'&&S.proj===id)){e.preventDefault();if(S.mode==='proj')zoomProj(id);return}if(lastPT!=='mouse'&&!el._armed){e.preventDefault();el._armed=true;if(!projLock)zoomProj(id);else projShow(ALL);}});});
  plbl.querySelectorAll('a').forEach(el=>{el.addEventListener('pointerenter',()=>clearTimeout(projT));el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});el.addEventListener('focus',()=>{clearTimeout(projT);projOn(ALL)});el.addEventListener('blur',projHide);});
  const pb=$('proj');pb.addEventListener('pointerenter',()=>projShow(ALL));pb.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});pb.addEventListener('focus',()=>projShow(ALL));pb.addEventListener('blur',projHide);
  pb.addEventListener('click',()=>{if(S.mode!=='start')closeAll();projLock=!projLock;pb.classList.toggle('on',projLock);pb.setAttribute('aria-pressed',projLock);projShow(projLock?ALL:[]);});
@@ -595,12 +633,12 @@ function build(){
  pins.innerHTML='';
  P.forEach(p=>{const b=document.createElement('button');b.className='m k-'+p.k;b.dataset.id=p.id;b.setAttribute('aria-label',p.n+(p.ey?', '+p.ey:''));
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head">${svg(p.ic)}</span><span class="lbl">${p.n}</span>`;
-  b.addEventListener('pointerenter',()=>{if(!drag)intent(()=>{if(S.id!==p.id)open(p.id,{hover:true})})});b.addEventListener('pointerleave',cancelIntent);
+  b.addEventListener('pointerenter',()=>{if(drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>{if(S.id!==p.id)open(p.id,{hover:true})})});b.addEventListener('pointerleave',cancelIntent);
   b.addEventListener('focus',()=>open(p.id));b.addEventListener('click',()=>open(p.id,{sticky:true}));pins.append(b);p.el=b;});
  CL.forEach(c=>{const ms=c.m.map(i=>byId[i]);c.x=ms.reduce((a,p)=>a+p.x,0)/ms.length;const ys=ms.map(p=>p.y);c.y=(Math.min(...ys)+Math.max(...ys))/2;c.side=c.x/SRC.w<0.5?'r':'l';
   const b=document.createElement('button');b.className='m c';b.setAttribute('aria-label',c.n+', '+c.m.length+' steder');
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head"><i>${c.m.length}</i>${c.n}</span>`;
-  b.addEventListener('pointerenter',()=>{if(!drag)intent(()=>openCl(c.id))});b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>openCl(c.id));
+  b.addEventListener('pointerenter',()=>{if(drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>openCl(c.id))});b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>openCl(c.id));
   pins.append(b);c.el=b;});
  // menyen til venstre: alle punktene gruppert etter kategori
  list.innerHTML=Object.entries(KAT).map(([k,v])=>{const ps=P.filter(p=>p.k===k);
@@ -608,7 +646,7 @@ function build(){
  list.querySelectorAll('.li').forEach(el=>{const id=+el.dataset.id;
   el.addEventListener('pointerenter',e=>{if(e.pointerType!=='mouse'||mob())return;clearTimeout(pvT);pvT=setTimeout(()=>preview(id),60)});
   el.addEventListener('focus',()=>{if(!mob())preview(id)});
-  el.addEventListener('click',()=>{clearTimeout(pvT);if(mob()){hero.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>open(id,{sticky:true}),350)}else open(id,{sticky:true})});});
+  el.addEventListener('click',()=>{clearTimeout(pvT);if(compact()){hero.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>open(id,{sticky:true}),350)}else open(id,{sticky:true})});});
  list.addEventListener('pointerleave',endPreview);
  list.addEventListener('focusout',e=>{if(!list.contains(e.relatedTarget))endPreview()});
  // kategoriknapper: klikk låser fokus på kategorien til knappen klikkes av igjen
@@ -628,17 +666,17 @@ function build(){
 }
 const ALL=FELT.map(f=>f.id);let projT=0,projLock=false,lastPT='mouse',projCur=[];
 function projShow(ids){clearTimeout(projT);projOn(ids)}
-function projHide(){clearTimeout(projT);projT=setTimeout(()=>projOn(projLock?ALL:[]),projCur.length>1?800:450)}
+function projHide(){if(S.mode==='proj')return;clearTimeout(projT);projT=setTimeout(()=>projOn(projLock?ALL:[]),projCur.length>1?800:450)}
 function projClear(){clearTimeout(projT);projLock=false;$('proj').classList.remove('on');$('proj').setAttribute('aria-pressed','false');projOn([])}
 function projOn(ids){
- if(S.mode!=='start'&&ids.length)return;
+ if(S.mode!=='start'&&S.mode!=='proj'&&ids.length)return;
  projCur=ids;
  felt.querySelectorAll('.f').forEach(el=>el.classList.toggle('on',ids.includes(el.dataset.id)));
  plbl.querySelectorAll('a').forEach(el=>el.classList.toggle('on',ids.includes(el.dataset.id)));
  hero.classList.toggle('proj',ids.length>1);
  hero.classList.toggle('proj1',ids.length===1);
 }
-let it=0;function intent(f){clearTimeout(it);it=setTimeout(f,110)}function cancelIntent(){clearTimeout(it)}
+let it=0;function intent(f){clearTimeout(it);it=setTimeout(f,S.mode==='proj'?380:110)}function cancelIntent(){clearTimeout(it)}
 // forhåndsvisning fra menyen: bilde og tekst i boksen, punktet markeres i kartet uten zoom
 let pvT=0,pvId=null;
 function preview(id){const p=byId[id];if(!vis(p))return;if(S.mode!=='start'&&S.id===id){endPreview();return}
@@ -695,6 +733,7 @@ function place(){
   const colX= right? Math.max(...ms.map(m=>m.x))+(mob()?40:80) : Math.min(...ms.map(m=>m.x))-(mob()?40:80);
   const cy= ms.reduce((a,m)=>a+m.y,0)/n - (mob()?70:90);
   const slots=ms.map((_,i)=>cy+(i-(n-1)/2)*gap);
+  {const top=Math.max(...(G.blk||[[0,0,0,0]]).filter(b=>b[0]<colX+160&&b[2]>colX-160).map(b=>b[3]),0)+30,bot=G.H-30;let sh=0;if(slots[0]-22<top)sh=top-(slots[0]-22);if(slots[n-1]+22+sh>bot)sh=Math.min(sh,bot-(slots[n-1]+22));for(let i=0;i<n;i++)slots[i]+=sh;}
   const perms=a=>a.length<2?[a]:a.flatMap((x,i)=>perms(a.slice(0,i).concat(a.slice(i+1))).map(r=>[x,...r]));
   const cross=(a,b,c,d)=>{const o=(p,q,r)=>Math.sign((q.x-p.x)*(r.y-p.y)-(q.y-p.y)*(r.x-p.x));return o(a,b,c)!==o(a,b,d)&&o(c,d,a)!==o(c,d,b)};
   let best=null;perms(ms).forEach(pm=>{let k=0,len=0;const seg=pm.map((m,i)=>[{x:m.x,y:m.y},{x:colX,y:slots[i]}]);
@@ -708,9 +747,11 @@ function place(){
  const zoomed=!start||s>1.01;
  P.concat(CL).forEach(o=>{const d=D(o);const hx=tx+s*d.X,hy=ty+s*d.Y-44;const r=[hx-22,hy-22,hx+22,hy+22];o.el.classList.toggle('under',zoomed&&(G.blk||[]).some(b=>ov(r,b))&&!o.el.classList.contains('named'))});
  stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
+ if(S.mode==='proj'&&FB[S.proj]){const b=FB[S.proj],X=G.ox+(b.x0+b.x1)/2*G.k,Y=G.oy+(b.y0+b.y1)/2*G.k;setSpot(tx+s*X,ty+s*Y,Math.max((b.x1-b.x0),(b.y1-b.y0))*G.k*s*0.6);}
  if(S.id){const C=S.cl?CL.find(c=>c.id===S.cl):null,q=C?D(C):D(byId[S.id]);setSpot(tx+s*q.X,ty+s*q.Y-30,(S.cl?170:110)*Math.max(1,s/2.1));}
  if(S.id&&!S.cl&&$('lead').classList.contains('show'))lead(byId[S.id],S.side);
  hero.classList.toggle('zoomed',V.s>1.01);
+ hero.classList.toggle('pz',S.mode==='proj');
  hero.classList.toggle('filt',F.size>0);
  list.querySelectorAll('.lg').forEach(g=>g.classList.toggle('off',F.size>0&&!F.has(g.dataset.k)));
  P.forEach(p=>p.el.classList.toggle('peek',pvId===p.id&&!inCl[p.id]));
@@ -728,7 +769,7 @@ const AR_IC='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', AR_IC2=
 function renderCard(p,side,pv){
  const kat=KAT[p.k];
  card.className='card '+side+' k-'+p.k+(pv?' pv show':(card.classList.contains('show')?' show':''));
- const w=mob()?innerWidth:(box.clientWidth||360);
+ const w=mob()?innerWidth:land()?(card.clientWidth||340):(box.clientWidth||360);
  const slides=(p.g&&p.g.length)?p.g.map(([s,c,op],i)=>`<figure><img src="${s}" alt="${p.n}${c?': '+c:''}" ${i?'loading="lazy"':''} draggable="false"${op?` style="object-position:${op}"`:''}><figcaption>${c||''}</figcaption></figure>`).join('')
    :`<figure><div class="crop" style="${cropStyle(p,w)}"></div><figcaption>Utsnitt av illustrasjonen</figcaption></figure>`;
  const n=(p.g&&p.g.length)||1;
@@ -781,6 +822,7 @@ function open(id,opt={}){
  const manual= !mob() && V.s>1.01;                                     // brukeren har zoomet selv: behold utsnittet
  let side;
  if(same) side=S.side;
+ else if(land()) side='r';
  else if(!mob()) side=C?C.side:(p.x/SRC.w<0.5?'r':'l');
  else side=sideFor(p,cl);
  const s= opt.s || (mob()?1.7:(cl?2.2:2.1));
@@ -805,7 +847,18 @@ function open(id,opt={}){
  if(!tour)setTourUI(false);
 }
 function openCl(cid){const c=CL.find(c=>c.id===cid);const m=c.m.find(i=>vis(byId[i]));if(m)open(m);}
-function closeAll(){if(tour)stopTour();tourPaused=false;S={mode:'start',id:null,cl:null,side:null};T={...V};hero.classList.remove('zoom','explore');card.classList.remove('show');box.classList.remove('has');pvId=null;markList(null);$('lead').classList.remove('show');place();setTourUI(false);}
+// prosjektområde: zoom inn på omrisset på samme måte som for punktene
+const FB={};FELT.forEach(f=>{const n=f.d.match(/-?\d+(\.\d+)?/g).map(Number),xs=n.filter((_,i)=>i%2===0),ys=n.filter((_,i)=>i%2===1);
+ FB[f.id]={x0:Math.min(...xs),x1:Math.max(...xs),y0:Math.min(...ys),y1:Math.max(...ys)};});
+let pzT=0;
+function zoomProj(id){const b=FB[id];if(!b)return;pzT=Date.now();if(tour)stopTour();
+ if(S.mode==='poi')closeAll();
+ const cx=(b.x0+b.x1)/2,cy=(b.y0+b.y1)/2,w=(b.x1-b.x0)*G.k,hh=(b.y1-b.y0)*G.k;
+ const s=Math.max(1.5,Math.min(2.6,G.W*0.5/w,G.H*0.42/hh));
+ S={mode:'proj',id:null,cl:null,side:null,proj:id};
+ const X=G.ox+cx*G.k,Y=G.oy+cy*G.k;T=focus(X,Y,s);
+ hero.classList.add('explore','zoom');clearTimeout(projT);projOn([id]);place();}
+function closeAll(){if(S.mode==='proj'){projCur=[];felt.querySelectorAll('.f.on').forEach(e=>e.classList.remove('on'));plbl.querySelectorAll('a.on').forEach(e=>e.classList.remove('on'));hero.classList.remove('proj1');}if(tour)stopTour();tourPaused=false;S={mode:'start',id:null,cl:null,side:null};T={...V};hero.classList.remove('zoom','explore');card.classList.remove('show');box.classList.remove('has');pvId=null;markList(null);$('lead').classList.remove('show');place();setTourUI(false);}
 function resetView(){V={...HOME};if(S.mode==='start'){T={...HOME};place();}else closeAll();}
 function step(n){const L=P.filter(vis);if(!L.length)return;const i=L.findIndex(p=>p.id===S.id);const j=i<0?(n>0?0:L.length-1):(i+n+L.length)%L.length;open(L[j].id,{sticky:true});}
 // karusell: dra med mus, sveip på berøring, og løkke fra siste til første bilde (og motsatt)
@@ -898,6 +951,7 @@ $('zreset').onclick=resetView;
 hero.addEventListener('click',e=>{if(S.mode==='start')return;
  // composedPath: målet kan være fjernet fra DOM-en av en annen klikkhandler (f.eks. omvisningsknappen som tegnes på nytt)
  if(e.composedPath().some(n=>n.nodeType===1&&n.matches('.m,.card,.bar,.zctl,.mini,.prog,.hint,.plbl a')))return;
+ if(S.mode==='proj'&&e.composedPath().some(n=>n.nodeType===1&&n.matches('a.fa')))return;
  e.preventDefault();closeAll();});
 hero.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});
 wrap.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!tour&&!drag)setTimeout(()=>{if(!wrap.matches(':hover')&&!drag&&S.mode!=='start'&&!S.sticky)closeAll()},450)});
@@ -913,7 +967,7 @@ addEventListener('keydown',e=>{
 addEventListener('resize',()=>{layout();V={...HOME};if(S.id)open(S.id,{now:1,refocus:1});else{T={...HOME};place();}});
 build();setTourUI(false);layout();place();
 document.fonts&&document.fonts.ready.then(()=>{layout();place()});
-if(mob())document.querySelector('#hint span').textContent='Trykk på et punkt for å se mer';
+
 window.demo={openLB,closeLB,toggleF,open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,V:()=>V,F,zoomAt,resetView,step,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
 </script>
 </body>
