@@ -147,6 +147,16 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .card p{margin-top:14px;font-size:15px;line-height:1.55;color:#2b2b2b}
 .card .todo{margin-top:14px;padding:12px 14px;border:1.5px dashed #c9b3a6;color:#8a6b5a;font-size:13.5px;line-height:1.45;background:#fbf4ef}
 .card .ft{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.card p+p{margin-top:10px}
+.card .src{margin-top:14px;font-size:12px;line-height:1.45;color:#6d7d7d}
+.card .src summary{cursor:pointer;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:10.5px;color:#7a8a8a;list-style:none;display:inline-flex;align-items:center;gap:6px}
+.card .src summary::-webkit-details-marker{display:none}
+.card .src summary::before{content:'';width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
+.card .src[open] summary::before{transform:rotate(45deg)}
+.card .src ul{margin:6px 0 0;padding-left:16px}
+.card .src li{margin-top:3px}
+.card .src a{color:#3d6b6b;text-decoration:underline;text-underline-offset:2px}
+.card .facts dd{overflow-wrap:anywhere;hyphens:auto}
 .card .more{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid var(--teal);border-radius:999px;color:var(--teal);font-size:14px;font-weight:600;text-decoration:none}
 .card .nav{display:flex;align-items:center;gap:6px;font-size:13px;color:#6b7b7b;font-weight:600}
 .card .nav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--teal)}
@@ -322,7 +332,7 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
  <div class="disc">Alle bilder er av illustrativ karakter, endringer vil forekomme.</div>
  <div class="prog" id="prog"><span id="progt">1 / 22</span><span class="b"><i id="progb" style="width:5%"></i></span></div>
  <div class="bar">
-  <div class="t">Utforsk Brøset<span id="nsteder">22 steder i den nye bydelen</span><button class="proj" id="proj"><i></i><span id="nproj">4 nyboligprosjekter i salg</span></button></div>
+  <div class="t">Utforsk Brøset<span id="nsteder">24 steder i den nye bydelen</span><button class="proj" id="proj"><i></i><span id="nproj">4 nyboligprosjekter i salg</span></button></div>
   <div class="chips" id="chips"></div>
   <button class="tour" id="tour" aria-pressed="false"></button>
  </div>
@@ -350,50 +360,128 @@ const IC={
  tre:'<circle cx="12" cy="9" r="5"/><path d="M12 14v6M9 20h6"/>',
  seng:'<path d="M3 18V8M3 14h18v4M21 14v-2.5a2 2 0 0 0-2-2h-8V14"/><circle cx="7" cy="11.5" r="1.7"/>',
  folk:'<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.4"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M14.5 14.6a4.5 4.5 0 0 1 6 4.4"/>',
- info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.2"/>'
+ info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.2"/>',
+ bekk:'<path d="M3 8.5c2-1.6 4-1.6 6 0s4 1.6 6 0 4-1.6 6 0M3 13c2-1.6 4-1.6 6 0s4 1.6 6 0 4-1.6 6 0M3 17.5c2-1.6 4-1.6 6 0s4 1.6 6 0 4-1.6 6 0"/>',
+ felleshus:'<path d="M3 11.5 9 6.5l6 5M4.5 10.5V20h9v-9.5M14 13.5h6.5V20H14M7.5 20v-4h3v4M3 20h18"/>'
 };
 const KAT={arv:{n:'Kulturarv',ic:'hoved'},barn:{n:'Barn og skole',ic:'skole'},han:{n:'Handel og servering',ic:'kafe'},mot:{n:'Møteplasser og tjenester',ic:'folk'}};
 const svg=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
 const LES_BEB='https://broset.no/den-eksisterende-bebyggelsen/', FELLES='https://broset.no/ambisjoner-om-delearealer/';
 const G_='assets/g/', OKT='Foto: okt. 2026', FILM='Stillbilde fra filmen (illustrasjon)';
-// x,y = bakkepunkt i Hovedbilde (3500×2227), beregnet fra kartfilens koordinater. g = galleri, første bilde vises først.
+const TK='https://www.trondheim.kommune.no/globalassets/10-bilder-og-filer/10-byutvikling/byplankontoret/';
+const S_KP=['Kvalitetsprogram Brøset nord, ATSITE og ADD arkitekter (20.12.2023)'];
+const S_R42=['Reguleringsbestemmelser Brøset nord, r20210042, vedtatt 29.08.2024',TK+'1c_vedtatt-plan/2024/del-av-broset-med-tilliggende-veger/reguleringsbestemmelser-revidert-i-trad-med-bystyrevedtak.pdf'];
+const S_R42S=['Saksframlegg Brøset nord, r20210042 (2024)',TK+'1c_vedtatt-plan/2024/del-av-broset-med-tilliggende-veger/saksfremlegg.pdf'];
+const S_VA=['VA-notat til detaljreguleringen av Brøset nord',TK+'1b_off-ettersyn/2022/del-av-broset-med-tilliggende-veger-detaljregulering/13.-va-notat.pdf'];
+const S_SB=['Planforslag Søndre del av Brøset (offentlig ettersyn 2025, ikke vedtatt)',TK+'1b_off-ettersyn/2025/sondre-del-av-broset/3.-planbeskrivelse.pdf'];
+const S_SBF=['Fagnotat Søndre del av Brøset (2025)',TK+'1b_off-ettersyn/2025/sondre-del-av-broset/1.-fagnotat.pdf'];
+const S_OP=['Områdeplan for Brøset, planbeskrivelse (2013)',TK+'temaplaner/omradeplan-for-broset/vedlegg-1---planbeskrivelse-datert-07.05.13.pdf'];
+const S_BN=['broset.no','https://broset.no/den-eksisterende-bebyggelsen/'];
+const S_BB=['bobroset.no','https://bobroset.no/no/til-salgs'];
+const S_BL=['brosetlokka.no','https://www.brosetlokka.no/'];
+// x,y = bakkepunkt i Hovedbilde (3500×2227), beregnet fra kartfilens koordinater. g = galleri, første bilde vises først. t = avsnitt, src = kilder.
 const P=[
- {id:3,x:1214.3,y:1709.0,k:'arv',ic:'hoved',n:'Hovedbygningen Reitgjerdet',ey:'Vernet bygg',f:[['Oppført','1861'],['Arkitekter','Schirmer og von Hanno'],['Framtid','Hjertet i bydelen']],t:'Oppført for Reitgjerdets pleiestiftelse for spedalske, og psykiatrisk sykehus fra 1923. Hovedbygningen og parkanlegget rundt bevares og får ny bruk som hjertet i den nye bydelen.',
-  g:[['assets/hovedbygningen.jpg','Reitgjerdet, flyfoto 1933'],[G_+'hoved_41.jpg','Hovedbygningen i dag · '+OKT],[G_+'hoved_07.jpg','Hovedbygningen fra lufta · '+OKT],[G_+'hoved_08.jpg',OKT],[G_+'hoved_06.jpg',OKT]],ln:LES_BEB,lt:'Les historien'},
- {id:1,x:1274.2,y:1965.6,k:'arv',ic:'villa',n:'Forvalterboligen',ey:'Vernet bygg',f:[['Oppført','1861'],['Stil','Sveitserstil'],['Status','Bevares']],t:'Trolig oppført samtidig med hovedbygningen, som bolig for forvalteren ved pleiestiftelsen. I dag et viktig miljøskapende element i området rundt hovedbygningen.',
-  g:[['assets/forvalterboligen.jpg','Flyfoto 1933'],[G_+'forv_44.jpg','Forvalterboligen i dag · '+OKT],[G_+'forv_42.jpg',OKT],[G_+'forv_43.jpg',OKT],[G_+'forv_09.jpg','Fra lufta · '+OKT],[G_+'forv_eldre.jpg','Eldre foto']],ln:LES_BEB,lt:'Les historien'},
- {id:2,x:832.1,y:2212.2,k:'arv',ic:'villa',n:'Overlegeboligen',ey:'Vernet bygg',f:[['Oppført','ca. 1923'],['Også kalt','Direktørboligen'],['Status','Bevares']],t:'Bygget da Reitgjerdet ble gjort om fra leprasykehus til psykiatrisk asyl. To etasjer med høyt valmtak og et klassisistisk inngangsparti. Integreres i et nytt parkanlegg.',
-  g:[['assets/overlegeboligen.jpg','Flyfoto 1933'],[G_+'over_47.jpg','Overlegeboligen i dag · '+OKT],[G_+'over_46.jpg',OKT],[G_+'over_2022.jpg','Foto 2022']],ln:LES_BEB,lt:'Les historien'},
- {id:4,x:557.6,y:1676.0,k:'arv',ic:'villa',n:'Ortenbygget',ey:'Vernet bygg',f:[['Oppført','ca. 1924'],['Opprinnelig','Gartneriet'],['Status','Bevares']],t:'Del av sykehusets gartnerianlegg, brukt til lagring av grønnsaker. Sommervikarene ved gartneriet bodde også her.',
-  g:[['assets/ortenbygget.jpg','Flyfoto 1933'],[G_+'orten_park.jpg','Illustrasjon: Den historiske parken'],[G_+'orten_48.jpg',OKT],[G_+'orten_49.jpg',OKT]],tolkG:1,ln:LES_BEB,lt:'Les historien'},
- {id:9,x:1313.4,y:1468.2,k:'barn',ic:'skole',n:'Ny barneskole',ey:'Brøset skole',f:[['I regi av','Trondheim kommune'],['Blir en del av skolen','Sykepostbygget fra 1961']],t:'Sykepostbygningen fra 1961, tegnet av arkitekt Roar Tønseth, bevares og blir en del av Brøset skole i regi av Trondheim kommune.',
-  g:[['assets/sykepost.jpg','Sykepostbygget i dag'],[G_+'skole_05.jpg','Sykepostbygget fra lufta · '+OKT],[G_+'skole_03.jpg',OKT]],ln:LES_BEB,lt:'Les mer'},
- {id:8,x:1167.3,y:1410.3,k:'barn',ic:'hall',n:'Idrettshall',ey:'Barn og skole',todo:'Fakta om idrettshallen (størrelse, bruk, åpning) mangler i underlaget.'},
- {id:6,x:1867.9,y:1482.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Barn og skole',todo:'Fakta om barnehagen (avdelinger, plasser, åpning) mangler i underlaget.'},
- {id:5,x:2030.9,y:1544.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Barn og skole',todo:'Fakta om barnehagen mangler i underlaget.'},
- {id:7,x:274.1,y:1246.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Barn og skole',todo:'Fakta om barnehagen mangler i underlaget.'},
- {id:10,x:1640.6,y:1199.8,k:'han',ic:'kafe',n:'Kafé',ey:'Bo Brøset Elvely',t:'Langs bydelsgata Brøsetjordet kommer det kaféer, bakeri og dagligvarebutikker, slik at mange av hverdagens gjøremål kan ordnes i nærmiljøet.',
-  g:[[G_+'kafe_bobroset.jpg','Illustrasjon: Bo Brøset']]},
- {id:11,x:1648.7,y:1318.5,k:'han',ic:'kafe',n:'Kafé og bakeri',ey:'Handel og servering',t:'Langs bydelsgata Brøsetjordet kommer det kaféer, bakeri og dagligvarebutikker, slik at mange av hverdagens gjøremål kan ordnes i nærmiljøet.',
-  g:[[G_+'bakeri_inne.jpg','Illustrasjon: kafé og bakeri'],[G_+'bakeri_ute.jpg','Illustrasjon: kafé i 1. etasje']]},
- {id:12,x:2820.1,y:1846.9,k:'han',ic:'bag',n:'Dagligvare',ey:'Brøsetporten',t:'Dagligvare i den østre delen av bydelen, ved Tungasletta.',todo:'Størrelse og åpning mangler i underlaget.',
-  g:[[G_+'kiwi.jpg','Illustrasjon: Kiwi Brøsetporten']]},
- {id:17,x:2029.5,y:1433.4,k:'han',ic:'bag',n:'Dagligvare',ey:'Brøset Torg',t:'I første etasje kommer en butikk og lokaler som bidrar til liv og aktivitet rundt torget.',
-  g:[[G_+'dagl_torg_film.jpg',FILM]]},
- {id:14,x:2180.1,y:1472.6,k:'han',ic:'rest',n:'Restaurant',ey:'Handel og servering',todo:'Fakta om restauranten mangler i underlaget.'},
- {id:15,x:2203,y:1383,k:'arv',ic:'lave',n:'Låven',ey:'Restaureres',f:[['Fra','Brøset gård'],['Framtid','Fellesareal'],['Status','Restaureres']],t:'Låven og stabburet fra Brøset gård integreres som en viktig del av rekreasjons- og aktivitetstilbudet, og blir unike fellesarealer.',
-  g:[[G_+'lave_film.jpg',FILM],[G_+'lave_25.jpg','Låven i dag · '+OKT],[G_+'lave_26.jpg',OKT]]},
- {id:16,x:2132,y:1432,k:'arv',ic:'stabbur',n:'Stabburet',ey:'Restaureres',f:[['Fra','Brøset gård'],['Framtid','Fellesareal'],['Status','Restaureres']],t:'Stabburet og låven fra Brøset gård blir unike fellesarealer i den nye bydelen.',
-  g:[[G_+'stab_film.jpg',FILM],[G_+'stab_28.jpg','Stabburet i dag · '+OKT],[G_+'stab_27.jpg',OKT]]},
- {id:19,x:2103.8,y:1453.7,k:'mot',ic:'torg',n:'Torget',ey:'Brøset Torg',f:[['Boliger','189'],['Størrelser','ca. 34–117 m²'],['I 1. etasje','Butikk']],t:'Med butikker, flotte uteområder og et levende torg blir Brøset Torg et naturlig midtpunkt i bydelen. Gatetun og torg skaper gode møteplasser, og bekkeløpet gir uterommene en naturlig karakter.',
-  g:[[G_+'torg_film.jpg',FILM],[G_+'torg_film2.jpg',FILM]],ln:'https://broset.no/broset-torg-blir-et-nytt-samlingspunkt-pa-broset/',lt:'Les om Brøset Torg'},
- {id:18,x:1765.2,y:1330.4,k:'mot',ic:'tre',n:'Gatetun',ey:'Møteplass',t:'Trivelige gatetun mellom husene gir gode møteplasser og bidrar til et levende nærmiljø.',
-  g:[[G_+'gatetun.jpg','Illustrasjon: gatetun'],[G_+'gatetun_naering.jpg','Illustrasjon: næringslokaler i 1. etasje']]},
- {id:20,x:1704.3,y:1307.3,k:'mot',ic:'seng',n:'3 gjesteleiligheter',ey:'Fellesfunksjon',f:[['Antall','3'],['For','Beboernes gjester'],['Booking','Av beboerne']],t:'Felles gjesteleiligheter som beboerne kan booke når familie eller venner kommer på besøk, så færre trenger et ekstra soverom.',ln:FELLES,lt:'Om fellesfunksjonene'},
- {id:21,x:1611.9,y:1307.0,k:'mot',ic:'folk',n:'Fellesrom',ey:'Fellesfunksjon',t:'Forsamlingslokaler for hverdag og fest, med blant annet felles kjøkken, sittegrupper, fellesstue, lekeområde for barn og møterom. Fellesvaskeri og felles takterrasser er også en del av fellesfunksjonene på Brøset.',
-  g:[[G_+'felles_forsamling.jpg','Illustrasjon: forsamlingslokale'],[G_+'felles_vaskeri.jpg','Illustrasjon: fellesvaskeri'],[G_+'felles_tak.jpg','Illustrasjon: felles takterrasse']],ln:FELLES,lt:'Om fellesfunksjonene'},
- {id:13,x:2625.3,y:1576.1,k:'mot',ic:'helse',n:'Helse- og velferdssenter',ey:'Tjenester',todo:'Fakta om senteret (tilbud, drift, åpning) mangler i underlaget.'},
- {id:22,x:1101.8,y:1278.3,k:'mot',ic:'info',n:'Infosenter Brøsetløkka',ey:'Tjenester',todo:'Åpningstider og innhold mangler i underlaget.'}
+ {id:3,x:1214.3,y:1709.0,k:'arv',ic:'hoved',n:'Hovedbygningen Reitgjerdet',ey:'Fredet bygg',f:[['Oppført','1861–1866'],['Arkitekter','Schirmer og von Hanno'],['Vern','Fredet']],
+  t:['Hovedbygningen ble reist som pleiestiftelse for spedalske og ble senere psykiatrisk sykehus. Bygget har to etasjer med loft og kjeller i murstein, og kapellet i midtdelen har stor arkitektonisk verdi. Riksantikvaren har fredet bygget i ytre form og kapellet innvendig.',
+     'Psykisk helsevern holdt til her fram til 2023, og bygget står i dag tomt. Planforslaget åpner for bolig, tjenesteyting, kontor, hotell eller servering.',
+     'Parken nord og sør for bygget og alléene i byggets akser bevares. Parken i sør skal utvikles i opprinnelig stil, med parsellhager i sørvest og en aktivitetspark i nord.'],
+  g:[['assets/hovedbygningen.jpg','Reitgjerdet, flyfoto 1933'],[G_+'hoved_41.jpg','Hovedbygningen i dag · '+OKT],[G_+'hoved_07.jpg','Hovedbygningen fra lufta · '+OKT],[G_+'hoved_08.jpg',OKT],[G_+'hoved_06.jpg',OKT]],ln:LES_BEB,lt:'Les historien',src:[S_OP,S_SB,S_BN]},
+ {id:1,x:1274.2,y:1965.6,k:'arv',ic:'villa',n:'Forvalterboligen',ey:'Vernet bygg',f:[['Også kalt','Vaktmester­boligen'],['Antikvarisk verdi','Klasse B'],['Framtid','Felleshus og bolig']],
+  t:['Trolig oppført samtidig med hovedbygningen, som bolig for forvalteren ved pleiestiftelsen. I dag et viktig miljøskapende element i området rundt hovedbygningen.',
+     'Boligen og garasjen reguleres til bevaring. Planforslaget legger opp til at boligen tas i bruk til boliger igjen, og at garasjen blir felleshus for beboerne. Kommunen anbefaler å fjerne de planlagte rekkehusene i feltet for å styrke sammenhengen med hovedbygningen.',
+     'Mellom forvalterboligen og overlegeboligen ligger et gammelt hageanlegg med dam, bru og trapp. Det settes av som naturområde, men det er ikke avklart om hagen skal restaureres.'],
+  g:[['assets/forvalterboligen.jpg','Flyfoto 1933'],[G_+'forv_44.jpg','Forvalterboligen i dag · '+OKT],[G_+'forv_42.jpg',OKT],[G_+'forv_43.jpg',OKT],[G_+'forv_09.jpg','Fra lufta · '+OKT],[G_+'forv_eldre.jpg','Eldre foto']],ln:LES_BEB,lt:'Les historien',src:[S_SB,S_SBF,S_BN]},
+ {id:2,x:832.1,y:2212.2,k:'arv',ic:'villa',n:'Overlegeboligen',ey:'Vernet bygg',f:[['Oppført','ca. 1923'],['Også kalt','Direktørboligen'],['Antikvarisk verdi','Klasse B']],
+  t:['Bygget da Reitgjerdet ble gjort om fra leprasykehus til psykiatrisk asyl. To etasjer med høyt valmtak og et klassisistisk inngangsparti.',
+     'Områdeplanen fra 2013 trekker fram overlegeboligen blant bygningene med høy antikvarisk verdi. Boligen og uthuset reguleres nå til bevaring, og overlegeboligen blir en del av de historiske sporene i den nye parken.',
+     'Mellom overlegeboligen og forvalterboligen ligger et historisk hageanlegg med dam, bru og trapp.'],
+  g:[['assets/overlegeboligen.jpg','Flyfoto 1933'],[G_+'over_47.jpg','Overlegeboligen i dag · '+OKT],[G_+'over_46.jpg',OKT],[G_+'over_2022.jpg','Foto 2022']],ln:LES_BEB,lt:'Les historien',src:[S_OP,S_SB,S_SBF,S_BN]},
+ {id:4,x:557.6,y:1676.0,k:'arv',ic:'villa',n:'Ortenbygget',ey:'Vernet bygg',f:[['Oppført','ca. 1924'],['Opprinnelig','Gartneriet'],['Antikvarisk verdi','Klasse C']],
+  t:['Del av sykehusets gartnerianlegg, brukt til lagring av grønnsaker. Sommervikarene ved gartneriet bodde også her.',
+     'Bygget ligger i parken sør for hovedbygningen og forteller om selvforsyning og praktisk arbeid. Gartneriet og drivhusene lå vest for bygget. Ortenbygget reguleres til bevaring, og parken sør for hovedbygningen skal få parsellhager i sørvest.'],
+  g:[['assets/ortenbygget.jpg','Flyfoto 1933'],[G_+'orten_park.jpg','Illustrasjon: Den historiske parken'],[G_+'orten_48.jpg',OKT],[G_+'orten_49.jpg',OKT]],tolkG:1,ln:LES_BEB,lt:'Les historien',src:[S_SB,S_BN]},
+ {id:9,x:1313.4,y:1468.2,k:'barn',ic:'skole',n:'Ny barneskole',ey:'Brøset skole',f:[['I regi av','Trondheim kommune'],['Bygger på','Sykepostbygget fra 1961'],['Uteareal','Minst 25 m² per elev']],
+  t:['Den nye Brøset skole bygges rundt to eksisterende bygg: det fredede sykepostbygget fra 1961, tegnet av arkitekt Roar Tønseth, og aktivitetsbygget fra 1976. Et nybygg binder dem sammen til ett skoleanlegg.',
+     'Skolen får en fleridrettshall på tomta, og aktivitetsparken nord for hovedbygningen skal dekke en del av elevenes uteareal. Områdeplanen fra 2013 beregnet behov for en barneskole for om lag 630 elever.'],
+  g:[['assets/sykepost.jpg','Sykepostbygget i dag'],[G_+'skole_05.jpg','Sykepostbygget fra lufta · '+OKT],[G_+'skole_03.jpg',OKT]],ln:LES_BEB,lt:'Les mer',src:[S_SB,S_SBF,S_OP,S_BN]},
+ {id:8,x:1167.3,y:1410.3,k:'barn',ic:'hall',n:'Idrettshall',ey:'Barn og skole',f:[['Type','Fleridrettshall'],['Ligger','På skoletomta'],['Knyttes til','Brøset skole']],
+  t:['Fleridrettshallen bygges på skoletomta og kobles til nybygget som binder sammen sykepostbygget og aktivitetsbygget. Hallen er trukket tilbake fra Brøsetjordet.',
+     'Områdeplanen fra 2013 la opp til en fleridrettshall og en basishall, en 7er fotballbane i parken og åpnet for å vurdere en svømmehall.'],
+  todo:'Størrelse på hallen og åpningstidspunkt står ikke i planforslaget.',src:[S_SB,S_OP]},
+ {id:6,x:1867.9,y:1482.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Ved Brøsetjordet',f:[['Sammen med nabobarnehagen','ca. 250 barn'],['Uteareal','24 m² per barn'],['Bygg','To etasjer']],
+  t:['To nye barnehager ligger side om side langs Brøsetjordet, med adkomst fra gata og uteområder som vender mot parken i sør. Til sammen får de om lag 250 barn fordelt på 8 og 6 barnegrupper, og begge bygges i to etasjer. Trondheim kommune står bak planforslaget for skole og barnehager sammen med Brøset Utvikling.'],
+  todo:'Hvilken av de to barnehagene som får 8 og hvilken som får 6 barnegrupper, går ikke fram av planforslaget.',src:[S_SB,S_SBF]},
+ {id:5,x:2030.9,y:1544.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Ved Brøsetjordet',f:[['Sammen med nabobarnehagen','ca. 250 barn'],['Uteareal','24 m² per barn'],['Bygg','To etasjer']],
+  t:['Den andre av de to nye barnehagene langs Brøsetjordet. Adkomst og varelevering skjer fra gata, mens uteområdene vender mot parken i sør. De to barnehagene får til sammen om lag 250 barn fordelt på 8 og 6 barnegrupper.',
+     'Et av de to barnehagefeltene ligger der arbeiderboligene står i dag. De har antikvarisk klasse C og skal rives.'],
+  todo:'Hvilken av de to barnehagene som får 8 og hvilken som får 6 barnegrupper, går ikke fram av planforslaget.',src:[S_SB,S_SBF]},
+ {id:7,x:274.1,y:1246.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Ved Brøsetekra',f:[['Plasser','ca. 75 barn'],['Uteareal','25 m² per barn'],['Nabo','Bekken og friområdet']],
+  t:['Barnehagen ligger sørvest i bydelen, vendt mot Brøsetekra, og deler feltet med 31 boliger. Utearealet vender mot friområdet og bekken i øst, og bebyggelsen tilpasses småhusene langs Brøsetvegen.'],
+  src:[S_SB]},
+ {id:10,x:1640.6,y:1199.8,k:'han',ic:'kafe',n:'Kafé',ey:'Bo Brøset Elvely',f:[['Prosjekt','Bo Brøset Elvely'],['Plassering','1. etasje i bygg A'],['Status','Planlagt']],
+  t:['I første etasje i bygg A i Elvely planlegges det kafé. Elvely ligger rett ved Brøset hundepark, og beboerne får blant annet forsamlingslokale, gjesterom og felles takterrasse.',
+     'Reguleringsplanen krever utadrettet virksomhet som butikk, servering eller tjenesteyting i første etasje mot Brøsetjordet og torget.'],
+  g:[[G_+'kafe_bobroset.jpg','Illustrasjon: Bo Brøset']],src:[S_BB,S_R42]},
+ {id:11,x:1648.7,y:1318.5,k:'han',ic:'kafe',n:'Kafé og bakeri',ey:'Brøsetløkka',f:[['Prosjekt','Brøsetløkka'],['Status','Planlagt'],['Nabo','Fellesrom og gjesterom']],
+  t:['Det er planlagt en kafé i Brøsetløkka. Plassering og tidspunkt er ikke endelig.',
+     'Kvalitetsprogrammet legger opp til åpne førsteetasjer på viktige steder, med bakeri, sykkelverksted og bruktbutikk som eksempler. Planen åpner også for bokaler: boliger med egen næringsdel og egen inngang.'],
+  g:[[G_+'bakeri_inne.jpg','Illustrasjon: kafé og bakeri'],[G_+'bakeri_ute.jpg','Illustrasjon: kafé i 1. etasje']],src:[S_BL,S_KP,S_R42]},
+ {id:12,x:2820.1,y:1846.9,k:'han',ic:'bag',n:'Dagligvare',ey:'Brøsetporten',f:[['Plassering','Ved Tungasletta'],['Næring i feltet','Inntil 2 900 m²'],['Status','Illustrasjon']],
+  t:['Illustrasjonen viser dagligvare i første etasje i Brøsetporten, i den østre enden av bydelen ved rundkjøringen i Tungasletta.',
+     'Reguleringsbestemmelsene for Brøset nord åpner for inntil 2 900 m² BRA til butikk, kontor, servering og tjenesteyting i feltet ved rundkjøringen.'],
+  todo:'Butikkstørrelse og åpningstidspunkt mangler i underlaget.',
+  g:[[G_+'kiwi.jpg','Illustrasjon: Kiwi Brøsetporten']],src:[S_R42]},
+ {id:17,x:2029.5,y:1433.4,k:'han',ic:'bag',n:'Dagligvare',ey:'Brøset Torg',f:[['Prosjekt','Brøset Torg'],['Plassering','1. etasje'],['Status','Planlagt']],
+  t:['Det planlegges en dagligvarebutikk langs hovedgata Brøsetjordet. I første etasje i Brøset Torg kommer en butikk og lokaler som bidrar til liv og aktivitet rundt torget.',
+     'Reguleringsplanen krever utadrettet virksomhet i første etasje mot Brøsetjordet og torget, og tillater høyst én parkeringsplass per 100 m² butikk.'],
+  g:[[G_+'dagl_torg_film.jpg',FILM]],src:[S_R42S,S_R42,S_BN]},
+ {id:14,x:2180.1,y:1472.6,k:'han',ic:'rest',n:'Restaurant',ey:'Ved torget',f:[['Ved','Torget og låven'],['Uteservering','Planlagt'],['Drift','Ikke avklart']],
+  t:['Kvalitetsprogrammet beskriver torget som bydelens pulserende byrom, med uteservering, små butikker og aktivitetsflater. Låven ved siden av skal få servering og solfylte terrasser.',
+     'Reguleringsplanen tillater servering i første etasje mot torget.'],
+  todo:'Hvem som skal drive restauranten, og når den åpner, mangler i underlaget.',
+  g:[[G_+'lave_veksthus.jpg','Illustrasjon: uteservering ved Veksthuset (kvalitetsprogrammet)']],src:[S_KP,S_R42]},
+ {id:15,x:2203,y:1383,k:'arv',ic:'lave',n:'Låven',ey:'Restaureres',f:[['Fra','Brøset gård'],['Rolle','Hjertet av Brøset'],['Bruk','Felleshus og servering']],
+  t:['Den gamle låven på Brøset gård settes i stand, får et nytt påbygg og blir bydelens samlende møtested. Kvalitetsprogrammet kaller den Veksthuset og ser for seg felleslokaler, servering, verksted, kurs i dyrking og fellesspising, med drivhus og solfylte terrasser.',
+     'Låven ligger der ravinen og aktivitetsaksen krysser hverandre. Terrengspranget ned mot ravinen formes som dyrkingsnivåer med sittetrinn som også kan brukes som amfi. Låven og stabburet blir felleshus for hele Bo Brøset.',
+     'Reguleringsplanen åpner for offentlig eller privat tjenesteyting i låven, også servering.'],
+  g:[[G_+'lave_film.jpg',FILM],[G_+'lave_veksthus.jpg','Illustrasjon: Veksthuset (kvalitetsprogrammet)'],[G_+'lave_25.jpg','Låven i dag · '+OKT],[G_+'lave_26.jpg',OKT]],src:[S_KP,S_R42,S_BB]},
+ {id:16,x:2132,y:1432,k:'arv',ic:'stabbur',n:'Stabburet',ey:'Restaureres',f:[['Fra','Brøset gård'],['Kan flyttes','Innenfor grøntområdet ved låven'],['Bruk','Felleshus']],
+  t:['Stabburet fra Brøset gård tas vare på og får nytt innhold sammen med låven. Kvalitetsprogrammet foreslår å flytte stabburet tidlig, slik at låven og stabburet blir en møteplass allerede før bydelen er ferdig bygd.',
+     'Reguleringsplanen tillater samme bruk som i låven, og stabburet kan flyttes innenfor grøntområdet rundt låven. Området skal ha et grønt preg og vende seg mot låven og stabburet.'],
+  g:[[G_+'stab_film.jpg',FILM],[G_+'stab_28.jpg','Stabburet i dag · '+OKT],[G_+'stab_27.jpg',OKT]],src:[S_KP,S_R42]},
+ {id:19,x:2103.8,y:1453.7,k:'mot',ic:'torg',n:'Torget',ey:'Brøset Torg',f:[['Boliger','189'],['Størrelser','ca. 34–117 m²'],['I 1. etasje','Butikk']],
+  t:['Torget ligger i overgangen mellom veksthushagen ved låven og Brøsetjordet. Det blir et offentlig torg for hele bydelen, med fast dekke, benker og beplantning, og førsteetasjene rundt skal være åpne og utadrettet.',
+     'Med butikker, flotte uteområder og et levende torg blir Brøset Torg et naturlig midtpunkt i bydelen. Torget skal være ferdig før boligene rundt tas i bruk.'],
+  g:[[G_+'torg_film.jpg',FILM],[G_+'torg_film2.jpg',FILM]],ln:'https://broset.no/broset-torg-blir-et-nytt-samlingspunkt-pa-broset/',lt:'Les om Brøset Torg',src:[S_KP,S_R42,['broset.no','https://broset.no/broset-torg-blir-et-nytt-samlingspunkt-pa-broset/']]},
+ {id:18,x:1765.2,y:1330.4,k:'mot',ic:'tre',n:'Gatetun',ey:'Møteplass',f:[['Trær','Minst tre arter i hvert tun'],['Forhager','2 til 4 meter'],['Biltrafikk','Bilfritt']],
+  t:['Gatetunene er limet i nabolagene og går på tvers mellom Brøsetvegen og Brøsetjordet. Her kan barna sykle og naboene møtes på en benk, og belegget går sammenhengende fra fasade til fasade.',
+     'Hvert gatetun får sin egen blanding av minst tre tresorter, og leilighetene i første etasje får forhager på 2 til 4 meter. Overflatene skal i størst mulig grad slippe regnvannet gjennom.'],
+  g:[[G_+'gatetun.jpg','Illustrasjon: gatetun'],[G_+'gatetun_naering.jpg','Illustrasjon: næringslokaler i 1. etasje']],src:[S_KP,S_R42]},
+ {id:20,x:1704.3,y:1307.3,k:'mot',ic:'seng',n:'3 gjesteleiligheter',ey:'Fellesfunksjon',f:[['Antall','3'],['Med','Eget bad'],['Booking','Via app']],
+  t:['Felles gjesterom med eget bad, som beboerne leier og booker via app når familie eller venner kommer på besøk. Da trenger færre et ekstra soverom som står tomt til vanlig.',
+     'Reguleringsplanen krever 0,03 gjesterom per bolig i hvert boligområde, altså tre gjesterom per hundre boliger.'],
+  ln:FELLES,lt:'Om fellesfunksjonene',src:[S_BL,S_R42]},
+ {id:21,x:1611.9,y:1307.0,k:'mot',ic:'folk',n:'Fellesrom',ey:'Fellesfunksjon',f:[['Kjøkken','Fra HTH'],['Møblering','Langbord og sittegrupper'],['Krav i planen','Minst 75 m²']],
+  t:['Fellesrommet i Brøsetløkka får kjøkken fra HTH, langbord til slekta på julaften og sittegrupper til filmkveld, dugnadskaffe eller bursdager som blir for store for stua. Det er det første av flere forsamlingslokaler på Brøset.',
+     'Beboerne får i tillegg fellesvaskeri, felles takterrasser med grillplass og dyrkingskasser, og sykkelverksted med sykkelvask i kjelleren.',
+     'Reguleringsplanen krever forsamlingslokale på minst 75 m² med minst 50 m² uteareal i hvert boligområde.'],
+  g:[[G_+'felles_forsamling.jpg','Illustrasjon: forsamlingslokale'],[G_+'felles_vaskeri.jpg','Illustrasjon: fellesvaskeri'],[G_+'felles_tak.jpg','Illustrasjon: felles takterrasse']],ln:FELLES,lt:'Om fellesfunksjonene',src:[S_BL,S_R42]},
+ {id:13,x:2625.3,y:1576.1,k:'mot',ic:'helse',n:'Helse- og velferdssenter',ey:'Tjenester',f:[['Sykehjem','ca. 72 plasser'],['Omsorgsboliger','Inntil 50'],['Størrelse','Inntil 12 000 m² BRA']],
+  t:['Senteret får sykehjem og omsorgsboliger, med hovedinngang mot Brøsetjordet og snuplass ved senteret. Bebyggelsen trappes ned mot sør, og det skal være minst 25 m² uteareal per 100 m² bygg.',
+     'Illustrasjonsplanen i kvalitetsprogrammet viser bydelskafé og sansehage ved senteret.'],
+  todo:'Drift og åpningstidspunkt mangler i underlaget.',src:[S_R42S,S_R42,S_KP]},
+ {id:22,x:1101.8,y:1278.3,k:'mot',ic:'info',n:'Infosenter Brøsetløkka',ey:'Tjenester',todo:'Åpningstider og innhold mangler i underlaget.'},
+ {id:23,x:2895,y:1528,k:'mot',ic:'bekk',n:'Bekkeløpet',ey:'Åpnes igjen',f:[['I dag','Lagt i rør'],['Dimensjonert for','200-årsflom'],['Åpnes','Trinnvis']],
+  t:['Kartet fra 1930 viser to ravinedaler gjennom Brøset. Den vestre ble fylt igjen for å gi dyrkbar jord, og bekken ble lagt i rør. Nå åpnes bekken igjen, og deler av ravinedalen formes på nytt som et sammenhengende grøntdrag gjennom bydelen.',
+     'Ravinen får tre stemninger: en intim ravine med smalere bekkeløp i vest, en vid og åpen ravine rundt låven og en dyp ravine i øst som går over i den eksisterende ravinen. Langs bekken blir det stier, frukttrær, dyrking, vannlek og uteservering.',
+     'Bekken skal ha sammenhengende åpen vannføring med små våtmarksområder og demninger, og den fungerer som flomvei ved kraftig regn. Åpningen skjer trinnvis i takt med utbyggingen og starter nedstrøms.',
+     'Sør for Brøsetjordet foreslås bekken også åpnet mellom Brøsetekra og Brøsetjordet, med hevet terreng. Den løsningen er ikke avklart.'],
+  g:[[G_+'bekk_tursti2.jpg','Illustrasjon: bekkeløp og tursti'],[G_+'bekk_ravine.jpg','Illustrasjon: ravinelandskapet (kvalitetsprogrammet)'],[G_+'bekk_kart3.jpg','Ravinens tre stemninger: 1 intim, 2 åpen, 3 dyp (kvalitetsprogrammet)'],[G_+'bekk_1930.jpg','Kart fra 1930 med vestre og østre ravine. Utlånt fra Strinda historielag']],
+  src:[S_KP,S_VA,S_R42,S_SB,S_SBF]},
+ {id:24,x:2959,y:1411,k:'mot',ic:'felleshus',n:'Felleshus Urtehagen',ey:'Urtehagen',f:[['Forsamlingslokale','Med kjøkken og toalett'],['Verksted','Snekre og reparere'],['Rekkehus','80–150 m²']],
+  t:['Midt mellom rekkehusene i Urtehagen ligger to felleshus: et forsamlingslokale med kjøkken og toalett til bursdager og dugnader, og et verksted der beboerne kan snekre, mekke og reparere.',
+     'Uteområdene får felles gressplen, to lekeplasser, et felles urtehageområde med plantekasser og friområde langs Bekkedalen. Lenger sør blir låven og stabburet felleshus for hele Bo Brøset.'],
+  g:[[G_+'urte_felleshus.jpg','Illustrasjon: felleshuset i Urtehagen'],[G_+'urte_felleshus2.jpg','Illustrasjon: felleshuset sett fra hagen'],[G_+'urte_verksted.jpg','Illustrasjon: verkstedet']],ln:'https://bobroset.no/no/til-salgs/rekkehusene',lt:'Om Urtehagen',src:[['bobroset.no, Urtehagen','https://bobroset.no/no/til-salgs/rekkehusene'],S_BB]}
 ];
 const CL=[{id:'torg',n:'Torget',m:[19,17,14,16,15]},{id:'felles',n:'Kafé og fellesrom',m:[11,20,18,21]}];
 const inCl={};CL.forEach(c=>c.m.forEach(i=>inCl[i]=c.id));
@@ -593,7 +681,7 @@ function renderCard(p,side,pv){
  const list=P.filter(vis),i=list.indexOf(p)+1;
  card.innerHTML=`<span class="grab"></span><button class="x" aria-label="Lukk" onclick="closeAll()">×</button>${gal}<div class="bd">
   <div class="eyebrow"><span class="dot"></span>${kat.n}${p.ey&&p.ey!==kat.n?' · '+p.ey:''}</div>
-  <h2>${p.n}</h2>${facts}${p.t?`<p>${p.t}</p>`:''}${p.todo?`<div class="todo">${p.todo}</div>`:''}
+  <h2>${p.n}</h2>${facts}${p.t?[].concat(p.t).map(x=>`<p>${x}</p>`).join(''):''}${p.todo?`<div class="todo">${p.todo}</div>`:''}${p.src&&!pv?`<details class="src"><summary>Kilder</summary><ul>${p.src.map(([a,u])=>`<li>${u?`<a href="${u}" target="_blank" rel="noopener">${a}</a>`:a}</li>`).join('')}</ul></details>`:''}
   <div class="ft">${pv?'<span class="pvh">Klikk for å vise i kartet</span>':''}${p.ln&&!pv?`<a class="more" href="${p.ln}" target="_blank" rel="noopener">${p.lt||'Les mer'} <span aria-hidden="true">→</span></a>`:'<span></span>'}
   <div class="nav"><button aria-label="Forrige sted" onclick="step(-1)">‹</button><span>${i} / ${list.length}</span><button aria-label="Neste sted" onclick="step(1)">›</button></div></div></div>`;
  const tr=$('gtr'),gp=$('gp'),gn=$('gn'),gc=$('gc'),dots=[...$('gd').children];
@@ -603,6 +691,7 @@ function renderCard(p,side,pv){
  gp.onclick=e=>{e.stopPropagation();tr.scrollBy({left:-tr.clientWidth})};gn.onclick=e=>{e.stopPropagation();tr.scrollBy({left:tr.clientWidth})};
  card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};
  upd();
+ if(card.parentNode===box)box.scrollTop=0;
  $('progt').textContent=i+' / '+list.length;$('progb').style.width=(i/list.length*100)+'%';
 }
 function lead(p,side){
