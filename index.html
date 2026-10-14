@@ -328,6 +328,8 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .lbt .nav button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--teal)}
 .lbx{position:absolute;right:14px;top:14px;width:40px;height:40px;border-radius:50%;background:rgba(254,251,249,.96);color:var(--teal);font-size:22px;line-height:1;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:3}
 .card .gal img,.card .gal .crop{cursor:zoom-in}
+.gal:not(.one) .tr,.lbg:not(.one) .lbtr{cursor:grab}
+.gal .tr img,.lbtr img{user-select:none;-webkit-user-drag:none}
 .card:not(.pv) .bd h2,.card:not(.pv) .bd p,.card:not(.pv) .bd .facts{cursor:zoom-in}
 .card .gz{position:absolute;right:52px;top:10px;width:32px;height:32px;border-radius:50%;background:rgba(254,251,249,.94);display:grid;place-items:center;color:var(--teal);z-index:2}
 .card .gz svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -511,7 +513,10 @@ const P=[
   t:['Senteret får sykehjem og omsorgsboliger, med hovedinngang mot Brøsetjordet og snuplass ved senteret. Bebyggelsen trappes ned mot sør, og det skal være minst 25 m² uteareal per 100 m² bygg.',
      'Illustrasjonsplanen i kvalitetsprogrammet viser bydelskafé og sansehage ved senteret.'],
   todo:'Drift og åpningstidspunkt mangler i underlaget.',src:[S_R42S,S_R42,S_KP]},
- {id:22,x:1101.8,y:1278.3,k:'mot',ic:'info',n:'Infosenter Brøsetløkka',ey:'Tjenester',todo:'Åpningstider og innhold mangler i underlaget.'},
+ {id:22,x:1101.8,y:1278.3,k:'mot',ic:'info',n:'Infosenter Brøsetløkka',ey:'Åpent tirsdager',f:[['Åpent','Tirsdager'],['Tid','Kl. 12–15'],['Prosjekt','Brøsetløkka']],
+  t:['Infosenteret til Brøsetløkka er åpent tirsdager fra klokka 12 til 15. Her står en stor modell av hele Brøset, så du kan se hvordan bydelen blir, og plansjer med leilighetene i Brøsetløkka.',
+     'Kom innom for en prat med megler, se planløsninger og få svar på spørsmål om prosjektet og nabolaget.'],
+  g:[[G_+'info_modell.jpg','Modellen av Brøset i infosenteret','50% 30%'],[G_+'info_rom.jpg','Infosenteret med modell og plansjer','50% 72%']],ln:'https://www.brosetlokka.no/',lt:'Til Brøsetløkka'},
  {id:23,x:2895,y:1528,k:'mot',ic:'bekk',n:'Bekkeløpet',ey:'Åpnes igjen',f:[['I dag','Lagt i rør'],['Dimensjonert for','200-årsflom'],['Åpnes','Trinnvis']],
   t:['Kartet fra 1930 viser to ravinedaler gjennom Brøset. Den vestre ble fylt igjen for å gi dyrkbar jord, og bekken ble lagt i rør. Nå åpnes bekken igjen, og deler av ravinedalen formes på nytt som et sammenhengende grøntdrag gjennom bydelen.',
      'Ravinen får tre stemninger: en intim ravine med smalere bekkeløp i vest, en vid og åpen ravine rundt låven og en dyp ravine i øst som går over i den eksisterende ravinen. Langs bekken blir det stier, frukttrær, dyrking, vannlek og uteservering.',
@@ -724,11 +729,11 @@ function renderCard(p,side,pv){
  const kat=KAT[p.k];
  card.className='card '+side+' k-'+p.k+(pv?' pv show':(card.classList.contains('show')?' show':''));
  const w=mob()?innerWidth:(box.clientWidth||360);
- const slides=(p.g&&p.g.length)?p.g.map(([s,c],i)=>`<figure><img src="${s}" alt="${p.n}${c?': '+c:''}" ${i?'loading="lazy"':''} draggable="false"><figcaption>${c||''}</figcaption></figure>`).join('')
+ const slides=(p.g&&p.g.length)?p.g.map(([s,c,op],i)=>`<figure><img src="${s}" alt="${p.n}${c?': '+c:''}" ${i?'loading="lazy"':''} draggable="false"${op?` style="object-position:${op}"`:''}><figcaption>${c||''}</figcaption></figure>`).join('')
    :`<figure><div class="crop" style="${cropStyle(p,w)}"></div><figcaption>Utsnitt av illustrasjonen</figcaption></figure>`;
  const n=(p.g&&p.g.length)||1;
  const gal=`<div class="gal${n<2?' one':''}" id="gal"><div class="tr" id="gtr">${slides}</div>
-  <button class="gb gp" id="gp" aria-label="Forrige bilde" disabled>${AR_IC}</button><button class="gb gn" id="gn" aria-label="Neste bilde">${AR_IC2}</button>
+  <button class="gb gp" id="gp" aria-label="Forrige bilde">${AR_IC}</button><button class="gb gn" id="gn" aria-label="Neste bilde">${AR_IC2}</button>
   <div class="dots" id="gd">${Array.from({length:n},(_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div><span class="hint2">Sveip</span><span class="cnt" id="gc">1 / ${n}</span></div>`;
  const facts=p.f?`<dl class="facts" style="--n:${p.f.length}">${p.f.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join('')}</dl>`:'';
  const list=P.filter(vis),i=list.indexOf(p)+1;
@@ -739,9 +744,9 @@ function renderCard(p,side,pv){
   <div class="nav"><button aria-label="Forrige sted" onclick="step(-1)">‹</button><span>${i} / ${list.length}</span><button aria-label="Neste sted" onclick="step(1)">›</button></div></div></div>`;
  const tr=$('gtr'),gp=$('gp'),gn=$('gn'),gc=$('gc'),dots=[...$('gd').children];
  const cur=()=>Math.round(tr.scrollLeft/Math.max(1,tr.clientWidth));
- const upd=()=>{const c=cur();gc.textContent=(c+1)+' / '+n;dots.forEach((d,j)=>d.classList.toggle('on',j===c));gp.disabled=c<=0;gn.disabled=c>=n-1;};
+ const upd=()=>{const c=cur();gc.textContent=(c+1)+' / '+n;dots.forEach((d,j)=>d.classList.toggle('on',j===c));};
  tr.addEventListener('scroll',()=>{cancelAnimationFrame(upd.r);upd.r=requestAnimationFrame(upd)},{passive:true});
- gp.onclick=e=>{e.stopPropagation();tr.scrollBy({left:-tr.clientWidth})};gn.onclick=e=>{e.stopPropagation();tr.scrollBy({left:tr.clientWidth})};
+ const cg=carousel(tr);gp.onclick=e=>{e.stopPropagation();cg.go(cur()-1)};gn.onclick=e=>{e.stopPropagation();cg.go(cur()+1)};
  card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};
  if(!pv){const big=e=>{if(e.target.closest('button,a,summary,details'))return;openLB(p.id,cur())};
   tr.addEventListener('click',big);card.querySelector('.bd').addEventListener('click',big);
@@ -803,6 +808,23 @@ function openCl(cid){const c=CL.find(c=>c.id===cid);const m=c.m.find(i=>vis(byId
 function closeAll(){if(tour)stopTour();tourPaused=false;S={mode:'start',id:null,cl:null,side:null};T={...V};hero.classList.remove('zoom','explore');card.classList.remove('show');box.classList.remove('has');pvId=null;markList(null);$('lead').classList.remove('show');place();setTourUI(false);}
 function resetView(){V={...HOME};if(S.mode==='start'){T={...HOME};place();}else closeAll();}
 function step(n){const L=P.filter(vis);if(!L.length)return;const i=L.findIndex(p=>p.id===S.id);const j=i<0?(n>0?0:L.length-1):(i+n+L.length)%L.length;open(L[j].id,{sticky:true});}
+// karusell: dra med mus, sveip på berøring, og løkke fra siste til første bilde (og motsatt)
+function carousel(tr){
+ const n=()=>tr.children.length,w=()=>Math.max(1,tr.clientWidth),cur=()=>Math.round(tr.scrollLeft/w());
+ const go=k=>{const N=n();if(N<2)return;k=((k%N)+N)%N;tr.scrollTo({left:k*w(),behavior:'smooth'});};
+ let d=null,moved=false;
+ tr.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.button!==0||n()<2)return;d={x:e.clientX,sl:tr.scrollLeft,k:cur()};moved=false;tr.style.scrollSnapType='none';tr.style.scrollBehavior='auto';tr.setPointerCapture(e.pointerId);e.preventDefault();});
+ tr.addEventListener('pointermove',e=>{if(!d)return;const dx=e.clientX-d.x;if(Math.abs(dx)>4)moved=true;tr.scrollLeft=d.sl-dx;tr.style.cursor='grabbing';});
+ const end=e=>{if(!d)return;const dx=e.clientX-d.x,k=d.k;d=null;tr.style.cursor='';tr.style.scrollBehavior='';
+  const t=Math.abs(dx)>40?k+(dx<0?1:-1):k;go(t);setTimeout(()=>{tr.style.scrollSnapType='';},450);};
+ tr.addEventListener('pointerup',end);tr.addEventListener('pointercancel',end);
+ tr.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false;}},true);
+ // berøring: native sveip, men sveip forbi siste/første bilde hopper rundt
+ let ts=null;tr.addEventListener('touchstart',e=>{ts={x:e.touches[0].clientX,k:cur()}},{passive:true});
+ tr.addEventListener('touchend',e=>{if(!ts)return;const dx=e.changedTouches[0].clientX-ts.x,N=n();
+  if(ts.k===N-1&&dx<-50)setTimeout(()=>go(0),60);else if(ts.k===0&&dx>50)setTimeout(()=>go(N-1),60);ts=null;},{passive:true});
+ return {go,cur};
+}
 // forstørret visning av bilde og tekst
 const LB=$('lb'),LBtr=$('lbtr');let lbId=null;
 function openLB(id,k){const p=byId[id];if(!p)return;if(tour)stopTour();if(S.id===id)S.sticky=true;lbId=id;
@@ -822,11 +844,12 @@ function openLB(id,k){const p=byId[id];if(!p)return;if(tour)stopTour();if(S.id==
 }
 function lbN(){return LBtr.children.length}
 function lbCur(){return Math.round(LBtr.scrollLeft/Math.max(1,LBtr.clientWidth))}
-function lbUpd(){const c=lbCur(),n=lbN();$('lbc').textContent=(c+1)+' / '+n;$('lbp').disabled=c<=0;$('lbn').disabled=c>=n-1;}
+function lbUpd(){const c=lbCur(),n=lbN();$('lbc').textContent=(c+1)+' / '+n;}
+const LBC=carousel(LBtr);
 function closeLB(){if(LB.hidden)return;LB.classList.remove('on');document.documentElement.style.overflow='';const k=lbCur(),id=lbId;lbId=null;
  setTimeout(()=>{LB.hidden=true;LBtr.innerHTML='';},260);if(S.id===id&&card.goto)card.goto(k);if(LB._ret&&LB._ret.focus)LB._ret.focus({preventScroll:true});}
 LBtr.addEventListener('scroll',()=>{cancelAnimationFrame(lbUpd.r);lbUpd.r=requestAnimationFrame(lbUpd)},{passive:true});
-$('lbp').onclick=()=>LBtr.scrollBy({left:-LBtr.clientWidth});$('lbn').onclick=()=>LBtr.scrollBy({left:LBtr.clientWidth});
+$('lbp').onclick=()=>LBC.go(lbCur()-1);$('lbn').onclick=()=>LBC.go(lbCur()+1);
 $('lbx').onclick=closeLB;
 LB.addEventListener('click',e=>{if(!e.target.closest('#lbin'))closeLB()});
 // omvisning: play blir pause mens den går
