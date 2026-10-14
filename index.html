@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Utforsk Brøset</title>
+<meta name="description" content="Interaktivt kart over den nye bydelen Brøset i Trondheim.">
+<style>
+/* Skrift: Sculpin/Bryant (Adobe Fonts på broset.no) er erstattet med Figtree/Nunito i prototypen */
+@font-face{font-family:Fig;font-weight:400;src:url(fonts/figtree-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Fig;font-weight:600;src:url(fonts/figtree-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Fig;font-weight:700;src:url(fonts/figtree-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:Fig;font-weight:800;src:url(fonts/figtree-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:Nun;font-weight:400;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Nun;font-weight:600;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Nun;font-weight:700;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
+@property --sx{syntax:'<length>';inherits:false;initial-value:0px}
+@property --sy{syntax:'<length>';inherits:false;initial-value:0px}
+@property --sr{syntax:'<length>';inherits:false;initial-value:2000px}
+@property --dx{syntax:'<length>';inherits:true;initial-value:0px}
+@property --dy{syntax:'<length>';inherits:true;initial-value:-44px}
+@property --len{syntax:'<length>';inherits:true;initial-value:26px}
+@property --ang{syntax:'<angle>';inherits:true;initial-value:0deg}
+:root{
+ --teal:#1C4B4C; --teal-d:#133536; --peach:#E6C9B8; --mint:#97DAB8; --paper:#FEFBF9; --sand:#F7F2ED; --ink:#212121; --line:#DDDDDD;
+ --head:'Fig',sculpin,system-ui,sans-serif; --body:'Nun',bryant-web,system-ui,sans-serif;
+ --ease:cubic-bezier(.22,.68,.12,1); --dur:1000ms;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ---------- topp (som broset.no) ---------- */
+.top{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 48px}
+.top img{height:30px;display:block}
+.top nav{display:flex;gap:22px;font-size:14px;color:var(--teal)}
+.top nav b{font-weight:700}
+.burger{display:none}
+
+/* ---------- kartet ---------- */
+.hero{position:relative;margin:0 48px;aspect-ratio:16/9;overflow:hidden;background:#2a2a22;isolation:isolate;user-select:none}
+.stage{position:absolute;inset:0;transform-origin:0 0;transition:transform var(--dur) var(--ease);will-change:transform}
+.stage img{position:absolute;display:block;max-width:none}
+.spot{position:absolute;inset:0;pointer-events:none;opacity:0;
+ background:radial-gradient(circle at var(--sx) var(--sy),rgba(10,30,30,0) 0,rgba(10,30,30,0) calc(var(--sr)*.55),rgba(10,30,30,.5) calc(var(--sr)*1.5),rgba(8,24,24,.72) calc(var(--sr)*3.2));
+ transition:opacity 700ms ease,--sx var(--dur) var(--ease),--sy var(--dur) var(--ease),--sr var(--dur) var(--ease)}
+.hero.zoom .spot{opacity:1}
+.shade{position:absolute;left:0;right:0;top:0;height:170px;pointer-events:none;background:linear-gradient(to bottom,rgba(10,30,30,.6),rgba(10,30,30,0))}
+.disc{position:absolute;left:16px;bottom:12px;z-index:9;font-size:12px;color:rgba(254,251,249,.9);text-shadow:0 1px 3px rgba(0,0,0,.6);opacity:0;transition:opacity 400ms}
+.hero.zoom .disc{opacity:1}
+
+/* prosjektomriss, uten fyll */
+svg.felt{position:absolute;overflow:visible}
+svg.felt .h{fill:none;stroke:rgba(19,53,54,.55);stroke-width:calc(var(--sw,1px)*5);stroke-linejoin:round}
+svg.felt .f{fill:none;stroke:var(--peach);stroke-width:calc(var(--sw,1px)*2);stroke-linejoin:round;pointer-events:all;cursor:pointer;transition:stroke 200ms,stroke-width 200ms}
+svg.felt .f.on{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*3)}
+.hero.zoom svg.felt .f{pointer-events:none}
+svg.felt a{cursor:pointer}
+svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*4)}
+.plbl a:hover{background:var(--teal);color:var(--paper)}.plbl a:hover small{color:var(--mint)}.plbl a:hover::after{background:var(--teal)}
+.plbl{position:absolute;left:0;top:0;z-index:7;pointer-events:none}
+.plbl a{position:absolute;transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px 0 10px;border-radius:999px;background:var(--paper);color:var(--teal);font-family:var(--head);font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.3);opacity:0;margin-top:-10px;transition:opacity 220ms ease,margin-top 220ms var(--ease)}
+.plbl a i{width:10px;height:10px;border:2px solid var(--peach);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(28,75,76,.25)}
+.plbl a small{font-family:var(--body);font-weight:700;font-size:11px;color:#3f7a62;letter-spacing:.03em}
+.plbl a::after{content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;margin-left:-5px;background:var(--paper);transform:rotate(45deg);border-radius:2px}
+.plbl a.on{opacity:1;margin-top:-16px;pointer-events:auto}
+.plbl a.l{transform:translate(-100%,-50%);margin-top:0;margin-left:-6px}.plbl a.l.on{margin-top:0;margin-left:-14px}
+.plbl a.l::after{left:auto;right:-5px;bottom:50%;margin:0 0 -5px 0}
+.plbl a.b{transform:translate(-50%,0);margin-top:10px}.plbl a.b.on{margin-top:16px}
+.plbl a.b::after{bottom:auto;top:-5px}
+.hero.zoom .plbl a{opacity:0!important;pointer-events:none!important}
+
+/* markører */
+.pins{position:absolute;inset:0;z-index:6;pointer-events:none}
+.m{position:absolute;left:0;top:0;width:0;height:0;pointer-events:auto;--dx:0px;--dy:-44px;--len:26px;--ang:0deg;transition:transform var(--dur) var(--ease),opacity 400ms ease,--dx 700ms var(--ease),--dy 700ms var(--ease),--len 700ms var(--ease),--ang 700ms var(--ease);will-change:transform}
+.m .foot{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--paper);box-shadow:0 0 0 2px rgba(28,75,76,.85),0 1px 4px rgba(0,0,0,.4)}
+.m .stem{position:absolute;left:-.75px;bottom:0;width:1.5px;height:var(--len);transform-origin:50% 100%;transform:rotate(var(--ang));background:linear-gradient(var(--paper),rgba(254,251,249,.7))}
+.m .head{position:absolute;left:calc(var(--dx) - 18px);top:calc(var(--dy) - 18px);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--teal);color:var(--paper);box-shadow:0 0 0 2px var(--paper),0 6px 16px rgba(0,0,0,.35);transition:transform 300ms var(--ease),background 300ms,color 300ms,box-shadow 300ms}
+.m .head svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.m.k-arv .head{background:var(--peach);color:var(--teal)}
+.m.k-barn .head{color:var(--mint)}
+.m.k-han .head{color:var(--paper)}
+.m.k-mot .head{background:var(--mint);color:var(--teal)}
+.m .lbl{position:absolute;left:calc(var(--dx) + 24px);top:calc(var(--dy) - 14px);height:28px;display:flex;align-items:center;gap:8px;padding:0 13px 0 14px;white-space:nowrap;background:var(--paper);color:var(--teal);font-family:var(--head);font-weight:700;font-size:14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.28);opacity:0;transform:translateX(-8px);transition:opacity 260ms ease,transform 260ms var(--ease);pointer-events:none}
+.m:hover .lbl,.m:focus-visible .lbl,.m.on .lbl,.m.named .lbl{opacity:1;transform:none}
+.hero.zoom .m.on:not(.named) .lbl{opacity:0}
+@media (max-width:700px){.hero.zoom .m.on .lbl{opacity:1}}
+.m:hover .head,.m:focus-visible .head{transform:scale(1.1)}
+.m.on .head{transform:scale(1.18);box-shadow:0 0 0 3px var(--paper),0 0 0 9px rgba(151,218,184,.45),0 8px 22px rgba(0,0,0,.4)}
+.m.on .head::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--mint);animation:ping 1.8s ease-out infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.1);opacity:0}}
+.m.dim{opacity:.32}
+.m.under{opacity:0;pointer-events:none}
+.m.lblL .lbl{left:auto;right:calc(24px - var(--dx));transform:translateX(8px)}
+.m.lblL:hover .lbl,.m.lblL.on .lbl,.m.lblL.named .lbl{transform:none}
+.m.hid{opacity:0;pointer-events:none}
+.m:focus-visible{outline:none}
+.m:focus-visible .head{box-shadow:0 0 0 2px var(--paper),0 0 0 5px var(--teal)}
+.hero.proj .m{opacity:0;pointer-events:none}
+.hero.proj1 .m{opacity:.25;pointer-events:none}
+/* klynge */
+.c .head{left:calc(var(--dx) - 22px);width:auto;min-width:44px;height:36px;border-radius:999px;padding:0 14px 0 6px;gap:8px;display:flex;align-items:center;background:var(--teal);color:var(--paper);font-family:var(--head);font-weight:700;font-size:14px;white-space:nowrap}
+.c .head i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--mint);color:var(--teal);font-size:13px;font-weight:800}
+
+/* faktakort */
+.card{position:absolute;top:50%;width:404px;z-index:8;background:var(--paper);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.18);opacity:0;pointer-events:none;transform:translate(var(--cx,24px),-50%);transition:opacity 420ms ease 200ms,transform 620ms var(--ease) 160ms}
+.card.r{right:40px;--cx:28px}.card.l{left:40px;--cx:-28px}
+.hero.zoom .card.show{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
+/* galleri */
+.gal{position:relative;aspect-ratio:16/9;background:#d9d4cf;overflow:hidden}
+.gal .tr{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain}
+.gal .tr::-webkit-scrollbar{display:none}
+.gal figure{position:relative;flex:0 0 100%;height:100%;scroll-snap-align:start}
+.gal img{width:100%;height:100%;object-fit:cover;display:block}
+.gal .crop{position:absolute;inset:0;background-repeat:no-repeat}
+.gal figcaption{position:absolute;left:0;bottom:0;max-width:78%;padding:6px 12px;font-size:11.5px;letter-spacing:.02em;line-height:1.35;color:var(--paper);background:rgba(19,53,54,.84)}
+.gal .gb{position:absolute;top:50%;width:38px;height:38px;margin-top:-19px;border-radius:50%;background:rgba(254,251,249,.94);color:var(--teal);display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.28);opacity:.88;transition:opacity 200ms,transform 200ms}
+.gal .gb:hover{transform:scale(1.08);opacity:1}
+.gal .gb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.gal .gp{left:10px}.gal .gn{right:10px}
+.gal .gb:focus-visible{opacity:1;outline:2px solid var(--teal);outline-offset:2px}
+.gal .gb[disabled]{opacity:0!important;pointer-events:none}
+.gal .cnt{position:absolute;right:10px;bottom:9px;padding:3px 9px;border-radius:999px;background:rgba(19,53,54,.78);color:var(--paper);font-size:11.5px;font-weight:700;letter-spacing:.04em}
+.gal .dots{position:absolute;left:0;right:0;top:12px;display:flex;justify-content:center;gap:6px;pointer-events:none}
+.gal .dots i{width:6px;height:6px;border-radius:50%;background:rgba(254,251,249,.55);box-shadow:0 0 0 1px rgba(0,0,0,.15);transition:all 250ms}
+.gal .dots i.on{width:18px;border-radius:3px;background:var(--paper)}
+.gal.one .gb,.gal.one .dots,.gal.one .cnt{display:none}
+.gal .hint2{display:none;position:absolute;right:56px;bottom:9px;font-size:11px;font-weight:700;color:var(--paper);text-shadow:0 1px 3px rgba(0,0,0,.6);opacity:.95}
+.gal.one .hint2{display:none}
+.card .bd{padding:20px 26px 22px}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#4d6e6e}
+.eyebrow .dot{width:9px;height:9px;border-radius:50%;background:var(--teal)}
+.k-arv .eyebrow .dot{background:#C99D84}.k-barn .eyebrow .dot{background:var(--mint)}.k-mot .eyebrow .dot{background:#5DB78E}
+.card h2{margin-top:10px;font-family:var(--head);font-weight:800;font-size:27px;line-height:1.12;color:var(--teal);letter-spacing:-.005em}
+.facts{display:grid;grid-template-columns:repeat(var(--n,3),1fr);margin-top:16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.facts div{padding:11px 10px 11px 0}
+.facts div+div{padding-left:12px;border-left:1px solid var(--line)}
+.facts dt{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#7a8a8a}
+.facts dd{margin-top:3px;font-family:var(--head);font-weight:700;font-size:15px;line-height:1.2;color:var(--teal)}
+.card p{margin-top:14px;font-size:15px;line-height:1.55;color:#2b2b2b}
+.card .todo{margin-top:14px;padding:12px 14px;border:1.5px dashed #c9b3a6;color:#8a6b5a;font-size:13.5px;line-height:1.45;background:#fbf4ef}
+.card .ft{display:flex;align-items:center;justify-content:space-between;margin-top:18px}
+.card .more{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid var(--teal);border-radius:999px;color:var(--teal);font-size:14px;font-weight:600;text-decoration:none}
+.card .nav{display:flex;align-items:center;gap:6px;font-size:13px;color:#6b7b7b;font-weight:600}
+.card .nav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--teal)}
+.card .x{position:absolute;right:10px;top:10px;width:32px;height:32px;border-radius:50%;background:rgba(254,251,249,.94);display:grid;place-items:center;color:var(--teal);font-size:18px;line-height:1;z-index:2}
+svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;opacity:0;transition:opacity 400ms ease}
+.hero.zoom svg.lead.show{opacity:1}
+
+/* topplinje */
+.bar{position:absolute;left:0;right:0;top:0;z-index:9;display:flex;align-items:flex-start;gap:18px;padding:22px 28px 0;color:var(--paper)}
+.bar .t{font-family:var(--head);font-weight:800;font-size:19px;color:var(--peach);white-space:nowrap}
+.bar .t span{display:block;font-family:var(--body);font-weight:600;font-size:12.5px;color:rgba(254,251,249,.85);margin-top:2px}
+.bar .t .proj{display:flex;align-items:center;gap:7px;margin-top:5px;font-family:var(--body);font-weight:700;font-size:12.5px;color:var(--paper);text-decoration:underline;text-decoration-color:rgba(230,201,184,.7);text-underline-offset:3px}
+.bar .t .proj i{width:11px;height:11px;border:2px solid var(--peach);border-radius:3px;transition:background 200ms}
+.bar .t .proj.on i{background:var(--peach)}
+.chips{display:flex;gap:8px;margin:2px auto 0}
+.chip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 6px;border-radius:999px;background:rgba(19,53,54,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(254,251,249,.22);font-size:13.5px;font-weight:600;white-space:nowrap;transition:background 200ms}
+.chip i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--teal);font-style:normal}
+.chip i svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.chip.k-arv i{background:var(--peach);color:var(--teal)}.chip.k-barn i{color:var(--mint)}.chip.k-han i{color:var(--paper)}.chip.k-mot i{background:var(--mint);color:var(--teal)}
+.chip b{font-weight:700;opacity:.7;font-size:12px}
+.tour{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px 0 8px;border-radius:999px;background:var(--paper);color:var(--teal);font-weight:700;font-size:14px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.tour i{width:26px;height:26px;border-radius:50%;background:var(--teal);color:var(--paper);display:grid;place-items:center}
+.hint{position:absolute;left:50%;top:84px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13.5px;font-weight:600;white-space:nowrap;transition:opacity 400ms}
+.hero.explore .hint,.hero.proj .hint{opacity:0}
+.prog{position:absolute;right:28px;top:76px;z-index:9;display:none;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13px;font-weight:600}
+.hero.touring .prog{display:flex}
+.prog .b{width:120px;height:3px;background:rgba(254,251,249,.25);border-radius:2px;overflow:hidden}.prog .b i{display:block;height:100%;background:var(--mint)}
+.mini{position:absolute;bottom:40px;z-index:9;width:180px;height:101px;border:1.5px solid rgba(254,251,249,.85);box-shadow:0 6px 18px rgba(0,0,0,.35);background-repeat:no-repeat;opacity:0;transition:opacity 400ms ease;pointer-events:none;overflow:hidden}
+.mini.l{left:16px}.mini.r{right:16px}
+.hero.zoom .mini{opacity:1}
+.mini i{position:absolute;border:1.5px solid var(--paper);box-shadow:0 0 0 999px rgba(10,30,30,.45);transition:all var(--dur) var(--ease)}
+.mini b{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 2px var(--teal)}
+
+/* ---------- mobil ---------- */
+@media (max-width:700px){
+ .top{height:64px;padding:0 18px}.top img{height:24px}.top nav{display:none}.burger{display:block;width:26px;height:16px;border-top:2px solid var(--teal);border-bottom:2px solid var(--teal);position:relative}.burger::after{content:"";position:absolute;left:0;right:0;top:5px;border-top:2px solid var(--teal)}
+ .hero{margin:0;aspect-ratio:auto;height:calc(100svh - 64px);min-height:620px}
+ .bar{padding:14px 14px 0;gap:10px}
+ .bar .t{display:block;font-size:17px}.bar .t span{font-size:11.5px}.bar .t .proj{font-size:11.5px}
+ .chips{display:none}
+ .tour{margin-left:auto;height:38px;font-size:13px;padding:0 14px 0 6px}
+ .hint{top:auto;bottom:22px;font-size:12.5px}
+ .disc{bottom:auto;top:84px;left:14px;font-size:11px}
+ .mini{display:none}
+ .card{top:auto;bottom:0;left:0!important;right:0!important;width:auto;transform:translateY(105%)!important;border-radius:18px 18px 0 0;max-height:66%;overflow:auto;transition:transform 560ms var(--ease);box-shadow:0 -10px 40px rgba(0,0,0,.35)}
+ .hero.zoom .card.show{transform:translateY(0)!important}
+ .card .grab{display:block;position:absolute;left:50%;top:7px;z-index:3;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:rgba(254,251,249,.85)}
+ .gal{aspect-ratio:2.1/1;border-radius:18px 18px 0 0}
+ .gal .gb{display:none}
+ .gal .hint2{display:block}
+ .card .bd{padding:14px 20px 18px}
+ .card h2{font-size:23px;margin-top:6px}
+ .card p{font-size:14.5px;margin-top:12px}
+ .card .x{top:12px;right:12px}
+ .prog{display:none!important}
+ svg.lead{display:none}
+ .m .lbl{font-size:13px}
+}
+.card .grab{display:none}
+@media (max-width:700px){.card .grab{display:block}}
+@media (prefers-reduced-motion:reduce){:root{--dur:1ms}.m.on .head::after{animation:none}.gal .tr{scroll-behavior:auto}}
+.noanim *, .noanim *::before, .noanim *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+</style>
+</head>
+<body>
+<header class="top">
+ <img src="assets/logo.svg" alt="Brøset">
+ <nav><span>Destinasjon Brøset</span><span>Fellesfunksjoner</span><span>Finn boligprosjekter</span><span>Aktuelle nyheter</span><span>Områdekart</span><span>Eksisterende bebyggelse</span><b>Meld interesse</b></nav>
+ <span class="burger" aria-hidden="true"></span>
+</header>
+
+<section class="hero" id="hero" aria-label="Interaktivt kart over Brøset">
+ <div class="stage" id="stage"><img id="heroimg" src="assets/hovedbilde.jpg" alt="Illustrasjon av Brøset sett fra lufta i solnedgang, med bydelen markert"><svg class="felt" id="felt" viewBox="0 0 3500 2227" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+ <div class="spot" id="spot"></div>
+ <div class="shade"></div>
+ <div class="plbl" id="plbl"></div>
+ <div class="pins" id="pins"></div>
+ <svg class="lead" id="lead"><line id="ll" stroke="#FEFBF9" stroke-width="1.5"/><circle id="lc" r="4" fill="#FEFBF9"/></svg>
+ <article class="card r" id="card" aria-live="polite"></article>
+ <div class="hint" id="hint"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 7-6 2-2 6z"/></svg><span>Hold pekeren over et punkt for å se mer</span></div>
+ <div class="mini l" id="mini"><i id="minir"></i><b id="minip"></b></div>
+ <div class="disc">Alle bilder er av illustrativ karakter, endringer vil forekomme.</div>
+ <div class="prog" id="prog"><span id="progt">1 / 22</span><span class="b"><i id="progb" style="width:5%"></i></span></div>
+ <div class="bar">
+  <div class="t">Utforsk Brøset<span id="nsteder">22 steder i den nye bydelen</span><button class="proj" id="proj"><i></i><span id="nproj">4 nyboligprosjekter i salg</span></button></div>
+  <div class="chips" id="chips"></div>
+  <button class="tour" id="tour"><i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></i>Ta en omvisning</button>
+ </div>
+</section>
+
+<script>
+const SRC={w:3500,h:2227,top:260};
+const HERO='assets/hovedbilde.jpg';
+const FELT=[{"id": "elvely", "n": "Bo Brøset Elvely", "url": "https://bobroset.no/no/til-salgs/leilighetene", "d": "M1641,1142 L1626,1158 L1626,1167 L1600,1167 L1591,1174 L1592,1202 L1636,1198 L1670,1236 L1694,1238 L1733,1249 L1770,1231 L1770,1223 L1795,1211 L1801,1213 L1802,1212 L1802,1164 L1717,1151 L1715,1153Z"}, {"id": "wesselslokka", "n": "Wesselsløkka", "url": "https://www.wesselslokka.no/", "d": "M1633,1332 L1636,1332 L1642,1332 L1652,1333 L1663,1333 L1674,1333 L1684,1333 L1693,1333 L1697,1332 L1700,1331 L1703,1328 L1706,1326 L1710,1324 L1713,1321 L1716,1319 L1717,1318 L1718,1317 L1754,1295 L1778,1285 L1825,1284 L1821,1270 L1807,1256 L1796,1254 L1781,1254 L1737,1257 L1737,1265 L1679,1267 L1679,1248 L1636,1200 L1590,1204 L1584,1209 L1584,1283Z"}, {"id": "brosettorg", "n": "Brøset Torg", "url": "https://brosettorg.no/", "d": "M1699,1362 L1699,1333 L1719,1319 L1755,1297 L1778,1287 L1860,1284 L1858,1279 L1880,1273 L1918,1273 L1935,1288 L1935,1309 L1946,1312 L1946,1306 L1957,1298 L1982,1287 L2044,1299 L2070,1310 L2070,1339 L2122,1349 L2122,1399 L2072,1430 L2038,1447 L1890,1412 L1802,1395Z"}, {"id": "urtehagen", "n": "Bo Brøset Urtehagen", "url": "https://bobroset.no/no/til-salgs/rekkehusene", "d": "M2895,1332 L2862,1344 L2862,1353 L2721,1390 L2716,1398 L2711,1427 L3108,1548 L3155,1552 L3158,1518 L3030,1349Z"}];
+const FELT_ANKER={elvely:[1700,1142,'t'],wesselslokka:[1584,1262,'l'],brosettorg:[1960,1440,'b'],urtehagen:[2895,1330,'t']};
+const IC={
+ hoved:'<path d="M3 9.5 12 4l9 5.5M4.5 9.5h15M6 12v6M10 12v6M14 12v6M18 12v6M3.5 20.5h17"/>',
+ villa:'<path d="M4 11 12 4.5l8 6.5M6 9.5V20h12V9.5M10.5 20v-5h3v5"/>',
+ lave:'<path d="M3 11 12 5l9 6v9H3zM9 20v-6h6v6M9 14l6 6M15 14l-6 6"/>',
+ stabbur:'<path d="M3.5 10 12 5l8.5 5M5.5 9.5V15h13V9.5M8 15v5M16 15v5M6 20h4M14 20h4"/>',
+ bhg:'<path d="M4 13h7v7H4zM13 13h7v7h-7zM8.5 5h7v7h-7z"/>',
+ skole:'<path d="M12 7c-2-1.6-5-2-8-1.6V18c3-.4 6 0 8 1.6 2-1.6 5-2 8-1.6V5.4c-3-.4-6 0-8 1.6zM12 7v12.6"/>',
+ hall:'<circle cx="12" cy="12" r="8"/><path d="M4.5 9.5c4 1.2 11 1.2 15 0M4.5 14.5c4-1.2 11-1.2 15 0M12 4c-2.5 4-2.5 12 0 16"/>',
+ kafe:'<path d="M5 9h11v4.5a4.5 4.5 0 0 1-4.5 4.5h-2A4.5 4.5 0 0 1 5 13.5zM16 10.5h1.5a2.2 2.2 0 0 1 0 4.4H16M8.5 3.5v2.5M12 3.5v2.5M4 20.5h13"/>',
+ bag:'<path d="M5.5 8.5h13l-1 11.5h-11zM9 8.5V7a3 3 0 0 1 6 0v1.5"/>',
+ rest:'<path d="M7 4v16M5 4v5a2 2 0 0 0 4 0V4M16.5 4c-2 1.8-2.4 6.5-.2 8.2V20"/>',
+ helse:'<path d="M9.5 4h5v5.5H20v5h-5.5V20h-5v-5.5H4v-5h5.5z"/>',
+ torg:'<path d="M12 4v6M8 7.5c1-2 3-2 4 0 1-2 3-2 4 0M5 13h14l-1.5 3.5h-11zM4 20h16"/>',
+ tre:'<circle cx="12" cy="9" r="5"/><path d="M12 14v6M9 20h6"/>',
+ seng:'<path d="M3 18V8M3 14h18v4M21 14v-2.5a2 2 0 0 0-2-2h-8V14"/><circle cx="7" cy="11.5" r="1.7"/>',
+ folk:'<circle cx="9" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.4"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M14.5 14.6a4.5 4.5 0 0 1 6 4.4"/>',
+ info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.2"/>'
+};
+const KAT={arv:{n:'Kulturarv',ic:'hoved'},barn:{n:'Barn og skole',ic:'skole'},han:{n:'Handel og servering',ic:'kafe'},mot:{n:'Møteplasser og tjenester',ic:'folk'}};
+const svg=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
+const LES_BEB='https://broset.no/den-eksisterende-bebyggelsen/', FELLES='https://broset.no/ambisjoner-om-delearealer/';
+const G_='assets/g/', OKT='Foto: okt. 2026', FILM='Stillbilde fra filmen (illustrasjon)';
+// x,y = bakkepunkt i Hovedbilde (3500×2227), beregnet fra kartfilens koordinater. g = galleri, første bilde vises først.
+const P=[
+ {id:3,x:1214.3,y:1709.0,k:'arv',ic:'hoved',n:'Hovedbygningen Reitgjerdet',ey:'Vernet bygg',f:[['Oppført','1861'],['Arkitekter','Schirmer og von Hanno'],['Framtid','Hjertet i bydelen']],t:'Oppført for Reitgjerdets pleiestiftelse for spedalske, og psykiatrisk sykehus fra 1923. Hovedbygningen og parkanlegget rundt bevares og får ny bruk som hjertet i den nye bydelen.',
+  g:[['assets/hovedbygningen.jpg','Reitgjerdet, flyfoto 1933'],[G_+'hoved_41.jpg','Hovedbygningen i dag · '+OKT],[G_+'hoved_07.jpg','Hovedbygningen fra lufta · '+OKT],[G_+'hoved_08.jpg',OKT],[G_+'hoved_06.jpg',OKT]],ln:LES_BEB,lt:'Les historien'},
+ {id:1,x:1274.2,y:1965.6,k:'arv',ic:'villa',n:'Forvalterboligen',ey:'Vernet bygg',f:[['Oppført','1861'],['Stil','Sveitserstil'],['Status','Bevares']],t:'Trolig oppført samtidig med hovedbygningen, som bolig for forvalteren ved pleiestiftelsen. I dag et viktig miljøskapende element i området rundt hovedbygningen.',
+  g:[['assets/forvalterboligen.jpg','Flyfoto 1933'],[G_+'forv_44.jpg','Forvalterboligen i dag · '+OKT],[G_+'forv_42.jpg',OKT],[G_+'forv_43.jpg',OKT],[G_+'forv_09.jpg','Fra lufta · '+OKT],[G_+'forv_eldre.jpg','Eldre foto']],ln:LES_BEB,lt:'Les historien'},
+ {id:2,x:832.1,y:2212.2,k:'arv',ic:'villa',n:'Overlegeboligen',ey:'Vernet bygg',f:[['Oppført','ca. 1923'],['Også kalt','Direktørboligen'],['Status','Bevares']],t:'Bygget da Reitgjerdet ble gjort om fra leprasykehus til psykiatrisk asyl. To etasjer med høyt valmtak og et klassisistisk inngangsparti. Integreres i et nytt parkanlegg.',
+  g:[['assets/overlegeboligen.jpg','Flyfoto 1933'],[G_+'over_47.jpg','Overlegeboligen i dag · '+OKT],[G_+'over_46.jpg',OKT],[G_+'over_2022.jpg','Foto 2022']],ln:LES_BEB,lt:'Les historien'},
+ {id:4,x:557.6,y:1676.0,k:'arv',ic:'villa',n:'Ortenbygget',ey:'Vernet bygg',f:[['Oppført','ca. 1924'],['Opprinnelig','Gartneriet'],['Status','Bevares']],t:'Del av sykehusets gartnerianlegg, brukt til lagring av grønnsaker. Sommervikarene ved gartneriet bodde også her.',
+  g:[['assets/ortenbygget.jpg','Flyfoto 1933'],[G_+'orten_park.jpg','Illustrasjon: Den historiske parken'],[G_+'orten_48.jpg',OKT],[G_+'orten_49.jpg',OKT]],tolkG:1,ln:LES_BEB,lt:'Les historien'},
+ {id:9,x:1313.4,y:1468.2,k:'barn',ic:'skole',n:'Ny barneskole',ey:'Brøset skole',f:[['I regi av','Trondheim kommune'],['Blir en del av skolen','Sykepostbygget fra 1961']],t:'Sykepostbygningen fra 1961, tegnet av arkitekt Roar Tønseth, bevares og blir en del av Brøset skole i regi av Trondheim kommune.',
+  g:[['assets/sykepost.jpg','Sykepostbygget i dag'],[G_+'skole_05.jpg','Sykepostbygget fra lufta · '+OKT],[G_+'skole_03.jpg',OKT]],ln:LES_BEB,lt:'Les mer'},
+ {id:8,x:1167.3,y:1410.3,k:'barn',ic:'hall',n:'Idrettshall',ey:'Barn og skole',todo:'Fakta om idrettshallen (størrelse, bruk, åpning) mangler i underlaget.'},
+ {id:6,x:1867.9,y:1482.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Barn og skole',todo:'Fakta om barnehagen (avdelinger, plasser, åpning) mangler i underlaget.'},
+ {id:5,x:2030.9,y:1544.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Barn og skole',todo:'Fakta om barnehagen mangler i underlaget.'},
+ {id:7,x:274.1,y:1246.9,k:'barn',ic:'bhg',n:'Ny barnehage',ey:'Barn og skole',todo:'Fakta om barnehagen mangler i underlaget.'},
+ {id:10,x:1640.6,y:1199.8,k:'han',ic:'kafe',n:'Kafé',ey:'Bo Brøset Elvely',t:'Langs bydelsgata Brøsetjordet kommer det kaféer, bakeri og dagligvarebutikker, slik at mange av hverdagens gjøremål kan ordnes i nærmiljøet.',
+  g:[[G_+'kafe_bobroset.jpg','Illustrasjon: Bo Brøset']]},
+ {id:11,x:1648.7,y:1318.5,k:'han',ic:'kafe',n:'Kafé og bakeri',ey:'Handel og servering',t:'Langs bydelsgata Brøsetjordet kommer det kaféer, bakeri og dagligvarebutikker, slik at mange av hverdagens gjøremål kan ordnes i nærmiljøet.',
+  g:[[G_+'bakeri_inne.jpg','Illustrasjon: kafé og bakeri'],[G_+'bakeri_ute.jpg','Illustrasjon: kafé i 1. etasje']]},
+ {id:12,x:2820.1,y:1846.9,k:'han',ic:'bag',n:'Dagligvare',ey:'Brøsetporten',t:'Dagligvare i den østre delen av bydelen, ved Tungasletta.',todo:'Størrelse og åpning mangler i underlaget.',
+  g:[[G_+'kiwi.jpg','Illustrasjon: Kiwi Brøsetporten']]},
+ {id:17,x:2029.5,y:1433.4,k:'han',ic:'bag',n:'Dagligvare',ey:'Brøset Torg',t:'I første etasje kommer en butikk og lokaler som bidrar til liv og aktivitet rundt torget.',
+  g:[[G_+'dagl_torg_film.jpg',FILM]]},
+ {id:14,x:2180.1,y:1472.6,k:'han',ic:'rest',n:'Restaurant',ey:'Handel og servering',todo:'Fakta om restauranten mangler i underlaget.'},
+ {id:15,x:2203,y:1383,k:'arv',ic:'lave',n:'Låven',ey:'Restaureres',f:[['Fra','Brøset gård'],['Framtid','Fellesareal'],['Status','Restaureres']],t:'Låven og stabburet fra Brøset gård integreres som en viktig del av rekreasjons- og aktivitetstilbudet, og blir unike fellesarealer.',
+  g:[[G_+'lave_film.jpg',FILM],[G_+'lave_25.jpg','Låven i dag · '+OKT],[G_+'lave_26.jpg',OKT]]},
+ {id:16,x:2132,y:1432,k:'arv',ic:'stabbur',n:'Stabburet',ey:'Restaureres',f:[['Fra','Brøset gård'],['Framtid','Fellesareal'],['Status','Restaureres']],t:'Stabburet og låven fra Brøset gård blir unike fellesarealer i den nye bydelen.',
+  g:[[G_+'stab_film.jpg',FILM],[G_+'stab_28.jpg','Stabburet i dag · '+OKT],[G_+'stab_27.jpg',OKT]]},
+ {id:19,x:2103.8,y:1453.7,k:'mot',ic:'torg',n:'Torget',ey:'Brøset Torg',f:[['Boliger','189'],['Størrelser','ca. 34–117 m²'],['I 1. etasje','Butikk']],t:'Med butikker, flotte uteområder og et levende torg blir Brøset Torg et naturlig midtpunkt i bydelen. Gatetun og torg skaper gode møteplasser, og bekkeløpet gir uterommene en naturlig karakter.',
+  g:[[G_+'torg_film.jpg',FILM],[G_+'torg_film2.jpg',FILM]],ln:'https://broset.no/broset-torg-blir-et-nytt-samlingspunkt-pa-broset/',lt:'Les om Brøset Torg'},
+ {id:18,x:1765.2,y:1330.4,k:'mot',ic:'tre',n:'Gatetun',ey:'Møteplass',t:'Trivelige gatetun mellom husene gir gode møteplasser og bidrar til et levende nærmiljø.',
+  g:[[G_+'gatetun.jpg','Illustrasjon: gatetun'],[G_+'gatetun_naering.jpg','Illustrasjon: næringslokaler i 1. etasje']]},
+ {id:20,x:1704.3,y:1307.3,k:'mot',ic:'seng',n:'3 gjesteleiligheter',ey:'Fellesfunksjon',f:[['Antall','3'],['For','Beboernes gjester'],['Booking','Av beboerne']],t:'Felles gjesteleiligheter som beboerne kan booke når familie eller venner kommer på besøk, så færre trenger et ekstra soverom.',ln:FELLES,lt:'Om fellesfunksjonene'},
+ {id:21,x:1611.9,y:1307.0,k:'mot',ic:'folk',n:'Fellesrom',ey:'Fellesfunksjon',t:'Forsamlingslokaler for hverdag og fest, med blant annet felles kjøkken, sittegrupper, fellesstue, lekeområde for barn og møterom. Fellesvaskeri og felles takterrasser er også en del av fellesfunksjonene på Brøset.',
+  g:[[G_+'felles_forsamling.jpg','Illustrasjon: forsamlingslokale'],[G_+'felles_vaskeri.jpg','Illustrasjon: fellesvaskeri'],[G_+'felles_tak.jpg','Illustrasjon: felles takterrasse']],ln:FELLES,lt:'Om fellesfunksjonene'},
+ {id:13,x:2625.3,y:1576.1,k:'mot',ic:'helse',n:'Helse- og velferdssenter',ey:'Tjenester',todo:'Fakta om senteret (tilbud, drift, åpning) mangler i underlaget.'},
+ {id:22,x:1101.8,y:1278.3,k:'mot',ic:'info',n:'Infosenter Brøsetløkka',ey:'Tjenester',todo:'Åpningstider og innhold mangler i underlaget.'}
+];
+const CL=[{id:'torg',n:'Torget',m:[19,17,14,16,15]},{id:'felles',n:'Kafé og fellesrom',m:[11,20,18,21]}];
+const inCl={};CL.forEach(c=>c.m.forEach(i=>inCl[i]=c.id));
+const byId=Object.fromEntries(P.map(p=>[p.id,p]));
+const $=id=>document.getElementById(id);
+const hero=$('hero'),stage=$('stage'),img=$('heroimg'),pins=$('pins'),card=$('card'),spot=$('spot'),felt=$('felt'),plbl=$('plbl');
+let G={W:0,H:0,k:1,ox:0,oy:0},T={tx:0,ty:0,s:1},S={mode:'start',id:null,cl:null};
+const mob=()=>innerWidth<=700;
+function layout(){
+ const W=hero.clientWidth,H=hero.clientHeight;
+ const k=Math.max(W/SRC.w,H/(SRC.h-SRC.top));
+ let ox=(W-SRC.w*k)/2, oy=H-SRC.h*k;
+ if(mob()) ox=Math.min(0,Math.max(W-SRC.w*k, W/2-1750*k));
+ G={W,H,k,ox,oy};
+ for(const el of [img,felt]){el.style.width=SRC.w*k+'px';el.style.height=SRC.h*k+'px';el.style.left=ox+'px';el.style.top=oy+'px';}
+}
+const D=p=>({X:G.ox+p.x*G.k,Y:G.oy+p.y*G.k});
+function clamp(tx,ty,s,vis){
+ const x0=G.ox*s, x1=(G.ox+SRC.w*G.k)*s, y0=G.oy*s, y1=(G.oy+SRC.h*G.k)*s;
+ const Hb=vis||G.H;
+ tx=Math.min(-x0,Math.max(G.W-x1,tx)); ty=Math.min(-y0,Math.max(Hb-y1,ty)); return {tx,ty,s};
+}
+function focus(X,Y,s,side){
+ if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const cx=G.W/2,cy=96+(vis-96)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
+ const free=G.W-404-80, cx= side==='r'? free/2+10 : G.W-free/2-10, cy=G.H*0.52;
+ const a=.5, px=X+(cx-X)*a, py=Y+(cy-Y)*a;
+ return clamp(px-s*X,py-s*Y,s);
+}
+function build(){
+ // prosjektomriss
+ felt.innerHTML=FELT.map(f=>`<path class="h" d="${f.d}"/><a class="fa" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener" aria-label="${f.n}, åpnes i ny fane"><path class="f" data-id="${f.id}" d="${f.d}"><title>${f.n}</title></path></a>`).join('');
+ plbl.innerHTML=FELT.map(f=>`<a class="${FELT_ANKER[f.id][2]}" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener"><i></i>${f.n}<small>I salg ↗</small></a>`).join('');
+ felt.querySelectorAll('a.fa').forEach(el=>{const id=el.dataset.id;
+  const lab=()=>plbl.querySelector(`[data-id="${id}"]`);
+  el.addEventListener('pointerenter',e=>{if(e.pointerType!=='mouse')el._armed=lab().classList.contains('on');projShow(projLock||projCur.length>1?ALL:[id])});
+  el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});
+  el.addEventListener('focus',()=>projShow([id]));el.addEventListener('blur',projHide);
+  // på berøringsskjerm: første trykk viser navnet, andre trykk (på omriss eller etikett) åpner prosjektsiden
+  el.addEventListener('click',e=>{if(S.mode!=='start'){e.preventDefault();return}if(lastPT!=='mouse'&&!el._armed){e.preventDefault();el._armed=true;projShow(projLock?ALL:[id]);}});});
+ plbl.querySelectorAll('a').forEach(el=>{el.addEventListener('pointerenter',()=>clearTimeout(projT));el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});el.addEventListener('focus',()=>{clearTimeout(projT);projOn(ALL)});el.addEventListener('blur',projHide);});
+ const pb=$('proj');pb.addEventListener('pointerenter',()=>projShow(ALL));pb.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});pb.addEventListener('focus',()=>projShow(ALL));pb.addEventListener('blur',projHide);
+ pb.addEventListener('click',()=>{if(S.mode!=='start')closeAll();projLock=!projLock;pb.classList.toggle('on',projLock);pb.setAttribute('aria-pressed',projLock);projShow(projLock?ALL:[]);});
+ // punkter
+ pins.innerHTML='';
+ P.forEach(p=>{const b=document.createElement('button');b.className='m k-'+p.k;b.dataset.id=p.id;b.setAttribute('aria-label',p.n+(p.ey?', '+p.ey:''));
+  b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head">${svg(p.ic)}</span><span class="lbl">${p.n}</span>`;
+  b.addEventListener('pointerenter',()=>intent(()=>open(p.id)));b.addEventListener('pointerleave',cancelIntent);
+  b.addEventListener('focus',()=>open(p.id));b.addEventListener('click',()=>open(p.id));pins.append(b);p.el=b;});
+ CL.forEach(c=>{const ms=c.m.map(i=>byId[i]);c.x=ms.reduce((a,p)=>a+p.x,0)/ms.length;const ys=ms.map(p=>p.y);c.y=(Math.min(...ys)+Math.max(...ys))/2;c.side=c.x/SRC.w<0.5?'r':'l';
+  const b=document.createElement('button');b.className='m c';b.setAttribute('aria-label',c.n+', '+c.m.length+' steder');
+  b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head"><i>${c.m.length}</i>${c.n}</span>`;
+  b.addEventListener('pointerenter',()=>intent(()=>openCl(c.id)));b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>openCl(c.id));
+  pins.append(b);c.el=b;});
+ const ch=$('chips');
+ ch.innerHTML=Object.entries(KAT).map(([k,v])=>`<button class="chip k-${k}" data-k="${k}"><i>${svg(v.ic)}</i>${v.n} <b>${P.filter(p=>p.k===k).length}</b></button>`).join('');
+ ch.querySelectorAll('.chip').forEach(c=>{c.onmouseenter=()=>hl(c.dataset.k);c.onmouseleave=()=>hl(null)});
+ $('nsteder').textContent=P.length+' steder i den nye bydelen';
+ $('nproj').textContent=FELT.length+' nyboligprosjekter i salg';
+}
+const ALL=FELT.map(f=>f.id);let projT=0,projLock=false,lastPT='mouse',projCur=[];
+function projShow(ids){clearTimeout(projT);projOn(ids)}
+function projHide(){clearTimeout(projT);projT=setTimeout(()=>projOn(projLock?ALL:[]),projCur.length>1?800:450)}
+function projClear(){clearTimeout(projT);projLock=false;$('proj').classList.remove('on');$('proj').setAttribute('aria-pressed','false');projOn([])}
+function projOn(ids){
+ if(S.mode!=='start'&&ids.length)return;
+ projCur=ids;
+ felt.querySelectorAll('.f').forEach(el=>el.classList.toggle('on',ids.includes(el.dataset.id)));
+ plbl.querySelectorAll('a').forEach(el=>el.classList.toggle('on',ids.includes(el.dataset.id)));
+ hero.classList.toggle('proj',ids.length>1);
+ hero.classList.toggle('proj1',ids.length===1);
+}
+let it=0;function intent(f){clearTimeout(it);it=setTimeout(f,110)}function cancelIntent(){clearTimeout(it)}
+function hl(k){if(S.mode!=='start')return;P.forEach(p=>p.el.classList.toggle('dim',!!k&&p.k!==k));CL.forEach(c=>c.el.classList.toggle('dim',!!k&&!c.m.some(i=>byId[i].k===k)));}
+function place(){
+ const {tx,ty,s}=T;
+ P.forEach(p=>{const d=D(p);p.el.style.transform=`translate(${tx+s*d.X}px,${ty+s*d.Y}px)`;
+  const cl=inCl[p.id];
+  p.el.classList.toggle('hid',!!(cl&&S.cl!==cl));
+  p.el.classList.toggle('on',S.id===p.id);
+  p.el.classList.toggle('named',!!(S.cl&&cl===S.cl));
+  p.el.classList.toggle('dim',S.mode!=='start'&&S.id!==p.id&&!(S.cl&&cl===S.cl));
+ });
+ CL.forEach(c=>{const d=D(c);c.el.style.transform=`translate(${tx+s*d.X}px,${ty+s*d.Y}px)`;c.el.classList.toggle('hid',S.cl===c.id);c.el.classList.toggle('dim',S.mode!=='start'&&S.cl!==c.id);});
+ FELT.forEach(f=>{const a=FELT_ANKER[f.id],el=plbl.querySelector(`[data-id="${f.id}"]`);el.style.left=(tx+s*(G.ox+a[0]*G.k))+'px';el.style.top=(ty+s*(G.oy+a[1]*G.k))+'px';});
+ felt.style.setProperty('--sw',(1/(G.k*s)*(SRC.w/3500))+'px');
+ // vifte ut klyngen
+ P.forEach(p=>{['--dx','--dy','--len','--ang'].forEach(v=>p.el.style.removeProperty(v));p.el.classList.remove('lblL')});
+ if(S.cl){const c=CL.find(c=>c.id===S.cl);const ms=c.m.map(i=>byId[i]).map(p=>{const d=D(p);return {p,x:tx+s*d.X,y:ty+s*d.Y}});
+  const right= S.side!=='r'; const gap=mob()?46:54; const n=ms.length;
+  const colX= right? Math.max(...ms.map(m=>m.x))+(mob()?40:80) : Math.min(...ms.map(m=>m.x))-(mob()?40:80);
+  const cy= ms.reduce((a,m)=>a+m.y,0)/n - (mob()?70:90);
+  const slots=ms.map((_,i)=>cy+(i-(n-1)/2)*gap);
+  const perms=a=>a.length<2?[a]:a.flatMap((x,i)=>perms(a.slice(0,i).concat(a.slice(i+1))).map(r=>[x,...r]));
+  const cross=(a,b,c,d)=>{const o=(p,q,r)=>Math.sign((q.x-p.x)*(r.y-p.y)-(q.y-p.y)*(r.x-p.x));return o(a,b,c)!==o(a,b,d)&&o(c,d,a)!==o(c,d,b)};
+  let best=null;perms(ms).forEach(pm=>{let k=0,len=0;const seg=pm.map((m,i)=>[{x:m.x,y:m.y},{x:colX,y:slots[i]}]);
+   for(let i=0;i<n;i++){len+=Math.hypot(seg[i][1].x-seg[i][0].x,seg[i][1].y-seg[i][0].y);for(let j=i+1;j<n;j++)if(cross(seg[i][0],seg[i][1],seg[j][0],seg[j][1]))k++}
+   const sc=k*1e6+len;if(!best||sc<best[0])best=[sc,pm]});
+  best[1].forEach((m,i)=>{const dx=colX-m.x, dy=slots[i]-m.y; const L=Math.hypot(dx,dy)-18;
+   const el=m.p.el; el.style.setProperty('--dx',dx+'px');el.style.setProperty('--dy',dy+'px');el.style.setProperty('--len',Math.max(0,L)+'px');el.style.setProperty('--ang',Math.atan2(dx,-dy)+'rad');
+   if(!right) el.classList.add('lblL');});
+ }
+ // skjul punkter under topplinjen når kartet er zoomet
+ P.concat(CL).forEach(o=>{const d=D(o);const hy=ty+s*d.Y-44;o.el.classList.toggle('under',S.mode!=='start'&&hy<(mob()?110:96)&&!o.el.classList.contains('named'))});
+ stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
+ const mm=$('mini');{const f=180/G.W;mm.style.height=G.H*f+'px';mm.style.backgroundImage=`url(${HERO})`;mm.style.backgroundSize=SRC.w*G.k*f+'px auto';mm.style.backgroundPosition=G.ox*f+'px '+G.oy*f+'px';
+  const r=$('minir');r.style.left=(-tx/s)*f+'px';r.style.top=(-ty/s)*f+'px';r.style.width=G.W/s*f+'px';r.style.height=G.H/s*f+'px';
+  mm.className='mini '+(S.side==='l'?'r':'l');
+  const pp=$('minip');if(S.id){const d=D(byId[S.id]);pp.style.left=d.X*f+'px';pp.style.top=d.Y*f+'px';pp.style.display='block'}else pp.style.display='none';}
+}
+function setSpot(X,Y,r){spot.style.setProperty('--sx',X+'px');spot.style.setProperty('--sy',Y+'px');spot.style.setProperty('--sr',r+'px');}
+const AR=()=>mob()?2.1:16/9;
+function cropStyle(p,w){const h=w/AR(),cw=620,f=w/cw;return `background-image:url(${HERO});background-size:${SRC.w*f}px auto;background-position:${-(p.x*f-w/2)}px ${-((p.y-30)*f-h/2)}px`;}
+const AR_IC='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', AR_IC2='<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
+function renderCard(p,side){
+ const kat=KAT[p.k];
+ card.className='card '+side+' k-'+p.k;
+ const w=mob()?innerWidth:404;
+ const slides=(p.g&&p.g.length)?p.g.map(([s,c],i)=>`<figure><img src="${s}" alt="${p.n}${c?': '+c:''}" ${i?'loading="lazy"':''} draggable="false"><figcaption>${c||''}</figcaption></figure>`).join('')
+   :`<figure><div class="crop" style="${cropStyle(p,w)}"></div><figcaption>Utsnitt av illustrasjonen</figcaption></figure>`;
+ const n=(p.g&&p.g.length)||1;
+ const gal=`<div class="gal${n<2?' one':''}" id="gal"><div class="tr" id="gtr">${slides}</div>
+  <button class="gb gp" id="gp" aria-label="Forrige bilde" disabled>${AR_IC}</button><button class="gb gn" id="gn" aria-label="Neste bilde">${AR_IC2}</button>
+  <div class="dots" id="gd">${Array.from({length:n},(_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div><span class="hint2">Sveip</span><span class="cnt" id="gc">1 / ${n}</span></div>`;
+ const facts=p.f?`<dl class="facts" style="--n:${p.f.length}">${p.f.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join('')}</dl>`:'';
+ const i=P.indexOf(p)+1;
+ card.innerHTML=`<span class="grab"></span><button class="x" aria-label="Lukk" onclick="closeAll()">×</button>${gal}<div class="bd">
+  <div class="eyebrow"><span class="dot"></span>${kat.n}${p.ey&&p.ey!==kat.n?' · '+p.ey:''}</div>
+  <h2>${p.n}</h2>${facts}${p.t?`<p>${p.t}</p>`:''}${p.todo?`<div class="todo">${p.todo}</div>`:''}
+  <div class="ft">${p.ln?`<a class="more" href="${p.ln}" target="_blank" rel="noopener">${p.lt||'Les mer'} <span aria-hidden="true">→</span></a>`:'<span></span>'}
+  <div class="nav"><button aria-label="Forrige sted" onclick="step(-1)">‹</button><span>${i} / ${P.length}</span><button aria-label="Neste sted" onclick="step(1)">›</button></div></div></div>`;
+ const tr=$('gtr'),gp=$('gp'),gn=$('gn'),gc=$('gc'),dots=[...$('gd').children];
+ const cur=()=>Math.round(tr.scrollLeft/Math.max(1,tr.clientWidth));
+ const upd=()=>{const c=cur();gc.textContent=(c+1)+' / '+n;dots.forEach((d,j)=>d.classList.toggle('on',j===c));gp.disabled=c<=0;gn.disabled=c>=n-1;};
+ tr.addEventListener('scroll',()=>{cancelAnimationFrame(upd.r);upd.r=requestAnimationFrame(upd)},{passive:true});
+ gp.onclick=e=>{e.stopPropagation();tr.scrollBy({left:-tr.clientWidth})};gn.onclick=e=>{e.stopPropagation();tr.scrollBy({left:tr.clientWidth})};
+ card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};
+ upd();
+ $('progt').textContent=i+' / '+P.length;$('progb').style.width=(i/P.length*100)+'%';
+}
+function lead(p,side){
+ const L=$('lead');if(mob()){L.classList.remove('show');return}
+ const d=D(p),cs=getComputedStyle(p.el),hx=T.tx+T.s*d.X+parseFloat(cs.getPropertyValue('--dx')||0),hy=T.ty+T.s*d.Y+parseFloat(cs.getPropertyValue('--dy')||-44);
+ const ch=card.offsetHeight||520,cy0=G.H/2-ch/2+30,cy1=G.H/2+ch/2-30;
+ const ex= side==='r'? G.W-40-404 : 40+404, ey=Math.max(cy0,Math.min(cy1,hy));
+ const sx= side==='r'? hx+24 : hx-24;
+ const l=$('ll');l.setAttribute('x1',sx);l.setAttribute('y1',hy);l.setAttribute('x2',ex);l.setAttribute('y2',ey);
+ const c=$('lc');c.setAttribute('cx',ex);c.setAttribute('cy',ey);
+ L.classList.add('show');
+}
+// Faktaboksen holder seg på samme side: fast side per klynge, og for enkeltpunkter byttes side bare når punktet ligger langt over på den andre halvdelen
+function sideFor(p,cl){
+ if(cl) return CL.find(c=>c.id===cl).side;
+ const fx=p.x/SRC.w;
+ if(S.mode!=='start'&&S.side){ if(S.side==='r'&&fx<0.62) return 'r'; if(S.side==='l'&&fx>0.38) return 'l'; }
+ return fx<0.5?'r':'l';
+}
+function open(id,opt={}){
+ projClear();
+ const p=byId[id];const d=D(p);
+ const cl=inCl[id], C=cl?CL.find(c=>c.id===cl):null;
+ const same= !!cl && S.mode!=='start' && S.cl===cl && !opt.refocus;   // bytte innen samme klynge: ingen ny zoom
+ let side= same? S.side : sideFor(p,cl);
+ const s= opt.s || (mob()?1.7:(cl?2.2:2.1));
+ S={mode:'poi',id,cl:cl||null,side};
+ renderCard(p,side);card.classList.add('show');
+ if(!same){
+  const f= C? D(C) : d;
+  T=focus(f.X,f.Y-20,s,side);
+  if(!mob()&&!cl){const sx=T.tx+s*d.X; if(side==='r'? sx>G.W-404-80 : sx<404+80){side=side==='r'?'l':'r';S.side=side;renderCard(p,side);T=focus(d.X,d.Y-20,s,side);}}
+ }
+ hero.classList.add('explore','zoom');
+ place();
+ const sp= C? D(C) : d;
+ setSpot(T.tx+T.s*sp.X,T.ty+T.s*sp.Y-30,cl?170:110);
+ clearTimeout(open.t);$('lead').classList.remove('show');
+ if(!cl) open.t=setTimeout(()=>lead(p,side),opt.now?0:950);
+}
+function openCl(cid){open(CL.find(c=>c.id===cid).m[0]);}
+function closeAll(){S={mode:'start',id:null,cl:null,side:null};T={tx:0,ty:0,s:1};hero.classList.remove('zoom','explore');card.classList.remove('show');$('lead').classList.remove('show');place();}
+function step(n){const i=(P.findIndex(p=>p.id===S.id)+n+P.length)%P.length;open(P[i].id);}
+let tour=0;$('tour').onclick=()=>{if(tour){clearInterval(tour);tour=0;hero.classList.remove('touring');return}hero.classList.add('touring');open(P[0].id);tour=setInterval(()=>step(1),5200)};
+hero.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide();if(e.pointerType==='mouse'&&!tour)setTimeout(()=>{if(!hero.matches(':hover'))closeAll()},450)});
+hero.addEventListener('pointerdown',e=>{lastPT=e.pointerType;if(e.pointerType!=='mouse'&&!e.target.closest('a.fa,.plbl a,#proj')){clearTimeout(projT);projOn(projLock?ALL:[]);felt.querySelectorAll('a.fa').forEach(a=>a._armed=false)}},true);
+// mens alle fire prosjektene vises: de blir stående så lenge pekeren er i bevegelse, og skjules først når den har stått i ro utenfor et prosjekt
+hero.addEventListener('pointermove',e=>{if(projCur.length>1&&!projLock&&!e.target.closest('a.fa,.plbl a,#proj'))projHide()},{passive:true});
+addEventListener('keydown',e=>{if(e.key==='Escape'){closeAll();projClear();}if(S.mode!=='start'&&e.key==='ArrowRight')step(1);if(S.mode!=='start'&&e.key==='ArrowLeft')step(-1)});
+addEventListener('resize',()=>{layout();if(S.id)open(S.id,{now:1,refocus:1});else place()});
+layout();build();place();
+if(mob())document.querySelector('#hint span').textContent='Trykk på et punkt for å se mer';
+window.demo={open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
+</script>
+</body>
+</html>
