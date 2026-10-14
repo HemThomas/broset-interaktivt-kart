@@ -38,7 +38,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .burger{display:none}
 
 /* ---------- kartet ---------- */
-.hero{position:relative;margin:0 48px;aspect-ratio:16/9;overflow:hidden;background:#2a2a22;isolation:isolate;user-select:none}
+.hero{position:relative;margin:0 auto 24px;width:min(calc(100vw - 96px),calc((100svh - 120px) * 3500 / 2227));aspect-ratio:3500/2227;overflow:hidden;background:#2a2a22;isolation:isolate;user-select:none;-webkit-user-select:none}
+.hero img{-webkit-user-drag:none}
+.stage{touch-action:pan-y}
+.hero.zoomed .stage{cursor:grab}.hero.dragging .stage{cursor:grabbing}
+.hero.live .stage,.hero.live .m,.hero.live .plbl a,.hero.live .spot,.hero.live .mini i{transition:none!important}
 .stage{position:absolute;inset:0;transform-origin:0 0;transition:transform var(--dur) var(--ease);will-change:transform}
 .stage img{position:absolute;display:block;max-width:none}
 .spot{position:absolute;inset:0;pointer-events:none;opacity:0;
@@ -46,7 +50,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
  transition:opacity 700ms ease,--sx var(--dur) var(--ease),--sy var(--dur) var(--ease),--sr var(--dur) var(--ease)}
 .hero.zoom .spot{opacity:1}
 .shade{position:absolute;left:0;right:0;top:0;height:170px;pointer-events:none;background:linear-gradient(to bottom,rgba(10,30,30,.6),rgba(10,30,30,0))}
-.disc{position:absolute;left:16px;bottom:12px;z-index:9;font-size:12px;color:rgba(254,251,249,.9);text-shadow:0 1px 3px rgba(0,0,0,.6);opacity:0;transition:opacity 400ms}
+.disc{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;bottom:16px;z-index:9;font-size:12px;color:rgba(254,251,249,.9);text-shadow:0 1px 3px rgba(0,0,0,.6);opacity:0;transition:opacity 400ms}
 .hero.zoom .disc{opacity:1}
 
 /* prosjektomriss, uten fyll */
@@ -62,6 +66,7 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .plbl a{position:absolute;transform:translate(-50%,-100%);display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px 0 10px;border-radius:999px;background:var(--paper);color:var(--teal);font-family:var(--head);font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.3);opacity:0;margin-top:-10px;transition:opacity 220ms ease,margin-top 220ms var(--ease)}
 .plbl a i{width:10px;height:10px;border:2px solid var(--peach);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(28,75,76,.25)}
 .plbl a small{font-family:var(--body);font-weight:700;font-size:11px;color:#3f7a62;letter-spacing:.03em}
+.plbl a.kommer small{color:#a8673f}
 .plbl a::after{content:"";position:absolute;left:50%;bottom:-5px;width:10px;height:10px;margin-left:-5px;background:var(--paper);transform:rotate(45deg);border-radius:2px}
 .plbl a.on{opacity:1;margin-top:-16px;pointer-events:auto}
 .plbl a.l{transform:translate(-100%,-50%);margin-top:0;margin-left:-6px}.plbl a.l.on{margin-top:0;margin-left:-14px}
@@ -81,7 +86,7 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .m.k-barn .head{color:var(--mint)}
 .m.k-han .head{color:var(--paper)}
 .m.k-mot .head{background:var(--mint);color:var(--teal)}
-.m .lbl{position:absolute;left:calc(var(--dx) + 24px);top:calc(var(--dy) - 14px);height:28px;display:flex;align-items:center;gap:8px;padding:0 13px 0 14px;white-space:nowrap;background:var(--paper);color:var(--teal);font-family:var(--head);font-weight:700;font-size:14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.28);opacity:0;transform:translateX(-8px);transition:opacity 260ms ease,transform 260ms var(--ease);pointer-events:none}
+.m .lbl{position:absolute;left:calc(var(--dx) + 24px);top:calc(var(--dy) - 14px + var(--ly,0px));height:28px;display:flex;align-items:center;gap:8px;padding:0 13px 0 14px;white-space:nowrap;background:var(--paper);color:var(--teal);font-family:var(--head);font-weight:700;font-size:14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.28);opacity:0;transform:translateX(-8px);transition:opacity 260ms ease,transform 260ms var(--ease);pointer-events:none}
 .m:hover .lbl,.m:focus-visible .lbl,.m.on .lbl,.m.named .lbl{opacity:1;transform:none}
 .hero.zoom .m.on:not(.named) .lbl{opacity:0}
 @media (max-width:700px){.hero.zoom .m.on .lbl{opacity:1}}
@@ -94,6 +99,8 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .m.lblL .lbl{left:auto;right:calc(24px - var(--dx));transform:translateX(8px)}
 .m.lblL:hover .lbl,.m.lblL.on .lbl,.m.lblL.named .lbl{transform:none}
 .m.hid{opacity:0;pointer-events:none}
+.m.off{opacity:.13!important;pointer-events:none!important}
+.m.flab .lbl{opacity:1;transform:none}
 .m:focus-visible{outline:none}
 .m:focus-visible .head{box-shadow:0 0 0 2px var(--paper),0 0 0 5px var(--teal)}
 .hero.proj .m{opacity:0;pointer-events:none}
@@ -103,7 +110,7 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .c .head i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--mint);color:var(--teal);font-size:13px;font-weight:800}
 
 /* faktakort */
-.card{position:absolute;top:50%;width:404px;z-index:8;background:var(--paper);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.18);opacity:0;pointer-events:none;transform:translate(var(--cx,24px),-50%);transition:opacity 420ms ease 200ms,transform 620ms var(--ease) 160ms}
+.card{position:absolute;top:calc(50% + 34px);max-height:calc(100% - 100px);overflow:auto;scrollbar-width:thin;width:404px;z-index:8;background:var(--paper);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.18);opacity:0;pointer-events:none;transform:translate(var(--cx,24px),-50%);transition:opacity 420ms ease 200ms,transform 620ms var(--ease) 160ms}
 .card.r{right:40px;--cx:28px}.card.l{left:40px;--cx:-28px}
 .hero.zoom .card.show{opacity:1;pointer-events:auto;transform:translate(0,-50%)}
 /* galleri */
@@ -158,18 +165,35 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 .chip{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px 0 6px;border-radius:999px;background:rgba(19,53,54,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(254,251,249,.22);font-size:13.5px;font-weight:600;white-space:nowrap;transition:background 200ms}
 .chip i{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--teal);font-style:normal}
 .chip i svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.chip{cursor:pointer}.chip:hover{background:rgba(19,53,54,.85)}
+.chip.on{background:var(--paper);color:var(--teal);border-color:var(--paper);box-shadow:0 6px 18px rgba(0,0,0,.25)}.chip.on b{opacity:.85}
 .chip.k-arv i{background:var(--peach);color:var(--teal)}.chip.k-barn i{color:var(--mint)}.chip.k-han i{color:var(--paper)}.chip.k-mot i{background:var(--mint);color:var(--teal)}
 .chip b{font-weight:700;opacity:.7;font-size:12px}
 .tour{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 18px 0 8px;border-radius:999px;background:var(--paper);color:var(--teal);font-weight:700;font-size:14px;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .tour i{width:26px;height:26px;border-radius:50%;background:var(--teal);color:var(--paper);display:grid;place-items:center}
-.hint{position:absolute;left:50%;top:84px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13.5px;font-weight:600;white-space:nowrap;transition:opacity 400ms}
+.tour.on i{background:#a8673f}
+.bar .t .proj{text-align:left}
+.tour .ts{display:none}
+/* smal skjerm: kategoriknappene på egen linje */
+.hero.narrow .bar{flex-wrap:wrap}.hero.narrow .chips{order:3;flex-basis:100%;margin:8px 0 0;justify-content:center}.hero.narrow .tour{margin-left:auto}
+/* zoom */
+.zctl{position:absolute;left:16px;bottom:14px;z-index:9;display:flex;align-items:center;gap:8px}
+.hero.sideL .zctl{left:auto;right:16px}
+.zhint{padding:6px 12px;border-radius:999px;background:rgba(19,53,54,.62);backdrop-filter:blur(8px);color:rgba(254,251,249,.92);font-size:12px;font-weight:600;transition:opacity 300ms}
+.zhint kbd{font-family:var(--body);font-weight:800;padding:1px 6px;border-radius:4px;background:rgba(254,251,249,.18);margin-right:2px}
+.hero.zoom .zhint,.hero.zoomed .zhint{opacity:0}
+.zreset{display:none;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:999px;background:var(--paper);color:var(--teal);font-weight:700;font-size:13.5px;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.hero.zoomed .zreset{display:inline-flex}
+.ztoast{position:absolute;left:50%;top:50%;z-index:10;transform:translate(-50%,-50%);padding:14px 22px;border-radius:12px;background:rgba(19,53,54,.85);color:var(--paper);font-size:16px;font-weight:700;pointer-events:none;opacity:0;transition:opacity 250ms}
+.ztoast.on{opacity:1}
+.hint{position:absolute;left:50%;top:calc(var(--barh,72px) + 12px);transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13.5px;font-weight:600;white-space:nowrap;transition:opacity 400ms}
 .hero.explore .hint,.hero.proj .hint{opacity:0}
-.prog{position:absolute;right:28px;top:76px;z-index:9;display:none;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13px;font-weight:600}
+.prog{position:absolute;right:28px;top:calc(var(--barh,72px) + 4px);z-index:9;display:none;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(19,53,54,.7);backdrop-filter:blur(8px);color:var(--paper);font-size:13px;font-weight:600}
 .hero.touring .prog{display:flex}
 .prog .b{width:120px;height:3px;background:rgba(254,251,249,.25);border-radius:2px;overflow:hidden}.prog .b i{display:block;height:100%;background:var(--mint)}
-.mini{position:absolute;bottom:40px;z-index:9;width:180px;height:101px;border:1.5px solid rgba(254,251,249,.85);box-shadow:0 6px 18px rgba(0,0,0,.35);background-repeat:no-repeat;opacity:0;transition:opacity 400ms ease;pointer-events:none;overflow:hidden}
+.mini{position:absolute;bottom:60px;z-index:9;width:180px;height:101px;border:1.5px solid rgba(254,251,249,.85);box-shadow:0 6px 18px rgba(0,0,0,.35);background-repeat:no-repeat;opacity:0;transition:opacity 400ms ease;pointer-events:none;overflow:hidden}
 .mini.l{left:16px}.mini.r{right:16px}
-.hero.zoom .mini{opacity:1}
+.hero.zoom .mini,.hero.zoomed .mini{opacity:1}
 .mini i{position:absolute;border:1.5px solid var(--paper);box-shadow:0 0 0 999px rgba(10,30,30,.45);transition:all var(--dur) var(--ease)}
 .mini b{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 2px var(--teal)}
 
@@ -179,10 +203,17 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
  .hero{margin:0;aspect-ratio:auto;height:calc(100svh - 64px);min-height:620px}
  .bar{padding:14px 14px 0;gap:10px}
  .bar .t{display:block;font-size:17px}.bar .t span{font-size:11.5px}.bar .t .proj{font-size:11.5px}
- .chips{display:none}
- .tour{margin-left:auto;height:38px;font-size:13px;padding:0 14px 0 6px}
+ .chips{display:flex;position:absolute;left:0;right:0;top:94px;margin:0;padding:0 14px;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.chips::-webkit-scrollbar{display:none}
+ .chip{height:32px;font-size:12.5px;flex:0 0 auto}
+ .zctl{display:none;top:136px;bottom:auto;left:auto!important;right:14px!important}.zhint{display:none}
+ .hero.zoomed .zctl{display:flex}
+ .hero.zoomed .disc{display:none}
+ .tour{margin-left:auto;height:38px;font-size:13px;padding:0 14px 0 6px;flex:0 0 auto}
+ .tour .tl{display:none}.tour .ts{display:inline}
+ .bar .t{min-width:0}
  .hint{top:auto;bottom:22px;font-size:12.5px}
- .disc{bottom:auto;top:84px;left:14px;font-size:11px}
+ .disc{bottom:auto;top:136px;left:14px;transform:none;font-size:11px}
+ .hero{width:auto}
  .mini{display:none}
  .card{top:auto;bottom:0;left:0!important;right:0!important;width:auto;transform:translateY(105%)!important;border-radius:18px 18px 0 0;max-height:66%;overflow:auto;transition:transform 560ms var(--ease);box-shadow:0 -10px 40px rgba(0,0,0,.35)}
  .hero.zoom .card.show{transform:translateY(0)!important}
@@ -212,7 +243,7 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
 </header>
 
 <section class="hero" id="hero" aria-label="Interaktivt kart over Brøset">
- <div class="stage" id="stage"><img id="heroimg" src="assets/hovedbilde.jpg" alt="Illustrasjon av Brøset sett fra lufta i solnedgang, med bydelen markert"><svg class="felt" id="felt" viewBox="0 0 3500 2227" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+ <div class="stage" id="stage"><img id="heroimg" draggable="false" src="assets/hovedbilde.jpg" alt="Illustrasjon av Brøset sett fra lufta i solnedgang, med bydelen markert"><svg class="felt" id="felt" viewBox="0 0 3500 2227" preserveAspectRatio="none" aria-hidden="true"></svg></div>
  <div class="spot" id="spot"></div>
  <div class="shade"></div>
  <div class="plbl" id="plbl"></div>
@@ -221,19 +252,21 @@ svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-
  <article class="card r" id="card" aria-live="polite"></article>
  <div class="hint" id="hint"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 7-6 2-2 6z"/></svg><span>Hold pekeren over et punkt for å se mer</span></div>
  <div class="mini l" id="mini"><i id="minir"></i><b id="minip"></b></div>
+ <div class="zctl"><span class="zhint" id="zhint"></span><button class="zreset" id="zreset"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Vis hele kartet</button></div>
+ <div class="ztoast" id="ztoast"></div>
  <div class="disc">Alle bilder er av illustrativ karakter, endringer vil forekomme.</div>
  <div class="prog" id="prog"><span id="progt">1 / 22</span><span class="b"><i id="progb" style="width:5%"></i></span></div>
  <div class="bar">
   <div class="t">Utforsk Brøset<span id="nsteder">22 steder i den nye bydelen</span><button class="proj" id="proj"><i></i><span id="nproj">4 nyboligprosjekter i salg</span></button></div>
   <div class="chips" id="chips"></div>
-  <button class="tour" id="tour"><i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></i>Ta en omvisning</button>
+  <button class="tour" id="tour" aria-pressed="false"></button>
  </div>
 </section>
 
 <script>
-const SRC={w:3500,h:2227,top:260};
+const SRC={w:3500,h:2227};
 const HERO='assets/hovedbilde.jpg';
-const FELT=[{"id": "elvely", "n": "Bo Brøset Elvely", "url": "https://bobroset.no/no/til-salgs/leilighetene", "d": "M1641,1142 L1626,1158 L1626,1167 L1600,1167 L1591,1174 L1592,1202 L1636,1198 L1670,1236 L1694,1238 L1733,1249 L1770,1231 L1770,1223 L1795,1211 L1801,1213 L1802,1212 L1802,1164 L1717,1151 L1715,1153Z"}, {"id": "wesselslokka", "n": "Wesselsløkka", "url": "https://www.wesselslokka.no/", "d": "M1633,1332 L1636,1332 L1642,1332 L1652,1333 L1663,1333 L1674,1333 L1684,1333 L1693,1333 L1697,1332 L1700,1331 L1703,1328 L1706,1326 L1710,1324 L1713,1321 L1716,1319 L1717,1318 L1718,1317 L1754,1295 L1778,1285 L1825,1284 L1821,1270 L1807,1256 L1796,1254 L1781,1254 L1737,1257 L1737,1265 L1679,1267 L1679,1248 L1636,1200 L1590,1204 L1584,1209 L1584,1283Z"}, {"id": "brosettorg", "n": "Brøset Torg", "url": "https://brosettorg.no/", "d": "M1699,1362 L1699,1333 L1719,1319 L1755,1297 L1778,1287 L1860,1284 L1858,1279 L1880,1273 L1918,1273 L1935,1288 L1935,1309 L1946,1312 L1946,1306 L1957,1298 L1982,1287 L2044,1299 L2070,1310 L2070,1339 L2122,1349 L2122,1399 L2072,1430 L2038,1447 L1890,1412 L1802,1395Z"}, {"id": "urtehagen", "n": "Bo Brøset Urtehagen", "url": "https://bobroset.no/no/til-salgs/rekkehusene", "d": "M2895,1332 L2862,1344 L2862,1353 L2721,1390 L2716,1398 L2711,1427 L3108,1548 L3155,1552 L3158,1518 L3030,1349Z"}];
+const FELT=[{"id": "elvely", "n": "Bo Brøset Elvely", "url": "https://bobroset.no/no/til-salgs/leilighetene", "d": "M1641,1142 L1626,1158 L1626,1167 L1600,1167 L1591,1174 L1592,1202 L1636,1198 L1670,1236 L1694,1238 L1733,1249 L1770,1231 L1770,1223 L1795,1211 L1801,1213 L1802,1212 L1802,1164 L1717,1151 L1715,1153Z"}, {"id": "wesselslokka", "n": "Brøsetløkka", "st": "salg", "url": "https://www.brosetlokka.no/", "d": "M1633,1332 L1636,1332 L1642,1332 L1652,1333 L1663,1333 L1674,1333 L1684,1333 L1693,1333 L1697,1332 L1700,1331 L1703,1328 L1706,1326 L1710,1324 L1713,1321 L1716,1319 L1717,1318 L1718,1317 L1754,1295 L1778,1285 L1825,1284 L1821,1270 L1807,1256 L1796,1254 L1781,1254 L1737,1257 L1737,1265 L1679,1267 L1679,1248 L1636,1200 L1590,1204 L1584,1209 L1584,1283Z"}, {"id": "brosettorg", "n": "Brøset Torg", "st": "kommer", "url": "https://brosettorg.no/", "d": "M1699,1362 L1699,1333 L1719,1319 L1755,1297 L1778,1287 L1860,1284 L1858,1279 L1880,1273 L1918,1273 L1935,1288 L1935,1309 L1946,1312 L1946,1306 L1957,1298 L1982,1287 L2044,1299 L2070,1310 L2070,1339 L2122,1349 L2122,1399 L2072,1430 L2038,1447 L1890,1412 L1802,1395Z"}, {"id": "urtehagen", "n": "Bo Brøset Urtehagen", "url": "https://bobroset.no/no/til-salgs/rekkehusene", "d": "M2895,1332 L2862,1344 L2862,1353 L2721,1390 L2716,1398 L2711,1427 L3108,1548 L3155,1552 L3158,1518 L3030,1349Z"}];
 const FELT_ANKER={elvely:[1700,1142,'t'],wesselslokka:[1584,1262,'l'],brosettorg:[1960,1440,'b'],urtehagen:[2895,1330,'t']};
 const IC={
  hoved:'<path d="M3 9.5 12 4l9 5.5M4.5 9.5h15M6 12v6M10 12v6M14 12v6M18 12v6M3.5 20.5h17"/>',
@@ -301,15 +334,25 @@ const inCl={};CL.forEach(c=>c.m.forEach(i=>inCl[i]=c.id));
 const byId=Object.fromEntries(P.map(p=>[p.id,p]));
 const $=id=>document.getElementById(id);
 const hero=$('hero'),stage=$('stage'),img=$('heroimg'),pins=$('pins'),card=$('card'),spot=$('spot'),felt=$('felt'),plbl=$('plbl');
-let G={W:0,H:0,k:1,ox:0,oy:0},T={tx:0,ty:0,s:1},S={mode:'start',id:null,cl:null};
+const HOME={tx:0,ty:0,s:1}, MAXS=3.5;
+let G={W:0,H:0,k:1,ox:0,oy:0},T={...HOME},V={...HOME},S={mode:'start',id:null,cl:null,side:null},HL=null;
+const F=new Set();                                   // aktive kategorier (knappene øverst)
+const vis=p=>F.size===0||F.has(p.k);
 const mob=()=>innerWidth<=700;
+const isMac=/Mac|iPhone|iPad/.test(navigator.platform||'')||/Mac OS X/.test(navigator.userAgent);
+const ZK=isMac?'⌘':'Ctrl';
+const IC_PLAY='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></i>';
+const IC_PAUSE='<i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></i>';
+
 function layout(){
- const W=hero.clientWidth,H=hero.clientHeight;
- const k=Math.max(W/SRC.w,H/(SRC.h-SRC.top));
+ const W=hero.clientWidth,H=hero.clientHeight,top=mob()?260:0;
+ const k=Math.max(W/SRC.w,H/(SRC.h-top));
  let ox=(W-SRC.w*k)/2, oy=H-SRC.h*k;
  if(mob()) ox=Math.min(0,Math.max(W-SRC.w*k, W/2-1750*k));
  G={W,H,k,ox,oy};
  for(const el of [img,felt]){el.style.width=SRC.w*k+'px';el.style.height=SRC.h*k+'px';el.style.left=ox+'px';el.style.top=oy+'px';}
+ hero.classList.toggle('narrow',!mob()&&W<1180);
+ G.barh=document.querySelector('.bar').offsetHeight; hero.style.setProperty('--barh',G.barh+'px');
 }
 const D=p=>({X:G.ox+p.x*G.k,Y:G.oy+p.y*G.k});
 function clamp(tx,ty,s,vis){
@@ -318,18 +361,18 @@ function clamp(tx,ty,s,vis){
  tx=Math.min(-x0,Math.max(G.W-x1,tx)); ty=Math.min(-y0,Math.max(Hb-y1,ty)); return {tx,ty,s};
 }
 function focus(X,Y,s,side){
- if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const cx=G.W/2,cy=96+(vis-96)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
- const free=G.W-404-80, cx= side==='r'? free/2+10 : G.W-free/2-10, cy=G.H*0.52;
+ if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const cx=G.W/2,cy=150+(vis-150)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
+ const free=G.W-404-80, cx= side==='r'? free/2+10 : G.W-free/2-10, cy=G.H*0.54;
  const a=.5, px=X+(cx-X)*a, py=Y+(cy-Y)*a;
  return clamp(px-s*X,py-s*Y,s);
 }
 function build(){
  // prosjektomriss
- felt.innerHTML=FELT.map(f=>`<path class="h" d="${f.d}"/><a class="fa" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener" aria-label="${f.n}, åpnes i ny fane"><path class="f" data-id="${f.id}" d="${f.d}"><title>${f.n}</title></path></a>`).join('');
- plbl.innerHTML=FELT.map(f=>`<a class="${FELT_ANKER[f.id][2]}" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener"><i></i>${f.n}<small>I salg ↗</small></a>`).join('');
+ felt.innerHTML=FELT.map(f=>`<path class="h" d="${f.d}"/><a class="fa" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener" aria-label="${f.n}, ${f.st==='kommer'?'kommer for salg':'i salg'}, åpnes i ny fane"><path class="f" data-id="${f.id}" d="${f.d}"><title>${f.n}</title></path></a>`).join('');
+ plbl.innerHTML=FELT.map(f=>`<a class="${FELT_ANKER[f.id][2]}${f.st==='kommer'?' kommer':''}" data-id="${f.id}" href="${f.url}" target="_blank" rel="noopener"><i></i>${f.n}<small>${f.st==='kommer'?'Kommer for salg':'I salg'} ↗</small></a>`).join('');
  felt.querySelectorAll('a.fa').forEach(el=>{const id=el.dataset.id;
   const lab=()=>plbl.querySelector(`[data-id="${id}"]`);
-  el.addEventListener('pointerenter',e=>{if(e.pointerType!=='mouse')el._armed=lab().classList.contains('on');projShow(projLock||projCur.length>1?ALL:[id])});
+  el.addEventListener('pointerenter',e=>{if(drag)return;if(e.pointerType!=='mouse')el._armed=lab().classList.contains('on');projShow(projLock||projCur.length>1?ALL:[id])});
   el.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide()});
   el.addEventListener('focus',()=>projShow([id]));el.addEventListener('blur',projHide);
   // på berøringsskjerm: første trykk viser navnet, andre trykk (på omriss eller etikett) åpner prosjektsiden
@@ -341,18 +384,28 @@ function build(){
  pins.innerHTML='';
  P.forEach(p=>{const b=document.createElement('button');b.className='m k-'+p.k;b.dataset.id=p.id;b.setAttribute('aria-label',p.n+(p.ey?', '+p.ey:''));
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head">${svg(p.ic)}</span><span class="lbl">${p.n}</span>`;
-  b.addEventListener('pointerenter',()=>intent(()=>open(p.id)));b.addEventListener('pointerleave',cancelIntent);
+  b.addEventListener('pointerenter',()=>{if(!drag)intent(()=>open(p.id))});b.addEventListener('pointerleave',cancelIntent);
   b.addEventListener('focus',()=>open(p.id));b.addEventListener('click',()=>open(p.id));pins.append(b);p.el=b;});
  CL.forEach(c=>{const ms=c.m.map(i=>byId[i]);c.x=ms.reduce((a,p)=>a+p.x,0)/ms.length;const ys=ms.map(p=>p.y);c.y=(Math.min(...ys)+Math.max(...ys))/2;c.side=c.x/SRC.w<0.5?'r':'l';
   const b=document.createElement('button');b.className='m c';b.setAttribute('aria-label',c.n+', '+c.m.length+' steder');
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head"><i>${c.m.length}</i>${c.n}</span>`;
-  b.addEventListener('pointerenter',()=>intent(()=>openCl(c.id)));b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>openCl(c.id));
+  b.addEventListener('pointerenter',()=>{if(!drag)intent(()=>openCl(c.id))});b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>openCl(c.id));
   pins.append(b);c.el=b;});
+ // kategoriknapper: klikk låser fokus på kategorien til knappen klikkes av igjen
  const ch=$('chips');
- ch.innerHTML=Object.entries(KAT).map(([k,v])=>`<button class="chip k-${k}" data-k="${k}"><i>${svg(v.ic)}</i>${v.n} <b>${P.filter(p=>p.k===k).length}</b></button>`).join('');
- ch.querySelectorAll('.chip').forEach(c=>{c.onmouseenter=()=>hl(c.dataset.k);c.onmouseleave=()=>hl(null)});
+ ch.innerHTML=Object.entries(KAT).map(([k,v])=>`<button class="chip k-${k}" data-k="${k}" aria-pressed="false"><i>${svg(v.ic)}</i>${v.n} <b>${P.filter(p=>p.k===k).length}</b></button>`).join('');
+ ch.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hl(c.dataset.k)});c.addEventListener('pointerleave',()=>hl(null));
+  c.addEventListener('click',()=>{const k=c.dataset.k;F.has(k)?F.delete(k):F.add(k);c.classList.toggle('on',F.has(k));c.setAttribute('aria-pressed',F.has(k));HL=null;
+   if(S.id&&!vis(byId[S.id])){if(tour)step(1);else closeAll();}
+   if(S.id){const list=P.filter(vis),sp=card.querySelector('.nav span');if(sp)sp.textContent=(list.indexOf(byId[S.id])+1)+' / '+list.length;}
+   place();});
+ });
  $('nsteder').textContent=P.length+' steder i den nye bydelen';
- $('nproj').textContent=FELT.length+' nyboligprosjekter i salg';
+ const nS=FELT.filter(f=>f.st!=='kommer').length,nK=FELT.length-nS;
+ $('nproj').textContent=mob()?(nS+' prosjekter i salg'+(nK?` · ${nK} kommer`:'')):(nS+' nyboligprosjekter i salg'+(nK?` · ${nK} kommer for salg`:''));
+ $('zhint').innerHTML=`<kbd>${ZK}</kbd> + skroll for å zoome`;
+ $('ztoast').textContent=`Hold ${ZK} nede og skroll for å zoome`;
 }
 const ALL=FELT.map(f=>f.id);let projT=0,projLock=false,lastPT='mouse',projCur=[];
 function projShow(ids){clearTimeout(projT);projOn(ids)}
@@ -367,22 +420,40 @@ function projOn(ids){
  hero.classList.toggle('proj1',ids.length===1);
 }
 let it=0;function intent(f){clearTimeout(it);it=setTimeout(f,110)}function cancelIntent(){clearTimeout(it)}
-function hl(k){if(S.mode!=='start')return;P.forEach(p=>p.el.classList.toggle('dim',!!k&&p.k!==k));CL.forEach(c=>c.el.classList.toggle('dim',!!k&&!c.m.some(i=>byId[i].k===k)));}
+function hl(k){if(S.mode!=='start'||F.size)k=null;if(HL===k)return;HL=k;place();}
+const ov=(a,b)=>a[0]<b[2]&&a[2]>b[0]&&a[1]<b[3]&&a[3]>b[1];
 function place(){
- const {tx,ty,s}=T;
+ const {tx,ty,s}=T,start=S.mode==='start';
  P.forEach(p=>{const d=D(p);p.el.style.transform=`translate(${tx+s*d.X}px,${ty+s*d.Y}px)`;
-  const cl=inCl[p.id];
-  p.el.classList.toggle('hid',!!(cl&&S.cl!==cl));
+  const cl=inCl[p.id],v=vis(p);
+  p.el.classList.toggle('off',!v);
+  p.el.classList.toggle('hid',v&&!!(cl&&S.cl!==cl));
   p.el.classList.toggle('on',S.id===p.id);
-  p.el.classList.toggle('named',!!(S.cl&&cl===S.cl));
-  p.el.classList.toggle('dim',S.mode!=='start'&&S.id!==p.id&&!(S.cl&&cl===S.cl));
+  p.el.classList.toggle('named',v&&!!(S.cl&&cl===S.cl));
+  p.el.classList.toggle('dim',(!start&&S.id!==p.id&&!(S.cl&&cl===S.cl))||(start&&!!HL&&p.k!==HL));
  });
- CL.forEach(c=>{const d=D(c);c.el.style.transform=`translate(${tx+s*d.X}px,${ty+s*d.Y}px)`;c.el.classList.toggle('hid',S.cl===c.id);c.el.classList.toggle('dim',S.mode!=='start'&&S.cl!==c.id);});
+ CL.forEach(c=>{const d=D(c);c.el.style.transform=`translate(${tx+s*d.X}px,${ty+s*d.Y}px)`;
+  const n=c.m.filter(i=>vis(byId[i])).length;c.el.querySelector('.head i').textContent=n;
+  c.el.classList.toggle('off',n===0);c.el.classList.toggle('hid',S.cl===c.id);
+  c.el.classList.toggle('dim',(!start&&S.cl!==c.id)||(start&&!!HL&&!c.m.some(i=>byId[i].k===HL)));});
  FELT.forEach(f=>{const a=FELT_ANKER[f.id],el=plbl.querySelector(`[data-id="${f.id}"]`);el.style.left=(tx+s*(G.ox+a[0]*G.k))+'px';el.style.top=(ty+s*(G.oy+a[1]*G.k))+'px';});
- felt.style.setProperty('--sw',(1/(G.k*s)*(SRC.w/3500))+'px');
+ felt.style.setProperty('--sw',(1/(G.k*s))+'px');
+ P.forEach(p=>{['--dx','--dy','--len','--ang','--ly'].forEach(v=>p.el.style.removeProperty(v));p.el.classList.remove('lblL','flab')});
+ // fokus på kategori: vis navnet på punktene, og legg navnelappen på den siden der den ikke kolliderer
+ if(F.size&&start){
+  const sc=p=>{const d=D(p);return [tx+s*d.X,ty+s*d.Y]};
+  const singles=P.filter(p=>vis(p)&&!inCl[p.id]);
+  const blocks=singles.map(p=>{const [x,y]=sc(p);return [x-20,y-64,x+20,y-24]});
+  CL.forEach(c=>{if(c.el.classList.contains('off'))return;const d=D(c),x=tx+s*d.X,y=ty+s*d.Y,w=c.el.querySelector('.head').offsetWidth||150;blocks.push([x-24,y-64,x-22+w+4,y-24])});
+  singles.sort((a,b)=>sc(a)[0]-sc(b)[0]).forEach(p=>{const [x,y]=sc(p),w=(p.el.querySelector('.lbl').offsetWidth||120)+6;
+   const cand=[['R',0],['L',0],['R',-34],['L',-34],['R',34],['L',34]];
+   for(const [sd,u] of cand){const r=sd==='R'?[x+22,y-60+u,x+22+w,y-28+u]:[x-22-w,y-60+u,x-22,y-28+u];
+    if(blocks.some(b=>ov(r,b))||r[0]<8||r[2]>G.W-8||r[1]<(G.barh||70))continue;
+    p.el.classList.add('flab');if(sd==='L')p.el.classList.add('lblL');if(u)p.el.style.setProperty('--ly',u+'px');blocks.push(r);break;}
+  });
+ }
  // vifte ut klyngen
- P.forEach(p=>{['--dx','--dy','--len','--ang'].forEach(v=>p.el.style.removeProperty(v));p.el.classList.remove('lblL')});
- if(S.cl){const c=CL.find(c=>c.id===S.cl);const ms=c.m.map(i=>byId[i]).map(p=>{const d=D(p);return {p,x:tx+s*d.X,y:ty+s*d.Y}});
+ if(S.cl){const c=CL.find(c=>c.id===S.cl);const ms=c.m.map(i=>byId[i]).filter(vis).map(p=>{const d=D(p);return {p,x:tx+s*d.X,y:ty+s*d.Y}});
   const right= S.side!=='r'; const gap=mob()?46:54; const n=ms.length;
   const colX= right? Math.max(...ms.map(m=>m.x))+(mob()?40:80) : Math.min(...ms.map(m=>m.x))-(mob()?40:80);
   const cy= ms.reduce((a,m)=>a+m.y,0)/n - (mob()?70:90);
@@ -397,8 +468,14 @@ function place(){
    if(!right) el.classList.add('lblL');});
  }
  // skjul punkter under topplinjen når kartet er zoomet
- P.concat(CL).forEach(o=>{const d=D(o);const hy=ty+s*d.Y-44;o.el.classList.toggle('under',S.mode!=='start'&&hy<(mob()?110:96)&&!o.el.classList.contains('named'))});
+ const thr=mob()?150:(G.barh||72)+24, zoomed=!start||s>1.01;
+ P.concat(CL).forEach(o=>{const d=D(o);const hy=ty+s*d.Y-44;o.el.classList.toggle('under',zoomed&&hy<thr&&!o.el.classList.contains('named'))});
  stage.style.transform=`translate(${tx}px,${ty}px) scale(${s})`;
+ if(S.id){const C=S.cl?CL.find(c=>c.id===S.cl):null,q=C?D(C):D(byId[S.id]);setSpot(tx+s*q.X,ty+s*q.Y-30,(S.cl?170:110)*Math.max(1,s/2.1));}
+ if(S.id&&!S.cl&&$('lead').classList.contains('show'))lead(byId[S.id],S.side);
+ hero.classList.toggle('zoomed',V.s>1.01);
+ hero.classList.toggle('filt',F.size>0);
+ hero.classList.toggle('sideL',S.side==='l');
  const mm=$('mini');{const f=180/G.W;mm.style.height=G.H*f+'px';mm.style.backgroundImage=`url(${HERO})`;mm.style.backgroundSize=SRC.w*G.k*f+'px auto';mm.style.backgroundPosition=G.ox*f+'px '+G.oy*f+'px';
   const r=$('minir');r.style.left=(-tx/s)*f+'px';r.style.top=(-ty/s)*f+'px';r.style.width=G.W/s*f+'px';r.style.height=G.H/s*f+'px';
   mm.className='mini '+(S.side==='l'?'r':'l');
@@ -419,12 +496,12 @@ function renderCard(p,side){
   <button class="gb gp" id="gp" aria-label="Forrige bilde" disabled>${AR_IC}</button><button class="gb gn" id="gn" aria-label="Neste bilde">${AR_IC2}</button>
   <div class="dots" id="gd">${Array.from({length:n},(_,i)=>`<i${i?'':' class="on"'}></i>`).join('')}</div><span class="hint2">Sveip</span><span class="cnt" id="gc">1 / ${n}</span></div>`;
  const facts=p.f?`<dl class="facts" style="--n:${p.f.length}">${p.f.map(([a,b])=>`<div><dt>${a}</dt><dd>${b}</dd></div>`).join('')}</dl>`:'';
- const i=P.indexOf(p)+1;
+ const list=P.filter(vis),i=list.indexOf(p)+1;
  card.innerHTML=`<span class="grab"></span><button class="x" aria-label="Lukk" onclick="closeAll()">×</button>${gal}<div class="bd">
   <div class="eyebrow"><span class="dot"></span>${kat.n}${p.ey&&p.ey!==kat.n?' · '+p.ey:''}</div>
   <h2>${p.n}</h2>${facts}${p.t?`<p>${p.t}</p>`:''}${p.todo?`<div class="todo">${p.todo}</div>`:''}
   <div class="ft">${p.ln?`<a class="more" href="${p.ln}" target="_blank" rel="noopener">${p.lt||'Les mer'} <span aria-hidden="true">→</span></a>`:'<span></span>'}
-  <div class="nav"><button aria-label="Forrige sted" onclick="step(-1)">‹</button><span>${i} / ${P.length}</span><button aria-label="Neste sted" onclick="step(1)">›</button></div></div></div>`;
+  <div class="nav"><button aria-label="Forrige sted" onclick="step(-1)">‹</button><span>${i} / ${list.length}</span><button aria-label="Neste sted" onclick="step(1)">›</button></div></div></div>`;
  const tr=$('gtr'),gp=$('gp'),gn=$('gn'),gc=$('gc'),dots=[...$('gd').children];
  const cur=()=>Math.round(tr.scrollLeft/Math.max(1,tr.clientWidth));
  const upd=()=>{const c=cur();gc.textContent=(c+1)+' / '+n;dots.forEach((d,j)=>d.classList.toggle('on',j===c));gp.disabled=c<=0;gn.disabled=c>=n-1;};
@@ -432,12 +509,12 @@ function renderCard(p,side){
  gp.onclick=e=>{e.stopPropagation();tr.scrollBy({left:-tr.clientWidth})};gn.onclick=e=>{e.stopPropagation();tr.scrollBy({left:tr.clientWidth})};
  card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};
  upd();
- $('progt').textContent=i+' / '+P.length;$('progb').style.width=(i/P.length*100)+'%';
+ $('progt').textContent=i+' / '+list.length;$('progb').style.width=(i/list.length*100)+'%';
 }
 function lead(p,side){
  const L=$('lead');if(mob()){L.classList.remove('show');return}
  const d=D(p),cs=getComputedStyle(p.el),hx=T.tx+T.s*d.X+parseFloat(cs.getPropertyValue('--dx')||0),hy=T.ty+T.s*d.Y+parseFloat(cs.getPropertyValue('--dy')||-44);
- const ch=card.offsetHeight||520,cy0=G.H/2-ch/2+30,cy1=G.H/2+ch/2-30;
+ const ch=card.offsetHeight||520,mid=G.H/2+34,cy0=mid-ch/2+30,cy1=mid+ch/2-30;
  const ex= side==='r'? G.W-40-404 : 40+404, ey=Math.max(cy0,Math.min(cy1,hy));
  const sx= side==='r'? hx+24 : hx-24;
  const l=$('ll');l.setAttribute('x1',sx);l.setAttribute('y1',hy);l.setAttribute('x2',ex);l.setAttribute('y2',ey);
@@ -452,39 +529,98 @@ function sideFor(p,cl){
  return fx<0.5?'r':'l';
 }
 function open(id,opt={}){
+ const p=byId[id]; if(!vis(p)) return;
  projClear();
- const p=byId[id];const d=D(p);
+ const d=D(p);
  const cl=inCl[id], C=cl?CL.find(c=>c.id===cl):null;
  const same= !!cl && S.mode!=='start' && S.cl===cl && !opt.refocus;   // bytte innen samme klynge: ingen ny zoom
- let side= same? S.side : sideFor(p,cl);
+ const manual= !mob() && V.s>1.01;                                     // brukeren har zoomet selv: behold utsnittet
+ let side;
+ if(same) side=S.side;
+ else if(manual){const q=C?D(C):d,sx=V.tx+V.s*q.X; side=S.mode!=='start'&&S.side?S.side:(sx<G.W/2?'r':'l'); if(S.mode!=='start'&&S.side){const covered=side==='r'?sx>G.W-404-80:sx<404+80;if(covered)side=side==='r'?'l':'r';}}
+ else side=sideFor(p,cl);
  const s= opt.s || (mob()?1.7:(cl?2.2:2.1));
  S={mode:'poi',id,cl:cl||null,side};
  renderCard(p,side);card.classList.add('show');
  if(!same){
-  const f= C? D(C) : d;
-  T=focus(f.X,f.Y-20,s,side);
-  if(!mob()&&!cl){const sx=T.tx+s*d.X; if(side==='r'? sx>G.W-404-80 : sx<404+80){side=side==='r'?'l':'r';S.side=side;renderCard(p,side);T=focus(d.X,d.Y-20,s,side);}}
+  if(manual){
+   T={...V};const q=C?D(C):d;const sx=T.tx+T.s*q.X,sy=T.ty+T.s*q.Y;
+   const minX=side==='l'?404+90:40,maxX=side==='r'?G.W-404-90:G.W-40;let dx=0,dy=0;
+   if(sx<minX)dx=minX-sx;if(sx>maxX)dx=maxX-sx;if(sy<150)dy=150-sy;if(sy>G.H-30)dy=G.H-30-sy;
+   if(dx||dy)T=clamp(T.tx+dx,T.ty+dy,T.s);
+  }else{
+   const f= C? D(C) : d;
+   T=focus(f.X,f.Y-20,s,side);
+   if(!mob()&&!cl){const sx=T.tx+s*d.X; if(side==='r'? sx>G.W-404-80 : sx<404+80){side=side==='r'?'l':'r';S.side=side;renderCard(p,side);T=focus(d.X,d.Y-20,s,side);}}
+  }
  }
  hero.classList.add('explore','zoom');
  place();
- const sp= C? D(C) : d;
- setSpot(T.tx+T.s*sp.X,T.ty+T.s*sp.Y-30,cl?170:110);
  clearTimeout(open.t);$('lead').classList.remove('show');
- if(!cl) open.t=setTimeout(()=>lead(p,side),opt.now?0:950);
+ if(!cl) open.t=setTimeout(()=>lead(p,S.side),opt.now||manual?0:950);
+ if(!tour)setTourUI(false);
 }
-function openCl(cid){open(CL.find(c=>c.id===cid).m[0]);}
-function closeAll(){S={mode:'start',id:null,cl:null,side:null};T={tx:0,ty:0,s:1};hero.classList.remove('zoom','explore');card.classList.remove('show');$('lead').classList.remove('show');place();}
-function step(n){const i=(P.findIndex(p=>p.id===S.id)+n+P.length)%P.length;open(P[i].id);}
-let tour=0;$('tour').onclick=()=>{if(tour){clearInterval(tour);tour=0;hero.classList.remove('touring');return}hero.classList.add('touring');open(P[0].id);tour=setInterval(()=>step(1),5200)};
-hero.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide();if(e.pointerType==='mouse'&&!tour)setTimeout(()=>{if(!hero.matches(':hover'))closeAll()},450)});
-hero.addEventListener('pointerdown',e=>{lastPT=e.pointerType;if(e.pointerType!=='mouse'&&!e.target.closest('a.fa,.plbl a,#proj')){clearTimeout(projT);projOn(projLock?ALL:[]);felt.querySelectorAll('a.fa').forEach(a=>a._armed=false)}},true);
+function openCl(cid){const c=CL.find(c=>c.id===cid);const m=c.m.find(i=>vis(byId[i]));if(m)open(m);}
+function closeAll(){if(tour)stopTour();tourPaused=false;S={mode:'start',id:null,cl:null,side:null};T={...V};hero.classList.remove('zoom','explore');card.classList.remove('show');$('lead').classList.remove('show');place();setTourUI(false);}
+function resetView(){V={...HOME};if(S.mode==='start'){T={...HOME};place();}else closeAll();}
+function step(n){const list=P.filter(vis);if(!list.length)return;const i=list.findIndex(p=>p.id===S.id);const j=i<0?(n>0?0:list.length-1):(i+n+list.length)%list.length;open(list[j].id);}
+// omvisning: play blir pause mens den går
+let tour=0,tourPaused=false;const TB=$('tour');
+function setTourUI(on){TB.innerHTML=(on?IC_PAUSE:IC_PLAY)+`<span class="tl">${on?'Pause omvisning':(tourPaused&&S.mode!=='start'?'Fortsett omvisning':'Ta en omvisning')}</span><span class="ts">Omvisning</span>`;TB.setAttribute('aria-label',on?'Pause omvisning':'Start omvisning');TB.setAttribute('aria-pressed',on?'true':'false');TB.classList.toggle('on',on);hero.classList.toggle('touring',on);}
+function startTour(){if(tour)return;tourPaused=false;step(1);tour=setInterval(()=>step(1),5200);setTourUI(true);}
+function stopTour(){clearInterval(tour);tour=0;tourPaused=S.mode!=='start';setTourUI(false);}
+TB.onclick=()=>{tour?stopTour():startTour()};
+// zoom: Ctrl/⌘ + skroll (og knip på styreflate/mobil), dra for å flytte når kartet er zoomet
+function live(){hero.classList.add('live');clearTimeout(live.t);live.t=setTimeout(()=>hero.classList.remove('live'),200);}
+function zoomAt(cx,cy,f){
+ const s0=T.s,s1=Math.min(MAXS,Math.max(1,s0*f));if(Math.abs(s1-s0)<1e-4)return;
+ live();T=clamp(cx-(cx-T.tx)*s1/s0,cy-(cy-T.ty)*s1/s0,s1);V={...T};place();
+}
+let toastT=0;function toast(){const z=$('ztoast');z.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>z.classList.remove('on'),1400);}
+hero.addEventListener('wheel',e=>{
+ if(!(e.ctrlKey||e.metaKey)){if(!mob())toast();return;}
+ e.preventDefault();$('ztoast').classList.remove('on');
+ const r=hero.getBoundingClientRect(),k=Math.abs(e.deltaY)<40?0.012:0.0022;
+ zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*k));
+},{passive:false});
+let drag=null,dragMoved=false,pinch=null;const ptrs=new Map();
+hero.addEventListener('pointerdown',e=>{
+ lastPT=e.pointerType;
+ if(e.pointerType!=='mouse'&&!e.target.closest('a.fa,.plbl a,#proj')){clearTimeout(projT);projOn(projLock?ALL:[]);felt.querySelectorAll('a.fa').forEach(a=>a._armed=false)}
+ if(e.pointerType==='mouse'&&e.button!==0)return;
+ if(!e.target.closest('.stage'))return;
+ ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(ptrs.size===1){drag={x:e.clientX,y:e.clientY,tx:T.tx,ty:T.ty};dragMoved=false;}
+ else if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y)};}
+},true);
+addEventListener('pointermove',e=>{
+ if(!ptrs.has(e.pointerId))return;
+ ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(ptrs.size===2&&pinch){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y),r=hero.getBoundingClientRect();zoomAt((a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top,d/pinch.d);pinch.d=d;dragMoved=true;return;}
+ if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(!dragMoved&&Math.hypot(dx,dy)<5)return;
+  if(!dragMoved){dragMoved=true;cancelIntent();}
+  hero.classList.add('dragging');live();T=clamp(drag.tx+dx,drag.ty+dy,T.s);V={...T};place();}
+});
+function endPtr(e){if(!ptrs.has(e.pointerId))return;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;
+ if(ptrs.size===0){drag=null;hero.classList.remove('dragging');}
+ else{const q=[...ptrs.values()][0];drag={x:q.x,y:q.y,tx:T.tx,ty:T.ty};}}
+addEventListener('pointerup',endPtr);addEventListener('pointercancel',endPtr);
+hero.addEventListener('click',e=>{if(dragMoved){e.preventDefault();e.stopPropagation();dragMoved=false;}},true);
+$('zreset').onclick=resetView;
+hero.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')projHide();if(e.pointerType==='mouse'&&!tour&&!drag)setTimeout(()=>{if(!hero.matches(':hover')&&!drag)closeAll()},450)});
 // mens alle fire prosjektene vises: de blir stående så lenge pekeren er i bevegelse, og skjules først når den har stått i ro utenfor et prosjekt
 hero.addEventListener('pointermove',e=>{if(projCur.length>1&&!projLock&&!e.target.closest('a.fa,.plbl a,#proj'))projHide()},{passive:true});
-addEventListener('keydown',e=>{if(e.key==='Escape'){closeAll();projClear();}if(S.mode!=='start'&&e.key==='ArrowRight')step(1);if(S.mode!=='start'&&e.key==='ArrowLeft')step(-1)});
-addEventListener('resize',()=>{layout();if(S.id)open(S.id,{now:1,refocus:1});else place()});
-layout();build();place();
+addEventListener('keydown',e=>{
+ if(e.target.closest&&e.target.closest('input,textarea'))return;
+ if(e.key==='Escape'){if(tour)stopTour();if(S.mode!=='start')closeAll();else if(V.s>1.01)resetView();projClear();return}
+ if(S.mode!=='start'&&e.key==='ArrowRight')step(1);if(S.mode!=='start'&&e.key==='ArrowLeft')step(-1);
+ if(!e.ctrlKey&&!e.metaKey&&(e.key==='+'||e.key==='-'||e.key==='0')&&hero.matches(':hover')){e.preventDefault();if(e.key==='0')resetView();else zoomAt(G.W/2,G.H/2,e.key==='+'?1.25:0.8);}
+});
+addEventListener('resize',()=>{layout();V={...HOME};if(S.id)open(S.id,{now:1,refocus:1});else{T={...HOME};place();}});
+build();setTourUI(false);layout();place();
+document.fonts&&document.fonts.ready.then(()=>{layout();place()});
 if(mob())document.querySelector('#hint span').textContent='Trykk på et punkt for å se mer';
-window.demo={open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
+window.demo={open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,V:()=>V,F,zoomAt,resetView,step,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
 </script>
 </body>
 </html>
