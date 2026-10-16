@@ -119,6 +119,7 @@ svg.felt a:focus-visible .f{stroke:var(--paper);stroke-width:calc(var(--sw,1px)*
 .c .head .cn small{font-family:var(--body);font-weight:600;font-size:10.5px;opacity:.85;display:flex;align-items:center;gap:4px}
 .c .head .cn small svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .c:hover .head{transform:translateY(-2px)}
+.m.on .head{cursor:zoom-in}
 html.land .c .head{top:calc(var(--dy) - 18px);height:36px;font-size:12px;padding:0 10px 0 5px;gap:7px}
 html.land .c .head i{width:25px;height:25px;font-size:12px}
 html.land .c .head .cn small{font-size:9.5px}
@@ -774,7 +775,7 @@ function build(){
  P.forEach(p=>{const b=document.createElement('button');b.className='m k-'+p.k;b.dataset.id=p.id;b.setAttribute('aria-label',p.n+(p.ey?', '+p.ey:''));
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head">${svg(p.ic)}</span>${p.fns?`<span class="fns">${p.fns.map(svg).join('')}</span>`:''}<span class="lbl">${p.n}</span>`;
   b.addEventListener('pointerenter',()=>{if(drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>{if(S.id!==p.id)open(p.id,{hover:true})})});b.addEventListener('pointerleave',cancelIntent);
-  b.addEventListener('focus',()=>open(p.id));b.addEventListener('click',()=>open(p.id,{sticky:true}));pins.append(b);p.el=b;});
+  b.addEventListener('focus',()=>open(p.id));b.addEventListener('click',()=>{if(S.mode==='poi'&&S.id===p.id&&Date.now()-openT>600){openLB(p.id,card.cur?card.cur():0);return}open(p.id,{sticky:true})});pins.append(b);p.el=b;});
  CL.forEach(c=>{const ms=c.m.map(i=>byId[i]);c.x=ms.reduce((a,p)=>a+p.x,0)/ms.length;const ys=ms.map(p=>p.y);c.y=(Math.min(...ys)+Math.max(...ys))/2;c.side=c.x/SRC.w<0.5?'r':'l';
   const b=document.createElement('button');b.className='m c';b.setAttribute('aria-label',c.n+', '+c.m.length+' steder. Åpne for å se alle');
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head"><i>${c.m.length}</i><span class="cn"><b>${c.n}</b><small><span class="cs">Trykk for å se alle</span><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></small></span></span>`;
@@ -816,6 +817,7 @@ function projOn(ids){
  hero.classList.toggle('proj',ids.length>1);
  hero.classList.toggle('proj1',ids.length===1);
 }
+let openT=0;
 let it=0;function intent(f){clearTimeout(it);it=setTimeout(f,S.mode==='proj'?380:110)}function cancelIntent(){clearTimeout(it)}
 // forhåndsvisning fra menyen: bilde og tekst i boksen, punktet markeres i kartet uten zoom
 let pvT=0,pvId=null;
@@ -938,7 +940,7 @@ function renderCard(p,side,pv){
  const upd=()=>{const c=cur();gc.textContent=(c+1)+' / '+n;dots.forEach((d,j)=>d.classList.toggle('on',j===c));};
  tr.addEventListener('scroll',()=>{cancelAnimationFrame(upd.r);upd.r=requestAnimationFrame(upd)},{passive:true});
  const cg=carousel(tr);gp.onclick=e=>{e.stopPropagation();cg.go(cur()-1)};gn.onclick=e=>{e.stopPropagation();cg.go(cur()+1)};
- card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};
+ card.goto=k=>{tr.scrollLeft=k*tr.clientWidth;upd();};card.cur=cur;
  if(!pv){const big=e=>{if(e.target.closest('button,a,summary,details'))return;openLB(p.id,cur())};
   tr.addEventListener('click',big);card.querySelector('.bd').addEventListener('click',big);
   card.querySelector('.gz').addEventListener('click',e=>{e.stopPropagation();openLB(p.id,cur())});}
@@ -977,6 +979,7 @@ function open(id,opt={}){
  else side=sideFor(p,cl);
  const s= opt.s || (p.rute==='runde'?(mob()?1.1:1.2):(mob()?1.7:(cl?2.2:2.1)));
  const sticky=!!(opt.sticky||tour||(same&&S.sticky&&!opt.hover));
+ if(S.id!==id)openT=Date.now();
  S={mode:'poi',id,cl:cl||null,side,sticky};
  renderCard(p,side);card.classList.add('show');box.classList.add('has');pvId=null;
  if(!same){
