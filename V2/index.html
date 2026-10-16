@@ -127,6 +127,12 @@ html.land .c .head .cn small{font-size:9.5px}
 /* V2: funksjonsstripe på Valentinlyst-punktet */
 .m .fns{position:absolute;left:calc(var(--dx) + 22px);top:calc(var(--dy) - 13px);height:26px;display:flex;align-items:center;gap:3px;padding:0 8px 0 7px;border-radius:999px;background:var(--paper);color:var(--teal);box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity 200ms}
 .m .fns svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.m.gl .lbl{display:none}
+.m.gls .head{transform:scale(.82)}
+.m.gls.on .head{transform:scale(1)}
+
+.c .fns{left:calc(var(--dx) - 18px);top:calc(var(--dy) - 54px)}
+.hero.zoom .c .fns{opacity:0}
 .m:hover .fns,.m.on .fns,.m.named .fns,.m.flab .fns,.m.peek .fns,.m.dim .fns,.hero.zoom .m:not(.on) .fns{opacity:0}
 .fn{display:grid;grid-template-columns:1fr;gap:6px;margin:2px 0 14px}
 .lbt .fn{grid-template-columns:1fr 1fr}
@@ -157,6 +163,10 @@ svg.felt .rr.go .ra{opacity:.95;animation:oflow 1.1s linear infinite}
 .hero.rt-on svg.felt .rg{opacity:1}
 .hero.proj svg.felt .rg,.hero.proj1 svg.felt .rg,.hero.rt-off svg.felt .rg{opacity:0}
 
+/* V2 mobil: faktakortet gir alltid plass til en stripe av kartet under topplinjen */
+@media (max-width:700px){.card{max-height:min(66%,calc(100% - var(--barh,150px) - 140px))!important}}
+/* V2: forbeholdsteksten skal ikke ta imot klikk */
+.disc{pointer-events:none}
 /* V2: skjul alle punkter */
 .pins,.plbl{transition:opacity 300ms}
 .hero.nopins .pins{opacity:0}
@@ -718,7 +728,12 @@ const P=[
      'Klubben planlegger en ny idrettshall i idrettsparken. Inntil den står klar, brukes dagens klubbhus.'],
   g:[[G_+'n_eberg.jpg','Eberg idrettspark sett fra Tyholttårnet (2023). Foto: Ssu, CC BY-SA 4.0, Wikimedia Commons']],ln:'https://www.skfreidig.no/',lt:'skfreidig.no',src:[S_EB,['Wikipedia, SK Freidig','https://en.wikipedia.org/wiki/SK_Freidig']]}
 ];
-const CL=[{id:'torg',n:'Torget',m:[19,17,14,16,15]},{id:'felles',n:'Kafé og fellesrom',m:[11,20,18,21],dy:-64},{id:'mbv',n:'Vyda og Sumart',m:[36,37]},{id:'eberg',n:'Eberg',m:[39,40,41,42]}];
+{const v=P.find(p=>p.id===34),ID=[50,51,52,53,54,55,56,57,58];
+ v.fn.forEach(([ic,n,st],i)=>P.push({id:ID[i],x:v.x+(i%3-1)*6,y:v.y+(Math.floor(i/3)-1)*5,k:'naer',ut:1,sub:34,ic,n,ey:'Valentinlyst senter',
+  f:st.length>1?[['Ligger','Valentinlyst senter'],['Antall',String(st.length)],['Åpent',ic==='bag'?'Kl. 7–23':'Se den enkelte']]:[['Ligger','Valentinlyst senter'],['Åpent','Se butikkens side']],
+  t:[st.length>1?'På Valentinlyst senter: '+st.map(x=>x[0]).join(', ')+'. Klikk på et navn for åpningstider og kontaktinfo.':n+' ligger på Valentinlyst senter. Klikk på navnet for åpningstider og kontaktinfo.'],
+  fn:[[ic,st.length>1?n:'Mer informasjon',st]],g:v.g,ln:st.length===1?'https://valentinlyst.no/butikk/'+st[0][1]+'/':'https://valentinlyst.no/butikker',lt:st.length===1?st[0][0]:'Alle butikkene',src:v.src}));}
+const CL=[{id:'torg',n:'Torget',m:[19,17,14,16,15]},{id:'felles',n:'Kafé og fellesrom',m:[11,20,18,21],dy:-64},{id:'mbv',n:'Vyda og Sumart',m:[36,37]},{id:'eberg',n:'Eberg',m:[39,40,41,42]},{id:'valentin',n:'Valentinlyst senter',dy:-84,m:[34,50,51,52,53,54,55,56,57,58],fns:['bag','helse','kafe','vin','trening','velv','tag','bank','bil']}];
 const RUTE={"seg": {"nord_v": "M141,1203 C206,1200 336,1191 500,1185 C664,1179 951,1173 1050,1170", "nord_o": "M1050,1170 C1134,1165 1379,1142 1518,1140 C1657,1138 1684,1142 1824,1158 C1964,1174 2163,1211 2294,1230 C2425,1249 2464,1251 2553,1262 C2642,1273 2703,1278 2788,1291 C2873,1304 2960,1308 3024,1332 C3088,1356 3110,1396 3141,1426 C3172,1456 3184,1477 3195,1500 C3206,1523 3199,1546 3200,1556", "ost": "M3200,1556 C3184,1560 3142,1574 3110,1580 C3078,1586 3044,1580 3024,1590 C3004,1600 3032,1626 3000,1638 C2968,1650 2927,1654 2847,1656 C2767,1658 2606,1651 2553,1650", "midt_o": "M2553,1650 C2506,1651 2383,1657 2294,1656 C2205,1655 2144,1637 2059,1644 C1974,1651 1896,1679 1824,1697 C1752,1715 1744,1729 1659,1744 C1574,1759 1445,1771 1353,1779 C1261,1787 1212,1788 1150,1790 C1088,1792 1035,1790 1010,1790", "alle": "M1010,1790 C1014,1774 1030,1734 1035,1700 C1040,1666 1038,1645 1040,1600 C1042,1555 1044,1504 1045,1450 C1046,1396 1047,1350 1048,1300 C1049,1250 1050,1193 1050,1170", "midt_v": "M262,1716 C305,1715 403,1714 500,1712 C597,1710 717,1707 800,1705 C883,1703 922,1685 960,1700 C998,1715 1001,1774 1010,1790", "vest": "M141,1203 C152,1220 175,1252 200,1300 C225,1348 267,1420 282,1470 C297,1520 286,1536 282,1580 C278,1624 266,1692 262,1716", "vest_s": "M262,1716 C251,1731 222,1770 200,1800 C178,1830 156,1851 140,1880 C124,1909 118,1919 112,1960 C106,2001 90,2069 106,2109 C122,2149 165,2159 200,2180 C235,2201 282,2219 300,2227", "diag": "M1010,1790 C1003,1797 993,1803 970,1830 C947,1857 914,1895 880,1940 C846,1985 814,2028 780,2080 C746,2132 706,2201 690,2227", "sor": "M2553,1650 C2553,1669 2540,1723 2553,1756 C2566,1789 2624,1813 2624,1832 C2624,1851 2612,1859 2553,1862 C2494,1865 2362,1844 2294,1850 C2226,1856 2240,1861 2176,1897 C2112,1933 2012,2004 1941,2050 C1870,2096 1834,2118 1780,2150 C1726,2182 1665,2213 1640,2227"}, "lade": "M3141,1426 C3156,1432 3195,1441 3224,1462 C3253,1483 3276,1517 3300,1545 C3324,1573 3338,1592 3355,1615 C3372,1638 3377,1659 3392,1672 C3407,1685 3421,1687 3440,1688 C3459,1689 3485,1681 3495,1680", "sel": {"liten": ["nord_o", "ost", "midt_o", "alle"], "stor": ["nord_v", "nord_o", "ost", "sor", "vest", "vest_s", "alle", "diag"]}};
 const inCl={};CL.forEach(c=>c.m.forEach(i=>inCl[i]=c.id));
 const byId=Object.fromEntries(P.map(p=>[p.id,p]));
@@ -769,7 +784,7 @@ function clamp(tx,ty,s,vis){
 function focus(X,Y,s,side){
  if(land()){const cw=(S.mode==='poi'?(card.offsetWidth||340)+16:0),cx=(G.W-cw)/2,cy=G.H*0.56;return clamp(cx-s*X,cy-s*Y,s);}
  if(!mob()){const bh=72,cx=G.W/2,cy=bh+(G.H-bh)*0.5,a=.85,px=X+(cx-X)*a,py=Y+(cy-Y)*a;return clamp(px-s*X,py-s*Y,s);}
- if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const cx=G.W/2,cy=150+(vis-150)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
+ if(mob()){const vis=G.H-(card.offsetHeight||380)+16;const tb=(G.barh||150)+14;const cx=G.W/2,cy=tb+(vis-tb)/2;return clamp(cx-s*X,cy-s*Y,s,vis);}
  const free=G.W-404-80, cx= side==='r'? free/2+10 : G.W-free/2-10, cy=G.H*0.54;
  const a=.5, px=X+(cx-X)*a, py=Y+(cy-Y)*a;
  return clamp(px-s*X,py-s*Y,s);
@@ -795,12 +810,12 @@ function build(){
  pins.innerHTML='';
  P.forEach(p=>{const b=document.createElement('button');b.className='m k-'+p.k;b.dataset.id=p.id;b.setAttribute('aria-label',p.n+(p.ey?', '+p.ey:''));
   b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head">${svg(p.ic)}</span>${p.fns?`<span class="fns">${p.fns.map(svg).join('')}</span>`:''}<span class="lbl">${p.n}</span>`;
-  b.addEventListener('pointerenter',()=>{if(drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>{if(S.id!==p.id)open(p.id,{hover:true})})});b.addEventListener('pointerleave',cancelIntent);
-  b.addEventListener('focus',()=>open(p.id));b.addEventListener('click',()=>{if(S.mode==='poi'&&S.id===p.id&&Date.now()-openT>600){openLB(p.id,card.cur?card.cur():0);return}open(p.id,{sticky:true})});pins.append(b);p.el=b;});
+  b.addEventListener('pointerenter',e=>{if(e.pointerType!=='mouse'||!placed||drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>{if(S.id!==p.id)open(p.id,{hover:true})})});b.addEventListener('pointerleave',cancelIntent);
+  b.addEventListener('focus',()=>{if(b.matches(':focus-visible'))open(p.id)});b.addEventListener('click',()=>{if(S.mode==='poi'&&S.id===p.id&&Date.now()-openT>600){openLB(p.id,card.cur?card.cur():0);return}open(p.id,{sticky:true})});pins.append(b);p.el=b;});
  CL.forEach(c=>{const ms=c.m.map(i=>byId[i]);c.x=ms.reduce((a,p)=>a+p.x,0)/ms.length;const ys=ms.map(p=>p.y);c.y=(Math.min(...ys)+Math.max(...ys))/2;c.side=c.x/SRC.w<0.5?'r':'l';
   const b=document.createElement('button');b.className='m c';b.setAttribute('aria-label',c.n+', '+c.m.length+' steder. Åpne for å se alle');
-  b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head"><i>${c.m.length}</i><span class="cn"><b>${c.n}</b><small><span class="cs">Trykk for å se alle</span><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></small></span></span>`;
-  b.addEventListener('pointerenter',()=>{if(drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>openCl(c.id))});b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>openCl(c.id));
+  b.innerHTML=`<span class="foot"></span><span class="stem"></span><span class="head"><i>${c.m.length}</i><span class="cn"><b>${c.n}</b><small><span class="cs">Trykk for å se alle</span><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></small></span></span>${c.fns?`<span class="fns">${c.fns.map(svg).join('')}</span>`:''}`;
+  b.addEventListener('pointerenter',e=>{if(e.pointerType!=='mouse'||!placed||drag||(S.mode==='proj'&&Date.now()-pzT<1300))return;intent(()=>openCl(c.id))});b.addEventListener('pointerleave',cancelIntent);b.addEventListener('click',()=>openCl(c.id));b.addEventListener('focus',()=>{if(b.matches(':focus-visible'))openCl(c.id)});
   pins.append(b);c.el=b;c.dy=c.dy||-44;b.style.setProperty('--dy',c.dy+'px');b.style.setProperty('--len',(-c.dy-18)+'px');});
  // menyen til venstre: alle punktene gruppert etter kategori
  list.innerHTML=Object.entries(KAT).map(([k,v])=>{const ps=P.filter(p=>p.k===k);
@@ -901,18 +916,21 @@ function place(){
  }
  // vifte ut klyngen
  if(S.cl){const c=CL.find(c=>c.id===S.cl);const ms=c.m.map(i=>byId[i]).filter(vis).map(p=>{const d=D(p);return {p,x:tx+s*d.X,y:ty+s*d.Y}});
-  let right= S.side!=='r'; const gap=mob()?46:54; const n=ms.length;
+  let right= S.side!=='r'; const n=ms.length; const gap=Math.max(mob()?36:40,Math.min(mob()?46:54,(G.H-(mob()?(card.offsetHeight||380):0)-170)/n));
   const cX=r=>r? Math.max(...ms.map(m=>m.x))+(mob()?40:80) : Math.min(...ms.map(m=>m.x))-(mob()?40:80);
   let colX=cX(right); if(!right&&colX<200){right=true;colX=cX(true)}else if(right&&colX>G.W-220){right=false;colX=cX(false)}
   const cy= ms.reduce((a,m)=>a+m.y,0)/n - (mob()?70:90);
   const slots=ms.map((_,i)=>cy+(i-(n-1)/2)*gap);
-  {const top=Math.max(...(G.blk||[[0,0,0,0]]).filter(b=>b[0]<colX+160&&b[2]>colX-160).map(b=>b[3]),0)+30,bot=G.H-30;let sh=0;if(slots[0]-22<top)sh=top-(slots[0]-22);if(slots[n-1]+22+sh>bot)sh=Math.min(sh,bot-(slots[n-1]+22));for(let i=0;i<n;i++)slots[i]+=sh;}
+  {const top=Math.max(...(G.blk||[[0,0,0,0]]).filter(b=>b[0]<colX+160&&b[2]>colX-160).map(b=>b[3]),0)+30,bot=mob()?G.H-(card.offsetHeight||380)-8:G.H-30;let sh=0;if(slots[0]-22<top)sh=top-(slots[0]-22);if(slots[n-1]+22+sh>bot)sh=Math.min(sh,bot-(slots[n-1]+22));for(let i=0;i<n;i++)slots[i]+=sh;}
   const perms=a=>a.length<2?[a]:a.flatMap((x,i)=>perms(a.slice(0,i).concat(a.slice(i+1))).map(r=>[x,...r]));
   const cross=(a,b,c,d)=>{const o=(p,q,r)=>Math.sign((q.x-p.x)*(r.y-p.y)-(q.y-p.y)*(r.x-p.x));return o(a,b,c)!==o(a,b,d)&&o(c,d,a)!==o(c,d,b)};
-  let best=null;perms(ms).forEach(pm=>{let k=0,len=0;const seg=pm.map((m,i)=>[{x:m.x,y:m.y},{x:colX,y:slots[i]}]);
+  let best=n>6?[0,ms]:null;(n>6?[]:perms(ms)).forEach(pm=>{let k=0,len=0;const seg=pm.map((m,i)=>[{x:m.x,y:m.y},{x:colX,y:slots[i]}]);
    for(let i=0;i<n;i++){len+=Math.hypot(seg[i][1].x-seg[i][0].x,seg[i][1].y-seg[i][0].y);for(let j=i+1;j<n;j++)if(cross(seg[i][0],seg[i][1],seg[j][0],seg[j][1]))k++}
    const sc=k*1e6+len;if(!best||sc<best[0])best=[sc,pm]});
-  best[1].forEach((m,i)=>{const dx=colX-m.x, dy=slots[i]-m.y; const L=Math.hypot(dx,dy)-18;
+  let GX=null,GY=null;const grid=mob()&&n>6;P.forEach(p=>p.el.classList.remove('gl'));
+  if(grid){const top0=(G.blk&&G.blk[0]?G.blk[0][3]:0)+26,vis0=G.H-(card.offsetHeight||380)+10,rows=(vis0-top0)>=100?2:1,per=Math.ceil(n/rows),sp=Math.min(44,(G.W-24)/per),cx=ms.reduce((a,m)=>a+m.x,0)/n,fy=ms[0].y,top=(G.blk&&G.blk[0]?G.blk[0][3]:0)+28,vis=G.H-(card.offsetHeight||380)+16;
+   const x0=Math.min(Math.max(cx-(per-1)*sp/2,24),G.W-24-(per-1)*sp);let y0=rows===1?Math.max(top,(top0+vis0)/2-4):Math.max(top,Math.min(fy-120,vis-110));if(sp<40)P.forEach(q=>q.el.classList.toggle('gls',inCl[q.id]===c.id));GX=[];GY=[];best=[0,ms];ms.forEach((m,i)=>{GX.push(x0+(i%per)*sp);GY.push(y0+Math.floor(i/per)*50)});}
+  best[1].forEach((m,i)=>{const dx=(GX?GX[i]:colX)-m.x, dy=(GY?GY[i]:slots[i])-m.y; const L=Math.hypot(dx,dy)-18;if(GX)m.p.el.classList.add('gl');
    const el=m.p.el; el.style.setProperty('--dx',dx+'px');el.style.setProperty('--dy',dy+'px');el.style.setProperty('--len',Math.max(0,L)+'px');el.style.setProperty('--ang',Math.atan2(dx,-dy)+'rad');
    if(!right) el.classList.add('lblL');});
  }
@@ -1153,7 +1171,7 @@ addEventListener('keydown',e=>{
  if(!e.ctrlKey&&!e.metaKey&&(e.key==='+'||e.key==='-'||e.key==='0')&&hero.matches(':hover')){e.preventDefault();if(e.key==='0')resetView();else zoomAt(G.W/2,G.H/2,e.key==='+'?1.25:0.8);}
 });
 addEventListener('resize',()=>{layout();V={...HOME};if(S.id)open(S.id,{now:1,refocus:1});else{T={...HOME};place();}});
-build();setTourUI(false);layout();place();
+let placed=false;build();setTourUI(false);layout();place();setTimeout(()=>placed=true,900);
 document.fonts&&document.fonts.ready.then(()=>{layout();place()});
 
 window.demo={openLB,closeLB,toggleF,open,closeAll,place,layout,P,byId,projOn,S:()=>S,T:()=>T,V:()=>V,F,zoomAt,resetView,step,gal:k=>card.goto&&card.goto(k),setNoAnim:v=>document.documentElement.classList.toggle('noanim',v)};
