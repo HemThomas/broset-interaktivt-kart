@@ -125,7 +125,7 @@ html.land .c .head i{width:25px;height:25px;font-size:12px}
 html.land .c .head .cn small{font-size:9.5px}
 @media (max-width:700px){.c .head{top:calc(var(--dy) - 19px);height:38px;font-size:12.5px;padding:0 10px 0 5px;gap:7px}.c .head i{width:27px;height:27px;font-size:12.5px}.c .head .cn small{font-size:10px}}
 /* V2: funksjonsstripe på Valentinlyst-punktet */
-.m .fns{position:absolute;left:calc(var(--dx) + 22px);top:calc(var(--dy) - 13px);height:26px;display:flex;align-items:center;gap:3px;padding:0 8px 0 7px;border-radius:999px;background:var(--paper);color:var(--teal);box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity 200ms;pointer-events:none}
+.m .fns{position:absolute;left:calc(var(--dx) + 22px);top:calc(var(--dy) - 13px);height:26px;display:flex;align-items:center;gap:3px;padding:0 8px 0 7px;border-radius:999px;background:var(--paper);color:var(--teal);box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity 200ms}
 .m .fns svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .m:hover .fns,.m.on .fns,.m.named .fns,.m.flab .fns,.m.peek .fns,.m.dim .fns,.hero.zoom .m:not(.on) .fns{opacity:0}
 .fn{display:grid;grid-template-columns:1fr;gap:6px;margin:2px 0 14px}
@@ -157,6 +157,10 @@ svg.felt .rr.go .ra{opacity:.95;animation:oflow 1.1s linear infinite}
 .hero.rt-on svg.felt .rg{opacity:1}
 .hero.proj svg.felt .rg,.hero.proj1 svg.felt .rg,.hero.rt-off svg.felt .rg{opacity:0}
 
+/* V2: topplinjen skal ikke stjele klikk fra kartet, bare knappene og lenkene i den er klikkbare */
+.bar,.bar .t,.bar .flt{pointer-events:none}
+.bar button,.bar a,.bar .tour{pointer-events:auto}
+.m .fns{pointer-events:auto;cursor:pointer}
 /* faktakort */
 .card{position:absolute;top:calc(50% + 34px);max-height:calc(100% - 100px);overflow:auto;scrollbar-width:thin;width:404px;z-index:8;background:var(--paper);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.38),0 2px 8px rgba(0,0,0,.18);opacity:0;pointer-events:none;transform:translate(var(--cx,24px),-50%);transition:opacity 420ms ease 200ms,transform 620ms var(--ease) 160ms}
 .card.r{right:40px;--cx:28px}.card.l{left:40px;--cx:-28px}
