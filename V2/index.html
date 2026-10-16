@@ -134,7 +134,9 @@ html.land .c .head .cn small{font-size:9.5px}
 .fn .fi{flex:0 0 26px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--teal);color:var(--paper)}
 .fn .fi svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fn b{display:block;font-size:12.5px;line-height:1.2;color:var(--teal)}
-.fn small{display:block;font-size:11.5px;line-height:1.3;opacity:.8;margin-top:2px}
+.fn small{display:block;font-size:11.5px;line-height:1.45;margin-top:2px;color:#3d5f5f}
+.fn small a{color:inherit;text-decoration:underline;text-decoration-color:rgba(28,75,76,.35);text-underline-offset:2px}
+.fn small a:hover{color:var(--teal);text-decoration-color:var(--teal)}
 @media (max-width:700px){.lbt .fn{grid-template-columns:1fr}.m .fns{display:none}}
 html.land .m .fns{display:none}
 /* V2: turruter */
@@ -647,30 +649,30 @@ const P=[
   t:['Den østre ravinen beholder sin form og reguleres til bevaring av naturmiljø. Her vokser gråor-heggeskog, lerk og gran, og ravinen er viktig for det biologiske mangfoldet og for vilt.',
      'Langs ravinen går en mye brukt turvei, både for rekreasjon og som snarvei gjennom området. Ravinen ligger mye i skygge, med best sol om morgenen og formiddagen.'],
   src:[S_SB]},
- {id:31,x:2250,y:1690,k:'nat',ic:'rute',n:'Brøsetrunden',ey:'Turrunde',rute:'runde',f:[['Lengde','ca. 2 km'],['Langs','Brøset allé og Snarveien'],['Kart','Oppdatert august 2025']],
+ {id:31,x:2150,y:1715,k:'nat',ic:'rute',n:'Brøsetrunden',ey:'Turrunde',rute:'runde',f:[['Lengde','ca. 2 km'],['Langs','Brøset allé og Snarveien'],['Kart','Oppdatert august 2025']],
   t:['Brøsetrunden er en sti rundt den nye bydelen, anlagt slik at du kan bli kjent med området mens det bygges.',
      'Runden følger Brøsetvegen og Snarveien, går langs ravinen og forbi hovedbygningen, og tilbake langs Brøset allé. En avstikker går ned til Granåsvegen.',
      'Gårdsvegen er stengt mens anleggsveien fra Tungasletta etableres, så runden er lagt om. Streken i kartet viser den oppdaterte runden.'],
   g:[[G_+'runde_kart.jpg','Brøsetrunden, oppdatert kart (broset.no, 2025)']],src:[S_GV,S_TUR,S_KP]},
- {id:32,x:3330,y:1340,k:'nat',ut:1,ic:'sjo',n:'Gangvei til Ladestien',ey:'Tur nordover',rute:'lade',f:[['Retning','Nordover via Leangen'],['Kommer ut ved','Leangsbukta'],['Ladestien','Ladehammeren–Rotvollfjæra']],
-  t:['Fra Brøset kan du gå eller sykle nordover via Leangen og under Innherredsvegen ned til Ladestien ved Leangsbukta.',
+ {id:32,x:3425,y:1688,off:[-40,-38],k:'nat',ut:1,ic:'sjo',n:'Gangvei til Ladestien',ey:'Tur nordover',rute:'lade',f:[['Retning','Nordover via Leangen'],['Kommer ut ved','Leangsbukta'],['Ladestien','Ladehammeren–Rotvollfjæra']],
+  t:['Fra Snarveien følger gangveien ravinedalen nordover. Videre kan du gå eller sykle via Leangen og under Innherredsvegen ned til Ladestien ved Leangsbukta.',
      'Ladestien går langs sjøen fra Ladehammeren til Rotvollfjæra, om lag 8 km.'],
-  src:[S_TUR,['ut.no, Grønne sykkelruter: Berg – Brøsetdalen – Leangen – Rotvollneset','https://ut.no/turforslag/111067252']]},
+  g:[[G_+'n_ladestien.jpg','Ladestien. Foto: Paweł Szubert, CC BY-SA 3.0, Wikimedia Commons']],src:[S_TUR,['ut.no, Grønne sykkelruter: Berg – Brøsetdalen – Leangen – Rotvollneset','https://ut.no/turforslag/111067252']]},
  {id:33,x:357,y:1029,k:'nat',ut:1,ic:'tre',n:'Bekkevolldalen',ey:'Friområde',f:[['Type','Friområde'],['Ligger ved','Eberg idrettspark'],['I planen','Bevares']],
   t:['Friområdet i Bekkevolldalen ligger ved Eberg idrettspark, og bevares i hovedsak i reguleringsplanen for idrettsparken og skolen.'],
   src:[S_EB]},
  {id:34,x:1854,y:945,k:'naer',ut:1,ic:'senter',n:'Valentinlyst senter',ey:'Kjøpesenter',fns:['bag','helse','kafe','vin','trening','velv','tag','bank'],
   f:[['Åpent','Kl. 9–20, lør. 9–18'],['Dagligvare','Kl. 7–23'],['Butikker og tjenester','26']],
-  fn:[['bag','Dagligvare','Coop Mega, Kiwi'],['helse','Helse','Boots apotek, Valentinlyst legesenter, Valentinlyst Tannlege, Nidaros Naprapatklinikk, Audioplus'],
-      ['kafe','Mat og drikke','Rosenborg Bakeri, Sabi Sushi'],['vin','Vinmonopolet',''],['trening','Trening','Fresh Fitness, Feelgood'],
-      ['velv','Velvære','I. Grande frisør, SkinTonic, Relax'],['tag','Butikker','ARK Bokhandel, Narvesen, Nille, Zavanna, Home By Gard, Sunkost, Synsam'],
-      ['bank','Bank og eiendom','Soknedal Sparebank, DNB Eiendom'],['bil','Trafikkskoler','Heimdal Trafikkskole, Trafikksikker']],
+  fn:[['bag','Dagligvare',[['Coop Mega','coop-mega'],['Kiwi','kiwi-valentinlyst']]],['helse','Helse',[['Boots apotek','boots-apotek'],['Valentinlyst legesenter','valentinlyst-legesenter'],['Valentinlyst Tannlege','valentinlyst-tannlegekontor'],['Nidaros Naprapatklinikk','nidaros-naprapatklinikk'],['Audioplus','audioplus-trondheim']]],
+      ['kafe','Mat og drikke',[['Rosenborg Bakeri','rosenborg-bakeri'],['Sabi Sushi','sabi-sushi-valentinlyst']]],['vin','Vinmonopolet',[['Vinmonopolet','vinmonopolet']]],['trening','Trening',[['Fresh Fitness','fresh-fitness'],['Feelgood','feelgood-valentinlyst']]],
+      ['velv','Velvære',[['I. Grande frisør','grande-frisor'],['SkinTonic','skin-tonic'],['Relax','relax']]],['tag','Butikker',[['ARK Bokhandel','ark'],['Narvesen','narvesen'],['Nille','nille'],['Zavanna','zavanna'],['Home By Gard','nordamp-trondheim'],['Sunkost','sunkost-valentinlyst'],['Synsam','synsam']]],
+      ['bank','Bank og eiendom',[['Soknedal Sparebank','soknedal-sparebank'],['DNB Eiendom','dnb-eiendom']]],['bil','Trafikkskoler',[['Heimdal Trafikkskole','heimdal-trafikkskole'],['Trafikksikker','trafikksikker-as']]]],
   t:['Nærsenteret på Valentinlyst har dagligvare, apotek, lege, tannlege, Vinmonopolet, trening og butikker samlet på ett sted.'],
-  ln:'https://valentinlyst.no/butikker',lt:'Alle butikkene',src:[S_VL]},
- {id:35,x:1192,y:835,k:'naer',ut:1,ic:'taarn',n:'Tyholttårnet',ey:'Landemerke',f:[['Høyde','124 m'],['Ferdig','1984'],['Restaurant','Ca. 74 m over bakken']],
+  g:[[G_+'n_valentinlyst.jpg','Valentinlyst senter sett fra Tyholttårnet (2010). Foto: ChickenFalls, fri bruk, Wikimedia Commons']],ln:'https://valentinlyst.no/butikker',lt:'Alle butikkene',src:[S_VL]},
+ {id:35,x:1183,y:786,off:[-54,-38],k:'naer',ut:1,ic:'taarn',n:'Tyholttårnet',ey:'Landemerke',f:[['Høyde','124 m'],['Ferdig','1984'],['Restaurant','Ca. 74 m over bakken']],
   t:['Tyholttårnet er først og fremst bygget som knutepunkt for radiolink, med antenner for radio og mobiltelefoni.',
      'På 74 meter ligger restauranten Egon Tårnet, som roterer én runde i timen. Utsiktsgalleriet ligger på 67 meter.'],
-  ln:'https://egon.no/en/restaurants/troendelag/egon-taarnet',lt:'Egon Tårnet',src:[['Store norske leksikon, Tyholttårnet','https://snl.no/Tyholtt%C3%A5rnet'],['egon.no','https://egon.no/en/restaurants/troendelag/egon-taarnet']]},
+  g:[[G_+'n_tyholt.jpg','Foto: Jonas Tisell, CC BY 2.0, Wikimedia Commons'],[G_+'n_tyholt_utsikt.jpg','Utsikt fra restauranten. Foto: HuBar, CC BY-SA 2.5, Wikimedia Commons']],ln:'https://egon.no/en/restaurants/troendelag/egon-taarnet',lt:'Egon Tårnet',src:[['Store norske leksikon, Tyholttårnet','https://snl.no/Tyholtt%C3%A5rnet'],['egon.no','https://egon.no/en/restaurants/troendelag/egon-taarnet']]},
  {id:36,x:1429,y:1084,k:'naer',ut:1,ic:'rest',n:'Vyda',ey:'Vietnamesisk restaurant',f:[['Kjøkken','Vietnamesisk'],['Tilbud','Servering og takeaway'],['Adresse','Magnus Berrføtts veg 4A']],
   t:['Vietnamesisk restaurant med servering og takeaway, blant annet pho og bánh xèo.'],
   src:[['Google Maps, VYDA restaurant','https://www.google.com/maps/search/VYDA+restaurant+Magnus+Berrf%C3%B8tts+veg+4A+Trondheim']]},
@@ -678,27 +680,27 @@ const P=[
   t:['Dagligvarebutikk med asiatiske varer, i samme bygg som Vyda.'],
   ln:'https://sumart.no/',lt:'sumart.no',src:[['Google Maps, SUMART Dagligvare','https://www.google.com/maps/search/SUMART+Dagligvare+Trondheim']]},
  {id:38,x:2467,y:2042,k:'naer',ut:1,ic:'burger',n:'Burger King',ey:'Tungasletta',f:[['Adresse','Tungasletta 14'],['Type','Hurtigmat'],['Drive-in','Ja']],
-  t:['Burger King med drive-in ligger ved Tungasletta, like øst for rundkjøringen.'],
+  t:['Burger King med drive-in ligger ved Tungasletta, like øst for rundkjøringen.'],ln:'https://burgerking.no/',lt:'burgerking.no',
   src:[['Google Maps, Burger King Tungasletta','https://www.google.com/maps/search/Burger+King+Tungasletta+14+Trondheim']]},
  {id:39,x:594,y:952,k:'naer',ut:1,ic:'skole',n:'Eberg skole',ey:'Barneskole',f:[['Trinn','1.–7.'],['Elever i dag','ca. 400'],['Plan','Utvidelse til 700']],
   t:['Eberg skole er en kommunal barneskole for 1. til 7. trinn.',
      'Reguleringsplanen for Eberg idrettspark og skole legger til rette for å utvide skolen fra om lag 400 til 700 elever. Når en utvidelse blir aktuell, er ikke avklart.'],
-  src:[S_EB]},
+  g:[[G_+'n_eberg.jpg','Eberg idrettspark sett fra Tyholttårnet (2023). Foto: Ssu, CC BY-SA 4.0, Wikimedia Commons']],ln:'https://www.trondheim.kommune.no/eberg-skole/',lt:'Eberg skole',src:[S_EB]},
  {id:40,x:600,y:922,k:'naer',ut:1,ic:'trafikk',n:'Eberg trafikkgård',ey:'Eberg idrettspark',f:[['Ligger','Nordvest i idrettsparken'],['I planen','Bevares'],['Nytt','Servicehus']],
   t:['Trafikkgården i Eberg idrettspark bevares i reguleringsplanen.',
      'Planen åpner for et nytt servicehus som blant annet kan romme toaletter, undervisningsrom, sykkelverksted og lager.'],
-  src:[S_EB]},
+  g:[[G_+'n_eberg.jpg','Eberg idrettspark sett fra Tyholttårnet (2023). Foto: Ssu, CC BY-SA 4.0, Wikimedia Commons']],src:[S_EB]},
  {id:41,x:193,y:951,k:'naer',ut:1,ic:'ball',n:'Freidigbanen',ey:'Kunstgress',f:[['Underlag','Kunstgress'],['Ligger','Eberg idrettspark'],['Planlagt','Idrettshall og fotballhall']],
   t:['Kunstgressbanene i Eberg idrettspark.',
      'Reguleringsplanen legger en ny idrettshall i terrengfallet nord for kunstgressbanene og en fotballhall på en av dagens treningsbaner.'],
-  src:[S_EB]},
+  g:[[G_+'n_eberg.jpg','Eberg idrettspark sett fra Tyholttårnet (2023). Foto: Ssu, CC BY-SA 4.0, Wikimedia Commons']],ln:'https://www.skfreidig.no/',lt:'SK Freidig',src:[S_EB]},
  {id:42,x:259,y:964,k:'naer',ut:1,ic:'folk',n:'Freidig Sportsklubb',ey:'Idrettslag',f:[['Stiftet','1903'],['Idretter','Fotball, håndball, orientering, langrenn'],['Planlagt','Ny idrettshall']],
   t:['Sportsklubben Freidig holder til i Eberg idrettspark og har fotball, håndball, orientering og langrenn på programmet.',
      'Klubben planlegger en ny idrettshall i idrettsparken. Inntil den står klar, brukes dagens klubbhus.'],
-  src:[S_EB,['Wikipedia, SK Freidig','https://en.wikipedia.org/wiki/SK_Freidig']]}
+  g:[[G_+'n_eberg.jpg','Eberg idrettspark sett fra Tyholttårnet (2023). Foto: Ssu, CC BY-SA 4.0, Wikimedia Commons']],ln:'https://www.skfreidig.no/',lt:'skfreidig.no',src:[S_EB,['Wikipedia, SK Freidig','https://en.wikipedia.org/wiki/SK_Freidig']]}
 ];
 const CL=[{id:'torg',n:'Torget',m:[19,17,14,16,15]},{id:'felles',n:'Kafé og fellesrom',m:[11,20,18,21],dy:-64},{id:'mbv',n:'Vyda og Sumart',m:[36,37]},{id:'eberg',n:'Eberg',m:[39,40,41,42]}];
-const RUTE={"runde": "M1040,1118 C1100,1099 1249,1115 1352,1115 C1455,1115 1526,1114 1613,1118 C1700,1122 1754,1127 1838,1140 C1922,1153 1985,1171 2078,1188 C2171,1205 2252,1215 2356,1232 C2460,1249 2545,1260 2658,1285 C2771,1310 2913,1349 2983,1372 C3053,1395 3048,1394 3049,1411 C3050,1428 3033,1450 2990,1467 C2947,1484 2838,1487 2808,1505 C2778,1523 2805,1543 2822,1565 C2839,1587 2858,1603 2904,1627 C2950,1651 3014,1673 3080,1696 C3146,1719 3212,1730 3268,1754 C3324,1778 3402,1803 3389,1827 C3376,1851 3269,1868 3194,1889 C3119,1910 3048,1929 2973,1942 C2898,1955 2843,1970 2779,1961 C2715,1952 2675,1922 2615,1892 C2555,1862 2496,1827 2445,1797 C2394,1767 2369,1746 2332,1725 C2295,1704 2290,1685 2237,1683 C2184,1681 2109,1701 2035,1713 C1961,1725 1919,1737 1828,1752 C1737,1767 1671,1777 1531,1798 C1391,1819 1159,1881 1052,1868 C945,1855 947,1772 937,1725 C927,1678 984,1665 995,1606 C1006,1547 1000,1456 997,1398 C994,1340 976,1313 980,1281 C984,1249 1008,1247 1019,1218 C1030,1189 980,1137 1040,1118 Z M937,1725 C894,1730 789,1747 697,1755 C605,1763 506,1763 424,1767 C342,1771 275,1777 242,1779", "lade": "M2983,1372 C3022,1368 3118,1358 3200,1350 C3282,1342 3397,1332 3440,1328"};
+const RUTE={"runde": "M1040,1118 C1096,1085 1249,1115 1352,1115 C1455,1115 1526,1114 1613,1118 C1700,1122 1754,1127 1838,1140 C1922,1153 1985,1171 2078,1188 C2171,1205 2252,1214 2356,1232 C2460,1250 2560,1275 2658,1288 C2756,1301 2838,1297 2900,1302 C2962,1307 2963,1307 3000,1318 C3037,1329 3073,1345 3105,1365 C3137,1385 3150,1402 3180,1430 C3210,1458 3240,1490 3270,1520 C3300,1550 3324,1573 3345,1598 C3366,1623 3377,1634 3384,1660 C3391,1686 3386,1712 3385,1740 C3384,1768 3411,1792 3378,1815 C3345,1838 3271,1844 3200,1866 C3129,1888 3048,1921 2985,1936 C2922,1951 2887,1946 2850,1950 C2813,1954 2806,1966 2779,1961 C2752,1956 2729,1943 2700,1925 C2671,1907 2643,1886 2620,1860 C2597,1834 2592,1808 2570,1780 C2548,1752 2527,1724 2500,1702 C2473,1680 2456,1661 2420,1658 C2384,1655 2349,1678 2300,1688 C2251,1698 2204,1705 2150,1715 C2096,1725 2045,1732 2000,1742 C1955,1752 1940,1755 1900,1770 C1860,1785 1816,1820 1780,1824 C1744,1828 1716,1813 1700,1795 C1684,1777 1697,1741 1690,1722 C1683,1703 1687,1698 1660,1692 C1633,1686 1580,1684 1540,1688 C1500,1692 1480,1703 1440,1712 C1400,1721 1363,1734 1320,1740 C1277,1746 1246,1748 1200,1748 C1154,1748 1090,1746 1062,1740 C1034,1734 1048,1737 1045,1712 C1042,1687 1046,1647 1046,1600 C1046,1553 1046,1504 1045,1450 C1044,1396 1044,1360 1043,1300 C1042,1240 984,1151 1040,1118 Z M1045,1712 C1019,1713 962,1716 900,1720 C838,1724 772,1730 700,1737 C628,1744 574,1750 500,1757 C426,1764 328,1774 290,1778", "lade": "M3385,1700 C3395,1698 3421,1694 3440,1690 C3459,1686 3483,1680 3492,1678"};
 const inCl={};CL.forEach(c=>c.m.forEach(i=>inCl[i]=c.id));
 const byId=Object.fromEntries(P.map(p=>[p.id,p]));
 const $=id=>document.getElementById(id);
@@ -856,12 +858,13 @@ function place(){
  FELT.forEach(f=>{const a=FELT_ANKER[f.id],el=plbl.querySelector(`[data-id="${f.id}"]`);el.style.left=(tx+s*(G.ox+a[0]*G.k))+'px';el.style.top=(ty+s*(G.oy+a[1]*G.k))+'px';});
  felt.style.setProperty('--sw',(1/(G.k*s))+'px');
  P.forEach(p=>{['--dx','--dy','--len','--ang','--ly'].forEach(v=>p.el.style.removeProperty(v));p.el.classList.remove('lblL','flab')});
+ P.forEach(p=>{if(!p.off||(S.cl&&inCl[p.id]===S.cl))return;const [dx,dy]=p.off;p.el.style.setProperty('--dx',dx+'px');p.el.style.setProperty('--dy',dy+'px');p.el.style.setProperty('--len',Math.max(0,Math.hypot(dx,dy)-18)+'px');p.el.style.setProperty('--ang',Math.atan2(dx,-dy)+'rad');if(dx<0)p.el.classList.add('lblL');});
  // V2: i startvisningen får punkter som havner under tittelblokken hodet under foten
  {const fl=(o,isC)=>{const d=D(o),x=tx+s*d.X,y=ty+s*d.Y,w=isC?(o.el.querySelector('.head').offsetWidth||150):40,b0=isC?o.dy:-44,r=[x-22,y+b0-22,x-22+w,y+b0+22];
   const hit=start&&s<1.01&&!compact()&&(G.blk||[]).some(b=>ov(r,b));o.el.classList.toggle('flip',hit);
   if(hit){o.el.style.setProperty('--dy','48px');o.el.style.setProperty('--len','30px');o.el.style.setProperty('--ang',Math.PI+'rad');}
   else if(isC){o.el.style.setProperty('--dy',o.dy+'px');o.el.style.setProperty('--len',(-o.dy-18)+'px');o.el.style.setProperty('--ang','0rad');}};
-  P.filter(p=>!inCl[p.id]).forEach(p=>fl(p,false));CL.forEach(c=>fl(c,true));}
+  P.filter(p=>!inCl[p.id]&&!p.off).forEach(p=>fl(p,false));CL.forEach(c=>fl(c,true));}
  // fokus på kategori: vis navnet på punktene, og legg navnelappen på den siden der den ikke kolliderer
  if(F.size&&start){
   const sc=p=>{const d=D(p);return [tx+s*d.X,ty+s*d.Y]};
@@ -917,7 +920,7 @@ function setSpot(X,Y,r){spot.style.setProperty('--sx',X+'px');spot.style.setProp
 const AR=()=>mob()?2.1:2;
 function cropStyle(p,w){const h=w/AR(),cw=620,f=w/cw;return `background-image:url(${HERO});background-size:${SRC.w*f}px auto;background-position:${-(p.x*f-w/2)}px ${-((p.y-30)*f-h/2)}px`;}
 const AR_IC='<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>', AR_IC2='<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
-const fnGrid=p=>p.fn?`<div class="fn">${p.fn.map(([ic,a,b])=>`<div><span class="fi">${svg(ic)}</span><span><b>${a}</b>${b?`<small>${b}</small>`:''}</span></div>`).join('')}</div>`:'';
+const fnGrid=p=>p.fn?`<div class="fn">${p.fn.map(([ic,a,b])=>`<div><span class="fi">${svg(ic)}</span><span><b>${a}</b>${b&&b.length?`<small>${b.map(([n,u])=>`<a href="https://valentinlyst.no/butikk/${u}/" target="_blank" rel="noopener">${n}</a>`).join(', ')}</small>`:''}</span></div>`).join('')}</div>`:'';
 function renderCard(p,side,pv){
  const kat=KAT[p.k];
  card.className='card '+side+' k-'+p.k+(pv?' pv show':(card.classList.contains('show')?' show':''));
