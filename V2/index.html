@@ -157,6 +157,12 @@ svg.felt .rr.go .ra{opacity:.95;animation:oflow 1.1s linear infinite}
 .hero.rt-on svg.felt .rg{opacity:1}
 .hero.proj svg.felt .rg,.hero.proj1 svg.felt .rg,.hero.rt-off svg.felt .rg{opacity:0}
 
+/* V2: skjul alle punkter */
+.pins,.plbl{transition:opacity 300ms}
+.hero.nopins .pins{opacity:0}
+.hero.nopins .pins .m{pointer-events:none!important}
+.hero.nopins .hint{opacity:0}
+.bar .t .flt .proj.hideall{margin-top:9px}
 /* V2: topplinjen skal ikke stjele klikk fra kartet, bare knappene og lenkene i den er klikkbare */
 .bar,.bar .t,.bar .flt{pointer-events:none}
 .bar button,.bar a,.bar .tour{pointer-events:auto}
@@ -814,6 +820,7 @@ function build(){
  });
  list.querySelectorAll('.lgh').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();toggleF(b.dataset.k)});
   b.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hl(b.dataset.k)});b.addEventListener('pointerleave',()=>hl(null));});
+ {const hb=document.createElement('button');hb.className='proj hideall';hb.id='hideall';hb.setAttribute('aria-pressed','false');hb.innerHTML='<i></i><span>Skjul alle punkter</span>';ch.append(hb);hb.addEventListener('click',()=>setHide(!hero.classList.contains('nopins')));}
  $('nsteder').textContent=P.filter(p=>!p.ut).length+' steder i den nye bydelen';
  const nS=FELT.filter(f=>f.st!=='kommer').length,nK=FELT.length-nS;
  $('nproj').textContent=mob()?(nS+' prosjekter i salg'+(nK?` · ${nK} kommer`:'')):(nS+' nyboligprosjekter i salg'+(nK?` · ${nK} kommer for salg`:''));
@@ -844,7 +851,8 @@ function endPreview(){clearTimeout(pvT);if(pvId===null)return;pvId=null;list.que
 function markList(id,scroll){list.querySelectorAll('.li').forEach(el=>el.classList.toggle('on',+el.dataset.id===id));
  if(scroll&&!mob()&&id!=null){const el=list.querySelector(`.li[data-id="${id}"]`);if(el){const t=el.offsetTop,b=t+el.offsetHeight;if(t<list.scrollTop+34)list.scrollTop=t-40;else if(b>list.scrollTop+list.clientHeight)list.scrollTop=b-list.clientHeight+8;}}}
 // kategorifilter: avhukingen i kartet og hovedpunktene i menyen styrer det samme
-function toggleF(k){F.has(k)?F.delete(k):F.add(k);HL=null;
+function setHide(on){if(on){if(tour)stopTour();if(S.mode==='poi')closeAll();endPreview();}hero.classList.toggle('nopins',on);const hb=$('hideall');if(hb){hb.classList.toggle('on',on);hb.setAttribute('aria-pressed',on);}}
+function toggleF(k){if(hero.classList.contains('nopins'))setHide(false);F.has(k)?F.delete(k):F.add(k);HL=null;
  $('chips').querySelectorAll('.fk').forEach(c=>{const on=F.has(c.dataset.k);c.classList.toggle('on',on);c.setAttribute('aria-pressed',on)});
  list.querySelectorAll('.lg').forEach(g=>{const on=F.has(g.dataset.k);g.classList.toggle('sel',on);g.querySelector('.lgh').setAttribute('aria-pressed',on)});
  if(S.id&&!vis(byId[S.id])){if(tour)step(1);else closeAll();}
@@ -991,6 +999,7 @@ function sideFor(p,cl){
 }
 function open(id,opt={}){
  const p=byId[id]; if(!vis(p)) return;
+ if(hero.classList.contains('nopins'))setHide(false);
  projClear();
  const d=D(p);
  const cl=inCl[id], C=cl?CL.find(c=>c.id===cl):null;
@@ -1087,7 +1096,7 @@ LB.addEventListener('click',e=>{if(!e.target.closest('#lbin'))closeLB()});
 // omvisning: play blir pause mens den går
 let tour=0,tourPaused=false;const TB=$('tour');
 function setTourUI(on){TB.innerHTML=(on?IC_PAUSE:IC_PLAY)+`<span class="tl">${on?'Pause omvisning':(tourPaused&&S.mode!=='start'?'Fortsett omvisning':'Ta en omvisning')}</span><span class="ts">Omvisning</span>`;TB.setAttribute('aria-label',on?'Pause omvisning':'Start omvisning');TB.setAttribute('aria-pressed',on?'true':'false');TB.classList.toggle('on',on);hero.classList.toggle('touring',on);}
-function startTour(){if(tour)return;tourPaused=false;step(1);tour=setInterval(()=>step(1),5200);setTourUI(true);}
+function startTour(){if(tour)return;setHide(false);tourPaused=false;step(1);tour=setInterval(()=>step(1),5200);setTourUI(true);}
 function stopTour(){clearInterval(tour);tour=0;tourPaused=S.mode!=='start';setTourUI(false);}
 TB.onclick=()=>{tour?stopTour():startTour()};
 // zoom: Ctrl/⌘ + skroll (og knip på styreflate/mobil), dra for å flytte når kartet er zoomet
