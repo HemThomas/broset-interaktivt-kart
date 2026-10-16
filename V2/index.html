@@ -691,13 +691,13 @@ const P=[
   t:['Friområdet i Bekkevolldalen ligger ved Eberg idrettspark, og bevares i hovedsak i reguleringsplanen for idrettsparken og skolen.'],
   src:[S_EB]},
  {id:34,x:1854,y:945,k:'naer',ut:1,ic:'senter',n:'Valentinlyst senter',ey:'Kjøpesenter',fns:['bag','helse','kafe','vin','trening','velv','tag','bank'],
-  f:[['Åpent','Kl. 9–20, lør. 9–18'],['Dagligvare','Kl. 7–23'],['Butikker og tjenester','26']],
+  f:[['Åpent','Kl. 9–20, lør. 9–18'],['Dagligvare','Kl. 7–23'],['Butikker og tjenester','27']],
   fn:[['bag','Dagligvare',[['Coop Mega','coop-mega'],['Kiwi','kiwi-valentinlyst']]],['helse','Helse',[['Boots apotek','boots-apotek'],['Valentinlyst legesenter','valentinlyst-legesenter'],['Valentinlyst Tannlege','valentinlyst-tannlegekontor'],['Nidaros Naprapatklinikk','nidaros-naprapatklinikk'],['Audioplus','audioplus-trondheim']]],
-      ['kafe','Mat og drikke',[['Rosenborg Bakeri','rosenborg-bakeri'],['Sabi Sushi','sabi-sushi-valentinlyst']]],['vin','Vinmonopolet',[['Vinmonopolet','vinmonopolet']]],['trening','Trening',[['Fresh Fitness','fresh-fitness'],['Feelgood','feelgood-valentinlyst']]],
+      ['kafe','Mat og drikke',[['Rosenborg Bakeri','rosenborg-bakeri'],['Sabi Sushi','sabi-sushi-valentinlyst'],['Fyr restaurant','https://fyrrestauranter.no/']]],['vin','Vinmonopolet',[['Vinmonopolet','vinmonopolet']]],['trening','Trening',[['Fresh Fitness','fresh-fitness'],['Feelgood','feelgood-valentinlyst']]],
       ['velv','Velvære',[['I. Grande frisør','grande-frisor'],['SkinTonic','skin-tonic'],['Relax','relax']]],['tag','Butikker',[['ARK Bokhandel','ark'],['Narvesen','narvesen'],['Nille','nille'],['Zavanna','zavanna'],['Home By Gard','nordamp-trondheim'],['Sunkost','sunkost-valentinlyst'],['Synsam','synsam']]],
       ['bank','Bank og eiendom',[['Soknedal Sparebank','soknedal-sparebank'],['DNB Eiendom','dnb-eiendom']]],['bil','Trafikkskoler',[['Heimdal Trafikkskole','heimdal-trafikkskole'],['Trafikksikker','trafikksikker-as']]]],
-  t:['Nærsenteret på Valentinlyst har dagligvare, apotek, lege, tannlege, Vinmonopolet, trening og butikker samlet på ett sted.'],
-  g:[[G_+'n_valentinlyst.jpg','Valentinlyst senter sett fra Tyholttårnet (2010). Foto: ChickenFalls, fri bruk, Wikimedia Commons']],ln:'https://valentinlyst.no/butikker',lt:'Alle butikkene',src:[S_VL]},
+  t:['Nærsenteret på Valentinlyst har dagligvare, apotek, lege, tannlege, Vinmonopolet, restauranter, trening og butikker samlet på ett sted.','Fyr restaurant (burger, pizza og grill, med uteservering og drive-in) ligger også i senteret.'],
+  g:[[G_+'n_valentinlyst.jpg','Valentinlyst senter sett fra Tyholttårnet (2010). Foto: ChickenFalls, fri bruk, Wikimedia Commons']],ln:'https://valentinlyst.no/butikker',lt:'Alle butikkene',src:[S_VL,['Google Maps, Fyr på Valentinlyst','https://www.google.com/maps/search/Fyr+p%C3%A5+Valentinlyst+Trondheim'],['fyrrestauranter.no','https://fyrrestauranter.no/']]},
  {id:35,x:1183,y:786,off:[-54,-38],k:'naer',ut:1,ic:'taarn',n:'Tyholttårnet',ey:'Landemerke',f:[['Høyde','124 m'],['Ferdig','1984'],['Restaurant','Ca. 74 m over bakken']],
   t:['Tyholttårnet er først og fremst bygget som knutepunkt for radiolink, med antenner for radio og mobiltelefoni.',
      'På 74 meter ligger restauranten Egon Tårnet, som roterer én runde i timen. Utsiktsgalleriet ligger på 67 meter.'],
@@ -966,7 +966,7 @@ function rselApply(){const k=rselHov||rselK;felt.querySelectorAll('.rr[data-r=ru
 function rselBind(root,p){const f=root.querySelector('.facts');if(!f||!p.rsel)return;f.classList.add('rsel');[...f.children].forEach((d,i)=>{const k=p.rsel[i];d.dataset.k=k;d.setAttribute('role','button');d.tabIndex=0;d.title=k==='alle'?'Vis hele Brøsetrunden':'Vis '+(k==='liten'?'liten':'stor')+' runde i kartet';
   d.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){rselHov=k;rselApply()}});d.addEventListener('pointerleave',()=>{rselHov=null;rselApply()});
   const tg=e=>{e.stopPropagation();rselK=(rselK===k||k==='alle')?null:k;rselApply()};d.addEventListener('click',tg);d.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();tg(e)}});});rselApply();}
-const fnGrid=p=>p.fn?`<div class="fn">${p.fn.map(([ic,a,b])=>`<div><span class="fi">${svg(ic)}</span><span><b>${a}</b>${b&&b.length?`<small>${b.map(([n,u])=>`<a href="https://valentinlyst.no/butikk/${u}/" target="_blank" rel="noopener">${n}</a>`).join(', ')}</small>`:''}</span></div>`).join('')}</div>`:'';
+const fnGrid=p=>p.fn?`<div class="fn">${p.fn.map(([ic,a,b])=>`<div><span class="fi">${svg(ic)}</span><span><b>${a}</b>${b&&b.length?`<small>${b.map(([n,u])=>`<a href="${/^https?:/.test(u)?u:'https://valentinlyst.no/butikk/'+u+'/'}" target="_blank" rel="noopener">${n}</a>`).join(', ')}</small>`:''}</span></div>`).join('')}</div>`:'';
 function renderCard(p,side,pv){
  const kat=KAT[p.k];
  card.className='card '+side+' k-'+p.k+(pv?' pv show':(card.classList.contains('show')?' show':''));
